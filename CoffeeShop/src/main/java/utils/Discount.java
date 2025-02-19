@@ -12,4 +12,6 @@ public enum Discount {
     private final int discount;
 
     Discount(int discount) { this.discount = discount; }
+
+    public double calculateDiscount(double price) { return price - (price * (discount / 100.0)); }
 }
