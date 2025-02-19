@@ -1,7 +1,8 @@
 package utils;
 
 /**
- * Calculates the discount for the current price
+ * Enum for storing the discounts available
+ * Contains a method to calculate the discount for the current price
  */
 public enum Discount {
     DISCOUNT10(10),
