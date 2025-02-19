@@ -14,5 +14,10 @@ public enum Discount {
 
     Discount(int discount) { this.discount = discount; }
 
+    /**
+     * Calculates the price for the given discount
+     * @param price the price to discount
+     * @return the discounted price
+     */
     public double calculateDiscount(double price) { return price - (price * (discount / 100.0)); }
 }
