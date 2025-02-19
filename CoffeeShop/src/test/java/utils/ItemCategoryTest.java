@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * Unit tests for the ItemCategory enum
  */
 public class ItemCategoryTest {
+    /**
+     * Ensure the enum values have not changed unexpectedly
+     */
     @Test
     void testEnumValues() {
         assertEquals("Roll", ItemCategory.ROLL.getName());
