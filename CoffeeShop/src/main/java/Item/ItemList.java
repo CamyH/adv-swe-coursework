@@ -5,17 +5,29 @@ import Interface.EntityList;
 import java.util.HashMap;
 
 public class ItemList implements EntityList {
-    private HashMap<String, Integer> items = new HashMap<>();
+    private HashMap<String, Object> items = new HashMap<>();
 
     public ItemList() {};
 
     @Override
-    public void add(Object item) {}
+    public void add(Object item) {
+        if (item.getItemID() != null) items.put(item.getItemID(), item);
+        else throw new NullPointerException("Item ID is null");
+    }
 
     @Override
-    public void remove(Object ID) {}
+    public void remove(Object ID) {
+        if (ID instanceof String) {
+            if (items.containsKey(ID)) {
+                items.remove(ID);
+                return;
+            }
+            throw new IllegalArgumentException(ID + " is not a valid item ID");
+        }
+        throw new IllegalArgumentException(ID + " is not of type String");
+    }
 
-    public HashMap getMenu() {
+    public HashMap<String, Object> getMenu() {
         return items;
     }
 
