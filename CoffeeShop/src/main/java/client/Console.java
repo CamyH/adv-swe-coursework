@@ -2,10 +2,10 @@ package client;
 
 /**
  * author: Caelan Mackenzie
- * GUI Class
+ * Console Class
  */
 
-public class GUI {
+public class Console {
     public static void main(String[] args) {
     }
 }
