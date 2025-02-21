@@ -1,6 +1,6 @@
 package interfaces;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Defines contracts for reading to and writing from a file.
@@ -11,9 +11,9 @@ public interface FileManager<T> extends AutoCloseable {
     /**
      * Reads from a given file
      * @return an instance of type T representing the file content
-     * @exception FileNotFoundException if the file does not exist
+     * @exception IOException for general IO exceptions
      */
-    public T readFile() throws FileNotFoundException;
+    public T readFile() throws IOException;
 
     /**
      * Write to a given file
