@@ -1,5 +1,6 @@
 package utils;
 
+import item.ItemCategory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
