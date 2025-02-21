@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Author: Cameron Hunt
  * Unit tests for the Discount utility class
+ * @author Cameron Hunt
  */
 public class DiscountTest {
     private double priceToDiscount;

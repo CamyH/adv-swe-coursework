@@ -1,9 +1,9 @@
 package item;
 
 /**
- * Author: Cameron Hunt
  * Enum for storing the different item categories
  * Contains a method to return the category
+ * @author Cameron Hunt
  */
 public enum ItemCategory {
     ROLL("Roll"),
