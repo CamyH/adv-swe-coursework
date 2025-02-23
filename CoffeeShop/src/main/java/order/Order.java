@@ -96,10 +96,10 @@ public class Order {
     }
 
     /**
-     * Returns the order details.
-     *
-     * @return the order details
-     */
+    * Returns the order details.
+    *
+    * @return the order details
+    */
     public ArrayList<String> getDetails() {
         return orderDetails;
     }
