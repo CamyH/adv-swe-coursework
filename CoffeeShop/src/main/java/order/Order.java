@@ -113,12 +113,11 @@ public class Order {
         return totalCost;
     }
 
-    /**
-     * Returns the total cost of the order after applying any applicable discounts.
-     * The discount is calculated using the Discount object associated with the order.
-     *
-     * @return The discounted cost of the order
-     */
+   /**
+    * Returns the total cost of the order after applying any applicable discounts.
+    * The discount is calculated using the Discount object associated with the order.
+    * @return The discounted cost of the order
+    */
     public double getDiscountedCost() {
         return totalCost - discount.calculateDiscount(totalCost);   //can modify later according to need
     }
