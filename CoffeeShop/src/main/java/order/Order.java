@@ -109,7 +109,7 @@ public class Order {
      *
      * @return The total cost of the order
      */
-    public float getTotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
 
