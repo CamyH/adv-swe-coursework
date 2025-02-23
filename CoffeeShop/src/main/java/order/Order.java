@@ -44,9 +44,9 @@ public class Order {
 
     /**
      * Adds an item to the order.
-            * The total cost is recalculated after the item is added.
-            *
-            * @param itemID The ID of the item to add to the order
+     * The total cost is recalculated after the item is added.
+     *
+     * @param itemID The ID of the item to add to the order
      */
     public void addItem(String itemID) {
         orderDetails.add(itemID);
