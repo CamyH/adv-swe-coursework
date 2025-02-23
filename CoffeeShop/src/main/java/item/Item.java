@@ -1,6 +1,5 @@
-package item; // Package declaration
+package item;
 
-import utils.ItemCategory; // Importing the ItemCategory class from the utils package
 /**
  * Defines an item object
  * @author Akash Poonia
