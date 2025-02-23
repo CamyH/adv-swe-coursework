@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
+ * Represents an order placed by a customer.
+ * Contains details about the items in the order, the customer, the timestamp, and the total cost.
+ * The order may also have an associated discount.
+ *
  * @author Mohd Faiz
  */
 
