@@ -77,11 +77,11 @@ public class Order {
         return orderID;
     }
 
-    /**
-     * Returns the customer ID associated with the order.
-     *
-     * @return The customer ID as a string
-     */
+   /**
+    * Returns the customer ID associated with the order.
+    *
+    * @return The customer ID as a string
+    */
     public String getCustomerID() {
         return customerID;
     }
