@@ -56,7 +56,6 @@ public class Order {
     /**
      * Calculates the total cost of the order based on the items in the order.
      * The cost of each item is fetched from the menu.
-     *
      * @return The total cost of the order
      */
     private double calculateTotalCost() {
