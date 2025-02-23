@@ -59,8 +59,8 @@ public class Order {
      *
      * @return The total cost of the order
      */
-    private float calculateTotalCost() {
-        float cost = 0.0f;      //assuming default cost here
+    private double calculateTotalCost() {
+        double cost = 0.0;      //assuming default cost here
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
             cost += menu.getCost(itemID);   // Can change this method according to need
