@@ -16,7 +16,7 @@ public class Item {
     private final ItemCategory category;
 
     // Cost of the item
-    private float cost;
+    private double cost;
 
     // Description of the item
     private final String description;
@@ -29,7 +29,7 @@ public class Item {
      * @param cost        The cost of the item.
      * @param description A brief description of the item.
      */
-    public Item(String itemID, ItemCategory category, float cost, String description) {
+    public Item(String itemID, ItemCategory category, double cost, String description) {
         this.itemID = itemID;
         this.category = category;
         this.cost = cost;
@@ -77,7 +77,7 @@ public class Item {
      *
      * @return The cost of the item.
      */
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 }
