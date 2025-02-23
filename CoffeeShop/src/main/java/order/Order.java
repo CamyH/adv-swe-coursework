@@ -32,7 +32,7 @@ public class Order {
     private final Discount discount;
 
     /** Constructor for creating an Order with order id, customerID, timestamp, and menu */
-    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, float totalCost, Discount discount) {
+    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) {
         this.customerID = customerID;
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = timestamp;
