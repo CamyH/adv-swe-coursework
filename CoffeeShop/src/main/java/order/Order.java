@@ -26,7 +26,7 @@ public class Order {
     private final ItemList menu;   // ItemList class not defined yet
 
     /** The total cost of the order before any discount is applied */
-    private float totalCost;
+    private double totalCost;
 
     /** Discount object representing the discount applied to the order */
     private final Discount discount;
