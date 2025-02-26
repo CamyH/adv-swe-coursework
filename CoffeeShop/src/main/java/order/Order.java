@@ -1,4 +1,4 @@
-package order;
+package Order;
 import utils.Discount;
 // import ItemList class here once defined
 import java.time.LocalDateTime;
