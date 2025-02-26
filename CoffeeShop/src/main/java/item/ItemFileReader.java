@@ -1,14 +1,14 @@
 package item;
 
 import interfaces.FileManager;
-
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Reads Item Data using JavaStream
  * @author Cameron Hunt
  */
-public class ItemFileReader<T> implements FileManager<T> {
+public class ItemFileReader implements FileManager<Item> {
     private String fileName;
 
     public ItemFileReader(String fileName) {
@@ -17,11 +17,10 @@ public class ItemFileReader<T> implements FileManager<T> {
 
     /**
      * Reads from a given file
-     *
      * @return an instance of type T representing the file content
      */
     @Override
-    public T readFile() throws IOException {
+    public ArrayList<Item> readFile() throws IOException {
         File itemFile = new File(fileName);
 
         // Throw exception early if file does not exist
@@ -48,7 +47,7 @@ public class ItemFileReader<T> implements FileManager<T> {
      * @param report all order information to be used for reporting
      */
     @Override
-    public void writeToFile(T report) {
+    public void writeToFile(Item report) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
