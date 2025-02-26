@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Defines contracts for reading to and writing from a file.
@@ -13,7 +14,7 @@ public interface FileManager<T> extends AutoCloseable {
      * @return an instance of type T representing the file content
      * @exception IOException for general IO exceptions
      */
-    public T readFile() throws IOException;
+    public ArrayList<T> readFile() throws IOException;
 
     /**
      * Write to a given file
