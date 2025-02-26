@@ -5,5 +5,12 @@ package exceptions;
  *
  * @author Mohd Faiz
  */
-public class InvalidOrderException {
+public class InvalidOrderException extends Exception {
+    /**
+     * Constructor accepting the exception message
+     */
+    public InvalidOrderException(String message) {
+        super(message);
+    }
+
 }
