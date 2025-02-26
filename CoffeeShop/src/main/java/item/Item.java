@@ -80,4 +80,13 @@ public class Item {
     public double getCost() {
         return cost;
     }
+
+    /**
+     * Custom toString to return correct format of item object
+     * @return custom formatted item object to match menu.txt
+     */
+    @Override
+    public String toString() {
+        return itemID + "," + category + "," + String.format("%.2f", cost) + "," + description;
+    }
 }
