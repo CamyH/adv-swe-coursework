@@ -14,11 +14,11 @@ public interface FileManager<T> extends AutoCloseable {
      * @return an instance of type T representing the file content
      * @exception IOException for general IO exceptions
      */
-    public ArrayList<T> readFile() throws IOException;
+    ArrayList<T> readFile() throws IOException;
 
     /**
      * Write to a given file
      * @param report all order information to be used for reporting
      */
-    public void writeToFile(T report);
+    void writeToFile(T report);
 }
