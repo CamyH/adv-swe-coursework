@@ -11,8 +11,13 @@ public class ItemList implements EntityList {
 
     @Override
     public void add(Object item) {
-        if (item.getItemID() != null) items.put(item.getItemID(), item);
-        else throw new NullPointerException("Item ID is null");
+        if (item != null) {
+            if (item.getItemID() != null) items.put(item.getItemID(), item);
+            else throw new NullPointerException("Item ID is null");
+
+            return;
+        }
+        throw new NullPointerException("Item ID is null");
     }
 
     @Override
@@ -44,7 +49,12 @@ public class ItemList implements EntityList {
     }
 
     public void setCost(String itemID, float cost) {
-
+        if (items.containsKey(itemID)) {
+            Object i = items.get(itemID);
+            i.setCost(cost);
+            return;
+        }
+        throw new IllegalArgumentException(itemID + " is not a valid item ID");
     }
 
 }
