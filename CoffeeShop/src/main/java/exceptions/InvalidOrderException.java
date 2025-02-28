@@ -13,6 +13,7 @@ public class InvalidOrderException extends Exception {
     public InvalidOrderException(String message) {
         this.message = message;
     }
+    
     /**
      * Returns the detail message of this exception.
      *
