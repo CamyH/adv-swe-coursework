@@ -17,7 +17,7 @@ public class Item {
     private final ItemCategory category;
 
     // Cost of the item
-    private float cost;
+    private double cost;
 
     // Description of the item
     private final String description;
@@ -30,7 +30,8 @@ public class Item {
      * @param cost        The cost of the item.
      * @param description A brief description of the item.
      */
-    public Item(String itemID, ItemCategory category, float cost, String description) throws InvalidItemIDException {
+
+    public Item(String itemID, ItemCategory category, double cost, String description) throws InvalidItemIDException {
 
         // Validate itemID: It should not be null or empty
         if (itemID == null || itemID.isEmpty()) {
@@ -55,15 +56,12 @@ public class Item {
         this.description = description;
     }
 
-
-
-
     /**
      * Sets the cost of the item.
      *
      * @param cost The new cost of the item.
      */
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -99,7 +97,7 @@ public class Item {
      *
      * @return The cost of the item.
      */
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 }
