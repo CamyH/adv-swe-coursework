@@ -1,7 +1,7 @@
+@author Caelan Mackenzie
 package client;
 
 /**
- * author: Caelan Mackenzie
  * GUI Class
  */
 

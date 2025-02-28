@@ -1,7 +1,8 @@
+@author Caelan Mackenzie
+
 package client;
 
 /**
- * author: Caelan Mackenzie
  * Console Class
  */
 

@@ -1,3 +1,5 @@
+@author Caelan Mackenzie
+
 package client;
 
 /**
