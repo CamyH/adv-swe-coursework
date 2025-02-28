@@ -1,6 +1,6 @@
 package item; // Package declaration
 
-import exception.InvalidItemIDException;
+import exceptions.InvalidItemIDException;
 import utils.ItemCategory; // Importing the ItemCategory class from the utils package
 
 /**
