@@ -18,7 +18,7 @@ public interface FileManager<T> extends AutoCloseable {
 
     /**
      * Write to a given file
-     * @param report all order information to be used for reporting
+     * @param list all information to be written to the file
      */
-    void writeToFile(T report);
+    void writeToFile(T list);
 }
