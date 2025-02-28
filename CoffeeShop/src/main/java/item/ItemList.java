@@ -3,6 +3,7 @@ package item;
 import interfaces.EntityList;
 import java.util.HashMap;
 import utils.ItemCategory;
+import exceptions.DuplicateItemIDException;
 
 /**
  * @author Fraser Holman
@@ -28,19 +29,11 @@ public class ItemList implements EntityList<Item, String> {
      * @param item The item to be added to the hashmap
      */
     @Override
-    public void add(Item item) {
-        if (item != null) {
-            if (item.getItemID() != null) {
-                if (!items.containsKey(item.getItemID())) {
-                    items.put(item.getItemID(), item);
-                }
-                else throw new IllegalArgumentException("Item ID is not unique");
-            }
-            else throw new NullPointerException("Item ID is null");
-
-            return;
+    public void add(Item item) throws DuplicateItemIDException {
+        if (items.containsKey(item.getItemID())) {
+            throw new DuplicateItemIDException("Item ID is not unique");
         }
-        throw new NullPointerException("Item is null");
+        else items.put(item.getItemID(), item);
     }
 
     /**
@@ -108,7 +101,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID
      * @param cost
      */
-    public void setCost(String itemID, float cost) {
+    public void setCost(String itemID, double cost) {
         if (items.containsKey(itemID)) {
             Item i = items.get(itemID);
             i.setCost(cost);

@@ -1,5 +1,7 @@
 package interfaces;
 
+import exceptions.DuplicateItemIDException;
+
 /**
  * @author Fraser Holman
  *
@@ -7,7 +9,7 @@ package interfaces;
  */
 
 public interface EntityList<T, R> {
-    void add(T item);
+    void add(T item) throws DuplicateItemIDException;
 
     void remove(R ID);
 }
