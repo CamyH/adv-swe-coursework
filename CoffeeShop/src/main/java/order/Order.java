@@ -1,5 +1,6 @@
 package order;
-import item.ItemList;
+import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
 import utils.Discount;
 // import ItemList class here once defined
 import java.time.LocalDateTime;
@@ -37,7 +38,33 @@ public class Order {
     private final Discount discount;
 
     /** Constructor for creating an Order with order id, customerID, timestamp, and menu */
-    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) {
+    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) throws InvalidOrderException {
+
+        // Validate orderID: It should not be null
+        if (orderID == null) {
+            throw new InvalidOrderException(" Order ID cannot be null.");
+        }
+        // Validate customerID: It should not be null
+        if (customerID == null || customerID.isEmpty()) {
+            throw new InvalidOrderException(" Customer ID cannot be null or empty.");
+        }
+        // Validate timestamp: It should not be in the future
+        if (timestamp == null || timestamp.isAfter(LocalDateTime.now())) {
+            throw new InvalidOrderException("Timestamp cannot be in the future.");
+        }
+        // Validate totalCost: It should not be negative
+        if (totalCost < 0) {
+            throw new InvalidOrderException(" Total cost cannot be negative (less than zero price).");
+        }
+        // Validate orderDetails: The order must contain at least one item
+        if (orderDetails == null || orderDetails.isEmpty()) {
+            throw new InvalidOrderException("Order must contain at least one item.");
+        }
+        // Validate menu: Menu must not be null
+        if (menu == null) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
+
         this.customerID = customerID;
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = timestamp;
