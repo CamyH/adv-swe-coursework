@@ -55,9 +55,6 @@ public class Item {
         this.description = description;
     }
 
-
-
-
     /**
      * Sets the cost of the item.
      *
