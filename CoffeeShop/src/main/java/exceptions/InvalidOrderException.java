@@ -7,7 +7,8 @@ package exceptions;
  */
 public class InvalidOrderException extends Exception {
     private final String message;
-    /**
+   
+     /**
      * Constructor accepting the exception message
      */
     public InvalidOrderException(String message) {
