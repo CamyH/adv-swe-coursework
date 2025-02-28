@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="23659ebc-67e7-4ea3-8a65-d7f06dfc5cff" name="Changes" comment="">
+    <list default="true" id="6a7c6509-0ec5-4eec-9b03-dc3eeb52fc7e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/Console.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CoffeeShop/src/main/java/client/GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,22 +13,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;cbmack&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "cbmack"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/CamyH/adv-swe-coursework.git&quot;,
-    &quot;accountId&quot;: &quot;722ec846-b452-492c-aaf7-46cd1f6dfad1&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/CamyH/adv-swe-coursework.git",
+    "accountId": "722ec846-b452-492c-aaf7-46cd1f6dfad1"
   }
-}</component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 8
-}</component>
-  <component name="ProjectId" id="2ta0P0KPuZjLt6g0fRMU2vbij42" />
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2tfybFj1eiU9ZwDt7pbzfxertJG" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,34 +40,11 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feature/GUI",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/cbmac/Documents/GitHub/adv-swe-coursework",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
+    "last_opened_file_path": "C:/Users/cbmac/Documents/GitHub/adv-swe-coursework/CoffeeShop/pom.xml",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\cbmac\Documents\GitHub\adv-swe-coursework\CoffeeShop\src\main\java\client" />
-    </key>
-  </component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="adv-swe-coursework" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="adv-swe-coursework" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -83,23 +56,16 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="23659ebc-67e7-4ea3-8a65-d7f06dfc5cff" name="Changes" comment="" />
-      <created>1740574849332</created>
+      <changelist id="6a7c6509-0ec5-4eec-9b03-dc3eeb52fc7e" name="Changes" comment="" />
+      <created>1740757493343</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1740574849332</updated>
-      <workItem from="1740574850540" duration="38000" />
-      <workItem from="1740756551509" duration="361000" />
-      <workItem from="1740756961188" duration="10000" />
-      <workItem from="1740757037968" duration="168000" />
+      <updated>1740757493343</updated>
+      <workItem from="1740757495498" duration="51000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>
