@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @author Cameron Hunt
  */
 public class ItemFileReader implements FileManager<Item> {
-    private String fileName;
+    private final String fileName;
 
     public ItemFileReader(String fileName) {
         this.fileName = fileName;
