@@ -35,8 +35,16 @@ public class Order {
     /** Discount object representing the discount applied to the order */
     private final Discount discount;
 
-    /** Constructor for creating an Order with order id, customerID, timestamp, and menu */
-    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) {
+    /**
+     * Constructor for creating a new order object
+     * @param customerID customer id, should be unique
+     * @param timestamp the current dateTime
+     * @param orderDetails the order details to be added
+     * @param menu the menu
+     * @param totalCost the total cost of the order
+     * @param discount the discount to be applied
+     */
+    public Order(String customerID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) {
         this.customerID = customerID;
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = timestamp;
