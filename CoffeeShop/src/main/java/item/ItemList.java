@@ -82,7 +82,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID
      * @return
      */
-    public float getCost(String itemID) {
+    public double getCost(String itemID) {
         if (items.containsKey(itemID)) {
             Item i = items.get(itemID);
             return i.getCost();
