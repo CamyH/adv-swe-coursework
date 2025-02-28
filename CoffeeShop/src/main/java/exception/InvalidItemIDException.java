@@ -4,7 +4,7 @@ package exception; // Package declaration
  * Exception thrown when an invalid item ID is encountered.
  */
 public class InvalidItemIDException extends Exception{
-    private String msg;
+    private final String msg;
 
     /**
      * Constructs an InvalidItemIDException with a specified detail message.
