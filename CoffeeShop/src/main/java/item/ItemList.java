@@ -3,7 +3,6 @@ package item;
 import interfaces.EntityList;
 import java.util.HashMap;
 import utils.ItemCategory;
-import exceptions.DuplicateItemIDException;
 
 /**
  * @author Fraser Holman
@@ -14,6 +13,7 @@ import exceptions.DuplicateItemIDException;
  */
 
 public class ItemList implements EntityList<Item, String> {
+    /** Hashmap data structure to hold item information */
     private HashMap<String, Item> items;
 
     /**
@@ -26,88 +26,83 @@ public class ItemList implements EntityList<Item, String> {
     /**
      * Adds an item to the hashmap
      *
-     * @param item The item to be added to the hashmap
+     * @param item The item ID to be added to the hashmap
      */
     @Override
-    public void add(Item item) throws DuplicateItemIDException {
-        if (items.containsKey(item.getItemID())) {
-            throw new DuplicateItemIDException("Item ID is not unique");
-        }
-        else items.put(item.getItemID(), item);
+    public Boolean add(Item item) {
+        return items.putIfAbsent(item.getItemID(), item) == null;
     }
 
     /**
+     * Removes an item from the hashmap
      *
-     * @param ID
+     * @param ID The item ID to be removed from the hashmap
      */
     @Override
-    public void remove(String ID) {
-        if (items.containsKey(ID)) {
-            items.remove(ID);
-            return;
-        }
-        throw new IllegalArgumentException(ID + " is not a valid item ID");
+    public Boolean remove(String ID) {
+        return items.remove(ID) != null;
     }
 
     /**
+     * Get method to return the items hashmap
      *
-     * @return
+     * @return items hashmap
      */
     public HashMap<String, Item> getMenu() {
         return items;
     }
 
     /**
+     * Get method to return a specific items category
      *
-     * @param itemID
-     * @return
+     * @param itemID The item ID used to find the desired item
+     * @return an ItemCategory enum containing category information
      */
     public ItemCategory getCategory(String itemID) {
-        if (items.containsKey(itemID)) {
-            Item i = items.get(itemID);
-            return i.getCategory();
+        if (!items.containsKey(itemID)) {
+            throw new IllegalArgumentException(itemID + " is not a valid item ID");
         }
-        throw new IllegalArgumentException(itemID + " is not a valid item ID");
+
+        return items.get(itemID).getCategory();
     }
 
     /**
+     * Get method to return the cost of an item
      *
-     * @param itemID
-     * @return
+     * @param itemID The item ID used to find the correct item
+     * @return a double which holds cost information
      */
     public double getCost(String itemID) {
-        if (items.containsKey(itemID)) {
-            Item i = items.get(itemID);
-            return i.getCost();
+        if (!items.containsKey(itemID)) {
+            throw new IllegalArgumentException(itemID + " is not a valid item ID");
         }
-        throw new IllegalArgumentException(itemID + " is not a valid item ID");
+        return items.get(itemID).getCost();
     }
 
     /**
+     * Get method to return the description of an item
      *
-     * @param itemID
-     * @return
+     * @param itemID The item ID used to find the correct item
+     * @return a String which holds a description of the item
      */
     public String getDescription(String itemID) {
-        if (items.containsKey(itemID)) {
-            Item i = items.get(itemID);
-            return i.getDescription();
+        if (!items.containsKey(itemID)) {
+            throw new IllegalArgumentException(itemID + " is not a valid item ID");
         }
-        throw new IllegalArgumentException(itemID + " is not a valid item ID");
+        return items.get(itemID).getDescription();
     }
 
     /**
+     * Set method to set the cost of an item
      *
-     * @param itemID
-     * @param cost
+     * @param itemID The item ID used to find the correct item
+     * @param cost The cost to set the item to
      */
     public void setCost(String itemID, double cost) {
-        if (items.containsKey(itemID)) {
-            Item i = items.get(itemID);
-            i.setCost(cost);
-            return;
+        if (!items.containsKey(itemID)) {
+            throw new IllegalArgumentException(itemID + " is not a valid item ID");
         }
-        throw new IllegalArgumentException(itemID + " is not a valid item ID");
+        items.get(itemID).setCost(cost);
     }
 
 }

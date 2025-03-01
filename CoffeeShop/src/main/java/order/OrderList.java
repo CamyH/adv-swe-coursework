@@ -15,6 +15,7 @@ import java.util.UUID;
  */
 
 public class OrderList implements EntityList<Order, UUID> {
+    /** A queue to hold existing Order objects */
     private Queue<Order> queue;
 
     /**
@@ -26,33 +27,30 @@ public class OrderList implements EntityList<Order, UUID> {
 
     /**
      * Adds an order to the queue of orders
+     * Eg will be used when a new Order has been placed
      *
      * @param order The order to be added to the queue
      */
     @Override
-    public void add(Order order) {
-        queue.add(order);
+    public Boolean add(Order order) {
+        return queue.offer(order);
     }
 
     /**
      * Removes an order from the queue of orders for processing
+     * Eg will be used when an Order has been processed
      *
      * @param ID The ID used to find the order to be removed
      */
     @Override
-    public void remove(UUID ID) {
-        for (Order o : queue) {
-            if (o.getOrderID().equals(ID)) {
-                queue.remove(o);
-                return;
-            }
-        }
-        throw new IllegalArgumentException(ID + " is not a valid order ID");
+    public Boolean remove(UUID ID) {
+        return queue.removeIf(order -> order.getOrderID().equals(ID));
     }
 
     /**
+     * Get method to return an Order object from queue
      *
-     * @param orderID
+     * @param orderID The UUID of the order to be retrieved
      * @return An Order Object
      */
     public Order getOrder(UUID orderID) {
@@ -65,6 +63,7 @@ public class OrderList implements EntityList<Order, UUID> {
     }
 
     /**
+     * Get method to return the entire queue of Order Objects
      *
      * @return The queue of orders
      */
@@ -73,6 +72,7 @@ public class OrderList implements EntityList<Order, UUID> {
     }
 
     /**
+     * Get method to return the details of an Order
      *
      * @return A string containing
      */

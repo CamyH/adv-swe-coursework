@@ -1,6 +1,7 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.ItemList;
 import utils.Discount;
 // import ItemList class here once defined
 import java.time.LocalDateTime;

@@ -2,7 +2,6 @@ package item;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import exceptions.DuplicateItemIDException;
 import exceptions.InvalidItemIDException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -59,8 +58,6 @@ public class ItemListTest {
             itemList.add(new Item("PSY4", ItemCategory.PASTRY, 3.5, "MACARONS"));
             itemList.add(new Item("PSY5", ItemCategory.PASTRY, 2.8, "PAIN AU CHOCOLAT"));
         } catch (InvalidItemIDException e) {
-            System.out.println(e.getMessage());
-        } catch (DuplicateItemIDException e) {
             System.out.println(e.getMessage());
         }
     }
