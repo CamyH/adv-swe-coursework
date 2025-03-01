@@ -95,7 +95,12 @@ public class Order {
         double cost = 0.0;      //assuming default cost here
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
-            cost += menu.getCost(itemID);   // Can change this method according to need
+            try {
+                cost += menu.getCost(itemID); // Can change this method according to need
+            }
+            catch (InvalidItemIDException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return cost;
     }

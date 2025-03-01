@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 
 import java.util.ArrayDeque;
@@ -53,13 +54,13 @@ public class OrderList implements EntityList<Order, UUID> {
      * @param orderID The UUID of the order to be retrieved
      * @return An Order Object
      */
-    public Order getOrder(UUID orderID) {
+    public Order getOrder(UUID orderID) throws InvalidOrderException {
         for (Order o : queue) {
             if (o.getOrderID().equals(orderID)) {
                 return o;
             }
         }
-        throw new IllegalArgumentException(orderID + " is not a valid order ID");
+        throw new InvalidOrderException(orderID + " is not a valid order ID");
     }
 
     /**

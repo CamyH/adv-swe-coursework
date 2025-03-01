@@ -1,5 +1,6 @@
 package item;
 
+import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
 import java.util.HashMap;
 import utils.ItemCategory;
@@ -49,7 +50,7 @@ public class ItemList implements EntityList<Item, String> {
      * @return items hashmap
      */
     public HashMap<String, Item> getMenu() {
-        return items;
+        return (HashMap<String, Item>) items.clone();
     }
 
     /**
@@ -58,9 +59,9 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the desired item
      * @return an ItemCategory enum containing category information
      */
-    public ItemCategory getCategory(String itemID) {
+    public ItemCategory getCategory(String itemID) throws InvalidItemIDException {
         if (!items.containsKey(itemID)) {
-            throw new IllegalArgumentException(itemID + " is not a valid item ID");
+            throw new InvalidItemIDException(itemID + " is not a valid item ID");
         }
 
         return items.get(itemID).getCategory();
@@ -72,9 +73,9 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the correct item
      * @return a double which holds cost information
      */
-    public double getCost(String itemID) {
+    public double getCost(String itemID) throws InvalidItemIDException {
         if (!items.containsKey(itemID)) {
-            throw new IllegalArgumentException(itemID + " is not a valid item ID");
+            throw new InvalidItemIDException(itemID + " is not a valid item ID");
         }
         return items.get(itemID).getCost();
     }
@@ -85,9 +86,9 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the correct item
      * @return a String which holds a description of the item
      */
-    public String getDescription(String itemID) {
+    public String getDescription(String itemID) throws InvalidItemIDException {
         if (!items.containsKey(itemID)) {
-            throw new IllegalArgumentException(itemID + " is not a valid item ID");
+            throw new InvalidItemIDException(itemID + " is not a valid item ID");
         }
         return items.get(itemID).getDescription();
     }
@@ -98,9 +99,9 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the correct item
      * @param cost The cost to set the item to
      */
-    public void setCost(String itemID, double cost) {
+    public void setCost(String itemID, double cost) throws InvalidItemIDException {
         if (!items.containsKey(itemID)) {
-            throw new IllegalArgumentException(itemID + " is not a valid item ID");
+            throw new InvalidItemIDException(itemID + " is not a valid item ID");
         }
         items.get(itemID).setCost(cost);
     }
