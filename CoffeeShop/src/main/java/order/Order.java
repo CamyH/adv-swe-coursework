@@ -1,4 +1,7 @@
 package order;
+import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
+import item.ItemList;
 import utils.Discount;
 // import ItemList class here once defined
 import java.time.LocalDateTime;
@@ -35,16 +38,34 @@ public class Order {
     /** Discount object representing the discount applied to the order */
     private final Discount discount;
 
-    /**
-     * Constructor for creating a new order object
-     * @param customerID customer id, should be unique
-     * @param timestamp the current dateTime
-     * @param orderDetails the order details to be added
-     * @param menu the menu
-     * @param totalCost the total cost of the order
-     * @param discount the discount to be applied
-     */
-    public Order(String customerID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) {
+    /** Constructor for creating an Order with order id, customerID, timestamp, and menu */
+    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) throws InvalidOrderException {
+
+        // Validate orderID: It should not be null
+        if (orderID == null) {
+            throw new InvalidOrderException(" Order ID cannot be null.");
+        }
+        // Validate customerID: It should not be null
+        if (customerID == null || customerID.isEmpty()) {
+            throw new InvalidOrderException(" Customer ID cannot be null or empty.");
+        }
+        // Validate timestamp: It should not be in the future
+        if (timestamp == null || timestamp.isAfter(LocalDateTime.now())) {
+            throw new InvalidOrderException("Timestamp cannot be in the future.");
+        }
+        // Validate totalCost: It should not be negative
+        if (totalCost < 0) {
+            throw new InvalidOrderException(" Total cost cannot be negative (less than zero price).");
+        }
+        // Validate orderDetails: The order must contain at least one item
+        if (orderDetails == null || orderDetails.isEmpty()) {
+            throw new InvalidOrderException("Order must contain at least one item.");
+        }
+        // Validate menu: Menu must not be null
+        if (menu == null) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
+
         this.customerID = customerID;
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = timestamp;
@@ -74,7 +95,12 @@ public class Order {
         double cost = 0.0;      //assuming default cost here
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
-            cost += menu.getCost(itemID);   // Can change this method according to need
+            try {
+                cost += menu.getCost(itemID); // Can change this method according to need
+            }
+            catch (InvalidItemIDException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return cost;
     }

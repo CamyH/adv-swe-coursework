@@ -1,5 +1,6 @@
-package item;
+package item; // Package declaration
 
+import utils.ItemCategory; // Importing the ItemCategory class from the utils package
 /**
  * Defines an item object
  * @author Akash Poonia
@@ -29,7 +30,26 @@ public class Item {
      * @param cost        The cost of the item.
      * @param description A brief description of the item.
      */
-    public Item(String itemID, ItemCategory category, double cost, String description) {
+
+    public Item(String itemID, ItemCategory category, double cost, String description) throws InvalidItemIDException {
+
+        // Validate itemID: It should not be null or empty
+        if (itemID == null || itemID.isEmpty()) {
+            throw new InvalidItemIDException("Item ID cannot be null or empty.");
+        }
+        // Validate category: It should not be null
+        if (category == null) {
+            throw new InvalidItemIDException("Item category cannot be null.");
+        }
+        // Validate cost: It should not be negative
+        if (cost < 0) {
+            throw new InvalidItemIDException("Item cost cannot be negative.");
+        }
+        // Validate description: It should not be null or empty
+        if (description == null || description.isEmpty()) {
+            throw new InvalidItemIDException("Item description cannot be null or empty.");
+        }
+        // Assign values to instance variables after validation
         this.itemID = itemID;
         this.category = category;
         this.cost = cost;
@@ -41,7 +61,7 @@ public class Item {
      *
      * @param cost The new cost of the item.
      */
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -79,14 +99,5 @@ public class Item {
      */
     public double getCost() {
         return cost;
-    }
-
-    /**
-     * Custom toString to return correct format of item object
-     * @return custom formatted item object to match menu.txt
-     */
-    @Override
-    public String toString() {
-        return itemID + "," + category + "," + String.format("%.2f", cost) + "," + description;
     }
 }
