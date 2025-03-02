@@ -1,5 +1,6 @@
 package item;
 
+import exceptions.InvalidItemIDException;
 import interfaces.FileManager;
 import java.io.*;
 import java.util.ArrayList;
@@ -57,14 +58,17 @@ public class ItemFileReader implements FileManager<Item> {
      */
     private ArrayList<Item> ingestFileContents(StringBuilder fileContents) {
         ArrayList<Item> items = new ArrayList<>();
+        try {
+            for (String line : fileContents.toString().split("\n")) {
+                // Skip empty lines
+                if (line.trim().isEmpty()) continue;
 
-        for (String line : fileContents.toString().split("\n")) {
-            // Skip empty lines
-            if (line.trim().isEmpty()) continue;
+                String[] lineData = line.split(",");
 
-            String[] lineData = line.split(",");
-
-            items.add(new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]));
+                items.add(new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]));
+            }
+        } catch (InvalidItemIDException e) {
+            System.err.println("Unable to add item, skipping " + e.getMessage());
         }
 
         return items;
