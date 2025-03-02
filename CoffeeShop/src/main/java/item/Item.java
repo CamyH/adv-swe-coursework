@@ -1,13 +1,10 @@
 package item; // Package declaration
 
-import utils.ItemCategory; // Importing the ItemCategory class from the utils package
+import exceptions.InvalidItemIDException;
+
 /**
  * Defines an item object
  * @author Akash Poonia
- */
-
-/**
- * Represents an item with an ID, category, cost, and description.
  */
 public class Item {
     // Unique identifier for the item
