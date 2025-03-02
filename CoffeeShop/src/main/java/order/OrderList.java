@@ -49,6 +49,13 @@ public class OrderList implements EntityList<Order, UUID> {
     }
 
     /**
+     * Removes an order from the queue of orders for processing
+     */
+    public Order getOrder() {
+        return queue.poll();
+    }
+
+    /**
      * Get method to return an Order object from queue
      *
      * @param orderID The UUID of the order to be retrieved
