@@ -3,7 +3,6 @@ package item;
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
 import java.util.HashMap;
-import utils.ItemCategory;
 
 /**
  * @author Fraser Holman
