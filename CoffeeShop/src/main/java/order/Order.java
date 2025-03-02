@@ -30,7 +30,7 @@ public class Order {
     private final ArrayList<String> orderDetails;
 
     /** Menu containing available items and their associated costs */
-    private final ItemList menu;   // ItemList class not defined yet
+    private final ItemList menu;
 
     /** The total cost of the order before any discount is applied */
     private double totalCost;
@@ -38,13 +38,22 @@ public class Order {
     /** Discount object representing the discount applied to the order */
     private final Discount discount;
 
-    /** Constructor for creating an Order with order id, customerID, timestamp, and menu */
-    public Order(String customerID, UUID orderID, LocalDateTime timestamp, ArrayList<String> orderDetails, ItemList menu, double totalCost, Discount discount) throws InvalidOrderException {
-
-        // Validate orderID: It should not be null
-        if (orderID == null) {
-            throw new InvalidOrderException(" Order ID cannot be null.");
-        }
+    /**
+     * A new order
+     * @param customerID
+     * @param timestamp
+     * @param orderDetails
+     * @param menu
+     * @param totalCost
+     * @param discount
+     * @throws InvalidOrderException
+     */
+    public Order(String customerID,
+                 LocalDateTime timestamp,
+                 ArrayList<String> orderDetails,
+                 ItemList menu,
+                 double totalCost,
+                 Discount discount) throws InvalidOrderException {
         // Validate customerID: It should not be null
         if (customerID == null || customerID.isEmpty()) {
             throw new InvalidOrderException(" Customer ID cannot be null or empty.");
