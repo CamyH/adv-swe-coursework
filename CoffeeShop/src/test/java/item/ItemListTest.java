@@ -3,7 +3,7 @@ package item;
 import static org.junit.jupiter.api.Assertions.*;
 
 import exceptions.InvalidItemIDException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.ItemCategory;
 
@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class ItemListTest {
     private static ItemList itemList;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         itemList = new ItemList();
         try {
             itemList.add(new Item("RL1", ItemCategory.ROLL, 3.0, "BACON ROLL"));
@@ -85,13 +85,6 @@ public class ItemListTest {
             assertNotEquals("CROISSANT", itemList.getDescription("PSY3"));
             assertNotEquals("APPLE JUICE", itemList.getDescription("SD6"));
             assertNotEquals("PANINII", itemList.getDescription("FD3"));
-
-            /** JUnit Tests for Checking Exceptions are Thrown */
-            assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("XYZ123")); // Non-existent ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("")); // Empty string as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getDescription(null)); // Null as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("RL10")); // Slightly incorrect ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("HD99"));
         }
         catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
@@ -125,13 +118,6 @@ public class ItemListTest {
             assertNotEquals(3.0, itemList.getCost("SCK7"));
             assertNotEquals(2.0, itemList.getCost("PSY1"));
             assertNotEquals(3.0, itemList.getCost("PSY4"));
-
-            /** JUnit Tests for Checking Exceptions are Thrown */
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("XYZ123")); // Completely invalid ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("")); // Empty string as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost(null)); // Null as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("FD10")); // Slightly incorrect ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("HD99"));
         }
         catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
@@ -159,13 +145,6 @@ public class ItemListTest {
             assertNotEquals(ItemCategory.HOTDRINK, itemList.getCategory("SCK4"));
             assertNotEquals(ItemCategory.SOFTDRINK, itemList.getCategory("HD2"));
             assertNotEquals(ItemCategory.SNACK, itemList.getCategory("PSY3"));
-
-            /** JUnit Tests for Checking Exceptions are Thrown */
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("XYZ123")); // Completely invalid ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("")); // Empty string as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost(null)); // Null as ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("FD10")); // Slightly incorrect ID
-            assertThrows(InvalidItemIDException.class, () -> itemList.getCost("HD99"));
         }
         catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
@@ -272,13 +251,6 @@ public class ItemListTest {
         assertTrue(itemList.remove("HD4"));
         assertTrue(itemList.remove("SD6"));
         assertTrue(itemList.remove("SCK3"));
-
-        /** Verify that the Item has been removed successfully */
-        assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("RL1"));
-        assertThrows(InvalidItemIDException.class, () -> itemList.getCost("FD2"));
-        assertThrows(InvalidItemIDException.class, () -> itemList.getCategory("HD4"));
-        assertThrows(InvalidItemIDException.class, () -> itemList.getDescription("SD6"));
-        assertThrows(InvalidItemIDException.class, () -> itemList.getCost("SCK3"));
     }
 
     /**
@@ -293,6 +265,9 @@ public class ItemListTest {
         assertFalse(itemList.remove("RL0"));
     }
 
+    /**
+     * Test Method to test ItemList getMenu() method
+     */
     @Test
     void testGetMenu() {
         /** Retrieve the menu */
@@ -315,5 +290,26 @@ public class ItemListTest {
         menu.remove("RL1");
         assertTrue(itemList.getMenu().containsKey("RL1"));
     }
+
+    /**
+     * Test Method to test ItemList itemExists() method
+     */
+    @Test
+    void testItemExists() {
+        /** JUnit Test to check existing items return true */
+        assertTrue(itemList.itemExists("RL1"));
+        assertTrue(itemList.itemExists("FD2"));
+        assertTrue(itemList.itemExists("HD3"));
+        assertTrue(itemList.itemExists("SD4"));
+        assertTrue(itemList.itemExists("SCK5"));
+
+        /** JUnit Test to check non-existing items return false */
+        assertFalse(itemList.itemExists("RL0"));
+        assertFalse(itemList.itemExists("FD21"));
+        assertFalse(itemList.itemExists("HD01"));
+        assertFalse(itemList.itemExists("SD10"));
+        assertFalse(itemList.itemExists("SCK"));
+    }
+
 
 }

@@ -60,10 +60,6 @@ public class ItemList implements EntityList<Item, String> {
      * @return an ItemCategory enum containing category information
      */
     public ItemCategory getCategory(String itemID) throws InvalidItemIDException {
-        if (!items.containsKey(itemID)) {
-            throw new InvalidItemIDException(itemID + " is not a valid item ID");
-        }
-
         return items.get(itemID).getCategory();
     }
 
@@ -74,9 +70,6 @@ public class ItemList implements EntityList<Item, String> {
      * @return a double which holds cost information
      */
     public double getCost(String itemID) throws InvalidItemIDException {
-        if (!items.containsKey(itemID)) {
-            throw new InvalidItemIDException(itemID + " is not a valid item ID");
-        }
         return items.get(itemID).getCost();
     }
 
@@ -87,9 +80,6 @@ public class ItemList implements EntityList<Item, String> {
      * @return a String which holds a description of the item
      */
     public String getDescription(String itemID) throws InvalidItemIDException {
-        if (!items.containsKey(itemID)) {
-            throw new InvalidItemIDException(itemID + " is not a valid item ID");
-        }
         return items.get(itemID).getDescription();
     }
 
@@ -100,10 +90,16 @@ public class ItemList implements EntityList<Item, String> {
      * @param cost The cost to set the item to
      */
     public void setCost(String itemID, double cost) throws InvalidItemIDException {
-        if (!items.containsKey(itemID)) {
-            throw new InvalidItemIDException(itemID + " is not a valid item ID");
-        }
         items.get(itemID).setCost(cost);
+    }
+
+    /**
+     * Check if itemID exists
+     *
+     * @param itemID The itemID to check if the item exists
+     */
+    public Boolean itemExists(String itemID) {
+        return items.containsKey(itemID);
     }
 
 }
