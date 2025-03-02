@@ -46,13 +46,13 @@ public class Order {
         }
 
         // Initialize fields
-        this.customerID = customerID;
+        this.customerID = UUID.randomUUID().toString(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = menu;
-        this.totalCost = totalCost;
-        this.discount = new Discount(); // Create a new Discount object (this might require parameters, adjust as necessary)
+        this.totalCost = 0.0;   // Initialize the total cost to 0
+        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
     }
 
     /**
