@@ -1,5 +1,8 @@
 package client;
 import java.util.Scanner;
+import item.ItemList;
+import order.Order;
+import order.OrderList;
 
 /**
  * @author Caelan Mackenzie
@@ -8,19 +11,15 @@ import java.util.Scanner;
 
 public class Console {
 
-    /*
     private ItemList menu;
-    private OrderList orders
-    */
+    private OrderList orders;
 
     public Scanner scanner;
 
-    public Console(/* ItemList itemList, OrderList orderList */) {
+    public Console(ItemList itemList, OrderList orderList) {
 
-        /*
         menu = itemList;
-        orders = orderList
-        */
+        orders = orderList;
 
         scanner = new Scanner(System.in);
     }
@@ -33,6 +32,10 @@ public class Console {
             System.out.println("Enter your command:");
             String command = scanner.nextLine();
             switch (command) {
+                case "viewMenu": {
+                    viewMenu();
+                    break;
+                }
                 case "addToMenu": {
                     addToMenu();
                     break;
@@ -58,7 +61,7 @@ public class Console {
                     break;
                 }
                 case "help": {
-                    System.out.println("newOrder, viewOrderList, addToMenu, removeFromMenu, quit");
+                    System.out.println("viewMenu, newOrder, viewOrderList, addToMenu, removeFromMenu, quit");
                     break;
                 }
                 case "quit": {
@@ -70,6 +73,10 @@ public class Console {
                 }
             }
         }
+    }
+
+    private void viewMenu(){
+
     }
 
     private void addToMenu() {

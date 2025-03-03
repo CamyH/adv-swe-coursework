@@ -1,4 +1,4 @@
-package utils;
+package client;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,14 @@ public class ConsoleTest {
     @Test
     void testInput(){
         
+    }
+
+    void testAddToMenu(){
+
+    }
+
+    void testRemoveFromMenu(){
+
     }
 
     void testNewOrder(){

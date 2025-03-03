@@ -1,4 +1,6 @@
 package client;
+import item.ItemList;
+import order.OrderList;
 
 /**
  * @author Caelan Mackenzie
@@ -8,21 +10,17 @@ package client;
 
 public class Demo {
 
-    /*
     private ItemList menu;
     private OrderList orders;
-    */
 
     public Demo() {
         // Initialise empty Item List and Order List
-        /*
         menu = new ItemList();
         orders = new OrderList();
-        */
     }
 
     public void showConsole() {
-        Console console =  new Console();
+        Console console =  new Console(menu,orders);
         console.run();
     }
 
