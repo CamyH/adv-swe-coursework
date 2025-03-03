@@ -6,6 +6,7 @@ package utils;
  * @author Cameron Hunt
  */
 public enum Discount {
+    DISCOUNT0(0),
     DISCOUNT10(10),
     DISCOUNT25(25),
     DISCOUNT50(50),

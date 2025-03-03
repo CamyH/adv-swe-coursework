@@ -38,50 +38,22 @@ public class Order {
     /** Discount object representing the discount applied to the order */
     private final Discount discount;
 
-    /**
-     * A new order
-     * @param customerID
-     * @param timestamp
-     * @param orderDetails
-     * @param menu
-     * @param totalCost
-     * @param discount
-     * @throws InvalidOrderException
-     */
-    public Order(String customerID,
-                 LocalDateTime timestamp,
-                 ArrayList<String> orderDetails,
-                 ItemList menu,
-                 double totalCost,
-                 Discount discount) throws InvalidOrderException {
-        // Validate customerID: It should not be null
-        if (customerID == null || customerID.isEmpty()) {
-            throw new InvalidOrderException(" Customer ID cannot be null or empty.");
-        }
-        // Validate timestamp: It should not be in the future
-        if (timestamp == null || timestamp.isAfter(LocalDateTime.now())) {
-            throw new InvalidOrderException("Timestamp cannot be in the future.");
-        }
-        // Validate totalCost: It should not be negative
-        if (totalCost < 0) {
-            throw new InvalidOrderException(" Total cost cannot be negative (less than zero price).");
-        }
-        // Validate orderDetails: The order must contain at least one item
-        if (orderDetails == null || orderDetails.isEmpty()) {
-            throw new InvalidOrderException("Order must contain at least one item.");
-        }
+    /** Constructor for creating an Order with only the menu */
+    public Order(ItemList menu) throws InvalidOrderException {
+
         // Validate menu: Menu must not be null
         if (menu == null) {
             throw new InvalidOrderException("Menu cannot be null.");
         }
 
-        this.customerID = customerID;
+        // Initialize fields
+        this.customerID = UUID.randomUUID().toString(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
-        this.timestamp = timestamp;
-        this.orderDetails = orderDetails;
+        this.timestamp = LocalDateTime.now(); // Set the current timestamp
+        this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = menu;
-        this.totalCost = totalCost;
-        this.discount = discount;
+        this.totalCost = 0.0;   // Initialize the total cost to 0
+        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
     }
 
     /**
