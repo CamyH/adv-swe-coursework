@@ -24,6 +24,7 @@ public class OrderList implements EntityList<Order, UUID> {
      */
     public OrderList() {
         inCompleteOrders = new ArrayDeque<Order>();
+        completeOrders = new ArrayList<>();
     }
 
     /**
@@ -83,7 +84,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
-        return inCompleteOrders;
+        return new LinkedList<>(inCompleteOrders);
     }
 
     /**
