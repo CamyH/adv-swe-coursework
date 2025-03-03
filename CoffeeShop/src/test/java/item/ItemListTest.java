@@ -7,7 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.ItemCategory;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemListTest {
     private static ItemList itemList;
@@ -309,6 +312,29 @@ public class ItemListTest {
         assertFalse(itemList.itemExists("HD01"));
         assertFalse(itemList.itemExists("SD10"));
         assertFalse(itemList.itemExists("SCK"));
+    }
+
+    /**
+     * Test Method to test getSummaryMenu() method works as intended
+     */
+    @Test
+    void testGetSummaryMenu() {
+        /** Maually generating the expected list */
+        String[] itemIDs = {
+            "RL1", "RL2", "RL3", "RL4",
+            "FD1", "FD2", "FD3", "FD4", "FD5",
+            "HD1", "HD2", "HD3", "HD4", "HD5", "HD6", "HD7",
+            "SD1", "SD2", "SD3", "SD4", "SD5", "SD6", "SD7", "SD8", "SD9",
+            "SCK1", "SCK2", "SCK3", "SCK4", "SCK5", "SCK6", "SCK7", "SCK8",
+            "PSY1", "PSY2", "PSY3", "PSY4", "PSY5"
+        };
+
+        /** Convert to set as order of data structure does not matter */
+        Set<String> expectedSet = new HashSet<>(Arrays.asList(itemIDs));
+        Set<String> actualSet = new HashSet<>(Arrays.asList(itemList.getSummaryMenu()));
+
+        assertEquals(expectedSet, actualSet);
+
     }
 
 

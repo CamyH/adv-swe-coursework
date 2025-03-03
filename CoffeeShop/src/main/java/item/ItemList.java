@@ -2,6 +2,8 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import utils.ItemCategory;
 
@@ -100,6 +102,15 @@ public class ItemList implements EntityList<Item, String> {
      */
     public Boolean itemExists(String itemID) {
         return items.containsKey(itemID);
+    }
+
+    /**
+     * Method to return array of ItemIDs used at end of program for the log
+     *
+     * @return String containing all ItemIDs
+     */
+    public String[] getSummaryMenu() {
+        return items.keySet().toArray(new String[0]);
     }
 
 }
