@@ -8,7 +8,7 @@ import java.util.Collection;
  * Use of Stream is recommended as the interface extends AutoCloseable
  * @author Cameron Hunt
  */
-public interface FileManager<T> extends AutoCloseable {
+public interface FileManager<T, R> extends AutoCloseable {
     /**
      * Reads from a given file
      * @return an instance of type T representing the file content
@@ -20,5 +20,5 @@ public interface FileManager<T> extends AutoCloseable {
      * Write to a given file
      * @param list all information to be written to the file
      */
-    void writeToFile(T list);
+    void writeToFile(R list) throws IOException;
 }
