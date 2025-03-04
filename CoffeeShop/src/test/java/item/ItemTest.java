@@ -11,7 +11,7 @@ import utils.ItemCategory;
      * JUnit test class for the Item class.
      * This class contains test cases to validate the functionality of the Item class including item creation, validation checks, and getter methods.
      *
-     * @author Mohd Faiz
+     * @author Akash Poonia
      */
     public class ItemTest {
 
