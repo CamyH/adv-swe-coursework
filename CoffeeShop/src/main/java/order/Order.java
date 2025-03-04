@@ -57,6 +57,32 @@ public class Order {
     }
 
     /**
+     * Constructor for reading in Order File
+     * @param orderID order ID string
+     * @param customerID customer ID string
+     * @param timestamp timestamp string
+     * @param menu items within the order
+     * @param totalCost total cost of the order
+     * @param discount the discount
+     * @throws InvalidOrderException if any params are incorrect
+     */
+    public Order(String orderID,
+                 String customerID,
+                 LocalDateTime timestamp,
+                 ArrayList<String> orderDetails,
+                 ItemList menu,
+                 double totalCost,
+                 Discount discount) throws InvalidOrderException {
+        this.orderID = UUID.fromString(orderID);
+        this.customerID = customerID;
+        this.timestamp = timestamp;
+        this.orderDetails = orderDetails;
+        this.menu = menu;
+        this.totalCost = totalCost;
+        this.discount = discount;
+    }
+
+    /**
      * Adds an item to the order.
      * The total cost is recalculated after the item is added.
      *
