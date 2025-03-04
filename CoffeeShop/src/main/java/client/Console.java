@@ -1,13 +1,11 @@
 package client;
 import java.util.Scanner;
 
-import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
-import utils.ItemCategory;
 
 /**
  * Console Class
@@ -15,8 +13,8 @@ import utils.ItemCategory;
  */
 public class Console {
 
-    private ItemList menu;
-    private OrderList orders;
+    private final ItemList menu;
+    private final OrderList orders;
 
     public Scanner scanner;
 
