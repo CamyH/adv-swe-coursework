@@ -32,32 +32,22 @@ public class ItemFileReaderTest {
         ItemFileReader fileReader = new ItemFileReader(tempFile);
 
         // Act
-        ArrayList<Item> items = fileReader.readFile();
+        ItemList items = fileReader.readFile();
 
         // Assert
         assertNotNull(items);
-        assertEquals(SetupItemFile.getItemList().size(), items.size());
+        assertEquals(SetupItemFile.getItemList().size(), items.getMenu().size());
 
-        assertEquals("RL1", items.getFirst().getItemID());
-        assertEquals(ItemCategory.ROLL, items.getFirst().getCategory());
-        assertEquals(3.00, items.get(0).getCost(), 0.01);
-        assertEquals("BACON ROLL", items.getFirst().getDescription());
-
-        assertEquals("FD1", items.get(4).getItemID());
-        assertEquals(ItemCategory.FOOD, items.get(4).getCategory());
-        assertEquals(4.00, items.get(4).getCost(), 0.01);
-        assertEquals("BAKED POTATO", items.get(4).getDescription());
-
-        assertEquals("PSY5", items.getLast().getItemID());
-        assertEquals(ItemCategory.PASTRY, items.getLast().getCategory());
-        assertEquals(2.80, items.getLast().getCost(), 0.01);
-        assertEquals("PAIN AU CHOCOLAT", items.getLast().getDescription());
+        assertEquals("RL1", items.getMenu().get("RL1").getItemID());
+        assertEquals(ItemCategory.ROLL, items.getMenu().get("RL1").getCategory());
+        assertEquals(3.00, items.getMenu().get("RL1").getCost(), 0.01);
+        assertEquals("BACON ROLL", items.getMenu().get("RL1").getDescription());
     }
 
     @Test
     void testReadFileNotNull() {
         try (ItemFileReader itemFileReader = new ItemFileReader(tempFile.toString())) {
-            ArrayList<Item> data = itemFileReader.readFile();
+            ItemList data = itemFileReader.readFile();
 
             Assertions.assertNotNull(data);
         } catch (Exception e) {

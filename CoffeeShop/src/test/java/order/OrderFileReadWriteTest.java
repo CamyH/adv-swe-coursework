@@ -38,7 +38,7 @@ public class OrderFileReadWriteTest {
         OrderFileReadWrite fileReader = new OrderFileReadWrite(tempFile);
 
         // Act
-        Queue<Order> orders = fileReader.readFile();
+        OrderList orders = fileReader.readFile();
 
         // Assert
         assertNotNull(orders);
@@ -48,6 +48,7 @@ public class OrderFileReadWriteTest {
     void testWriteFile() throws IOException {
         // Arrange
         OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile);
+
 
         // Act
 

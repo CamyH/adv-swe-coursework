@@ -66,7 +66,12 @@ public class SetupItemFile {
     public static ArrayList<String> getItemListAsString() {
         ArrayList<String> convertedItemList = new ArrayList<>();
         for (Item item : itemList) {
-            convertedItemList.add(item.toString());
+            String itemDetails = String.format("%s,%s,%.2f,%s",
+                item.getItemID(),
+                item.getCategory().toString(),
+                item.getCost(),
+                item.getDescription());
+            convertedItemList.add(itemDetails);
         }
         return convertedItemList;
     }
