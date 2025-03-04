@@ -36,9 +36,9 @@ public class GUI extends JFrame {
                 private JButton addItemButton;
         private JPanel itemListPane;
             private JScrollPane itemListScrollPane;
-                private JTextField displayListField;
+                private JTextArea displayMenuField;
             private JScrollPane orderDetailsScrollPane;
-                private JTextField orderDetailsField;
+                private JTextArea orderDetailsField;
             private JButton exitButton;
 
 
@@ -54,6 +54,11 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
 
+        totalCostField.setEnabled(false);
+        discountedCostField.setEnabled(false);
+        displayMenuField.setEnabled(false);
+        orderDetailsField.setEnabled(false);
+
         // Make the scroll panes always have vertical scroll bars visible
         itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -62,6 +67,14 @@ public class GUI extends JFrame {
         submitOrderButton.addActionListener(this::actionPerformed);
         addItemButton.addActionListener(this::actionPerformed);
         exitButton.addActionListener(this::actionPerformed);
+
+        totalCostField.setText("£62.55");
+        discountedCostField.setText("£50.02");
+        for (int i = 1; i<30; i++) {
+            displayMenuField.append("ItemName, £" + i + "\n");
+        }
+        orderDetailsField.setText("Empty");
+
     }
 
     // Functionality for when a button is pressed

@@ -149,7 +149,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="8ed30" class="javax.swing.JTextField" binding="displayListField">
+              <component id="9bad6" class="javax.swing.JTextArea" binding="displayMenuField">
                 <constraints/>
                 <properties/>
               </component>
@@ -162,7 +162,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="523b5" class="javax.swing.JTextField" binding="orderDetailsField">
+              <component id="681a9" class="javax.swing.JTextArea" binding="orderDetailsField">
                 <constraints/>
                 <properties/>
               </component>

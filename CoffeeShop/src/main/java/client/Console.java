@@ -70,7 +70,7 @@ public class Console {
                     System.out.println("addToMenu is unimplemented in Stage 1");
                     System.out.println("removeFromMenu is unimplemented in Stage 1");
                     System.out.println("help shows all available commands");
-                    System.out.println("quit terminates the console");
+                    System.out.println("quit terminates the console and closes the GUI, if it is open");
                     break;
                 }
                 case "quit": {
@@ -179,6 +179,7 @@ public class Console {
 
     /**
      * Prints the contents of the current order to console
+     * @param curOrder The current order requested by the user
      */
     void previewOrder(Order curOrder) {
 
@@ -226,6 +227,9 @@ public class Console {
         }
     }
 
+    /**
+     *
+     */
     void viewOrderDetails() {
         System.out.println("Enter the order ID:");
         String orderID = scanner.nextLine();
