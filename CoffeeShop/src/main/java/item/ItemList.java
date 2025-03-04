@@ -3,27 +3,28 @@ package item;
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+
+import order.Order;
 import utils.ItemCategory;
 
 /**
- * @author Fraser Holman
- *
  * Class represents a list of all avaible items that can be ordered
  *
  * Contains a hashmap of all the items
+ *
+ * @author Fraser Holman
  */
 
 public class ItemList implements EntityList<Item, String> {
     /** Hashmap data structure to hold item information */
-    private HashMap<String, Item> items;
+    private Map<String, Item> items;
 
     /**
      * Initialises the hashmap to contain the items
      */
     public ItemList() {
-        items = new HashMap<String, Item>();
+        items = new LinkedHashMap<String, Item>();
     };
 
     /**
@@ -51,9 +52,10 @@ public class ItemList implements EntityList<Item, String> {
      *
      * @return items hashmap
      */
-    public HashMap<String, Item> getMenu() {
-        return (HashMap<String, Item>) items.clone();
+    public LinkedHashMap<String, Item> getMenu() {
+        return new LinkedHashMap<>(items); // Creates a copy
     }
+
 
     /**
      * Get method to return a specific items category
@@ -107,10 +109,37 @@ public class ItemList implements EntityList<Item, String> {
     /**
      * Method to return array of ItemIDs used at end of program for the log
      *
-     * @return String containing all ItemIDs
+     * @return String array containing all ItemIDs
      */
-    public String[] getSummaryMenu() {
+    public String[] getItemIDs() {
         return items.keySet().toArray(new String[0]);
+    }
+
+    /**
+     * Method to return array of strings representing itemID, description, and cost
+     *
+     * Method is used by the console and GUI to display item information
+     *
+     * @return String array containing menu details
+     */
+    public String[] getMenuDetails() {
+        String[] menuDetailsString = new String[items.size()];
+
+        int count = 0;
+
+        for (Item item : items.values()) {
+            String s = String.format("%s,%s,%.2f",
+                    item.getItemID(),
+                    item.getDescription(),
+                    item.getCost()
+            );
+
+            menuDetailsString[count] = s;
+
+            count++;
+        }
+
+        return menuDetailsString;
     }
 
 }
