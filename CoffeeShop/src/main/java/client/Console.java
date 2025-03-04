@@ -152,22 +152,8 @@ public class Console {
 
         System.out.println("Enter the item ID:");
         String curItemID = scanner.nextLine();
+        curOrder.addItem(curItemID);
 
-        System.out.println("Enter the item category:");
-        String stringCategory = scanner.nextLine();
-        ItemCategory curCategory =  ItemCategory.valueOf(stringCategory.toUpperCase());
-
-        System.out.println("Enter the item ID:");
-        double curCost = Double.parseDouble(scanner.nextLine());
-
-        System.out.println("Enter the item ID:");
-        String curDescription = scanner.nextLine();
-
-        try {
-            Item curItem = new Item(curItemID,curCategory,curCost,curDescription);
-        } catch (InvalidItemIDException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

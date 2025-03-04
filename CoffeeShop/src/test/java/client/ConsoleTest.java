@@ -27,11 +27,6 @@ public class ConsoleTest {
     }
 
     @Test
-    void testInput(){
-        
-    }
-
-    @Test
     public void testViewMenu(){
         try {
             itemList.add(new Item("RL1", ItemCategory.ROLL, 3.0, "BACON ROLL"));
