@@ -3,9 +3,9 @@ import item.ItemList;
 import order.OrderList;
 
 /**
- * @author Caelan Mackenzie
  * Demo initialises the CoffeeShop program
  * Contains the main method
+ * @author Caelan Mackenzie
  */
 
 public class Demo {

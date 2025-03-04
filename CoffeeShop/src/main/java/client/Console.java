@@ -1,14 +1,17 @@
 package client;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
+
+import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
 
 /**
- * @author Caelan Mackenzie
  * Console Class
+ * @author Caelan Mackenzie
  */
-
 public class Console {
 
     private ItemList menu;
@@ -48,6 +51,9 @@ public class Console {
                     newOrder();
                     break;
                 }
+
+                /*
+
                 case "addItem": {
                     addItem();
                     break;
@@ -56,6 +62,9 @@ public class Console {
                     placeOrder();
                     break;
                 }
+
+                */
+
                 case "viewOrderList": {
                     viewOrderList();
                     break;
@@ -75,31 +84,103 @@ public class Console {
         }
     }
 
-    private void viewMenu(){
+    /**
+     * Prints the entire contents of the menu to the console
+     */
+    void viewMenu(){
+        System.out.println("Item List:");
+        System.out.println("------------------------");
+        for (Item entry : menu.getMenu().values()) {
+            System.out.println("ID: " + entry.getItemID());
+            System.out.println("Description: " + entry.getDescription());
+            System.out.println("Category: " + entry.getCategory());
+            System.out.println("Cost: $" + entry.getCost());
+            System.out.println("------------------------");
+        }
+    }
+
+    /**
+     * Not implemented for Stage 1
+     */
+    void addToMenu() {
 
     }
 
-    private void addToMenu() {
+    /**
+     * Not implemented for Stage 1
+     */
+    void removeFromMenu() {
 
     }
 
-    private void removeFromMenu() {
+    /**
+     * Initialises a new order so that the user can add items and then add to order list
+     */
+    void newOrder() {
 
-    }
+        ;
 
-    private void newOrder() {
         System.out.println("Enter the command 'addItem' to add an item to the order, then enter 'placeOrder' to place an order.");
+        System.out.println("Enter 'cancel' to cancel the order or 'help' for a list of commands.");
+        while (true) {
+            /* needs menu to be initialised
+            Order order = new Order(menu);
+            */
+            System.out.println("Enter your command:");
+            String command = scanner.nextLine();
+            switch (command) {
+                case "addItem": {
+                    addItem();
+                    break;
+                }
+                case "previewOrder": {
+                    previewOrder();
+                    break;
+                }
+                case "placeOrder": {
+                    placeOrder();
+                    break;
+                }
+                case "help": {
+                    System.out.println("addItem, previewOrder, placeOrder, cancel");
+                    break;
+                }
+                case "cancel": {
+                    System.out.println("Order cancelled");
+                    return;
+                }
+                default: {
+                    System.out.println("Unknown command. Type 'help' for a list of commands.");
+                }
+            }
+        }
     }
 
-    private void addItem() {
+    /**
+     * Adds an item to the current order
+     */
+    void addItem() {
 
     }
 
-    private void placeOrder() {
+    /**
+     * Prints the contents of the current order to console
+     */
+    void previewOrder() {
 
     }
 
-    private void viewOrderList() {
+    /**
+     * Description
+     */
+    void placeOrder() {
+
+    }
+
+    /**
+     * Description
+     */
+    void viewOrderList() {
 
     }
 }
