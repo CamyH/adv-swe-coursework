@@ -7,10 +7,10 @@ import item.ItemList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import utils.ItemCategory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import item.ItemCategory;
 import java.util.HashMap;
 import java.util.Queue;
 
