@@ -7,11 +7,11 @@ import java.sql.SQLOutput;
 import java.util.*;
 
 /**
- * @author Fraser Holman
- *
  * Class represents a list of current orders
  *
  * Contains a queue of different orders created by customers
+ *
+ * @author Fraser Holman
  */
 
 public class OrderList implements EntityList<Order, UUID> {
