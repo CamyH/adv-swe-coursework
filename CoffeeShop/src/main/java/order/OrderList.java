@@ -3,9 +3,8 @@ package order;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.UUID;
+import java.sql.SQLOutput;
+import java.util.*;
 
 /**
  * @author Fraser Holman
@@ -17,13 +16,15 @@ import java.util.UUID;
 
 public class OrderList implements EntityList<Order, UUID> {
     /** A queue to hold existing Order objects */
-    private Queue<Order> queue;
+    private Queue<Order> inCompleteOrders;
 
+    private ArrayList<Order> completeOrders;
     /**
      * Initialises the queue to contain all the orders
      */
     public OrderList() {
-        queue = new ArrayDeque<Order>();
+        inCompleteOrders = new ArrayDeque<Order>();
+        completeOrders = new ArrayList<>();
     }
 
     /**
@@ -34,7 +35,7 @@ public class OrderList implements EntityList<Order, UUID> {
      */
     @Override
     public Boolean add(Order order) {
-        return queue.offer(order);
+        return inCompleteOrders.offer(order);
     }
 
     /**
@@ -45,14 +46,21 @@ public class OrderList implements EntityList<Order, UUID> {
      */
     @Override
     public Boolean remove(UUID ID) {
-        return queue.removeIf(order -> order.getOrderID().equals(ID));
+        try {
+            completeOrders.add(this.getOrder(ID));
+            return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
+        }
+        catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
     /**
      * Removes an order from the queue of orders for processing
      */
     public Order getOrder() {
-        return queue.poll();
+        return inCompleteOrders.peek();
     }
 
     /**
@@ -62,7 +70,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * @return An Order Object
      */
     public Order getOrder(UUID orderID) throws InvalidOrderException {
-        for (Order o : queue) {
+        for (Order o : inCompleteOrders) {
             if (o.getOrderID().equals(orderID)) {
                 return o;
             }
@@ -76,15 +84,67 @@ public class OrderList implements EntityList<Order, UUID> {
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
-        return queue;
+        return new LinkedList<>(inCompleteOrders);
     }
 
     /**
-     * Get method to return the details of an Order
+     * Method used to return details of uncompleted orders as a string array
      *
-     * @return A string containing
+     * @return a String array with each entry formatted as below
+     * (Order ID,Customer ID,Timestamp,Order Details Array [Item ID],Total Cost,Discounted Cost) e.g.
      */
-    public String getOrderDetails() {
-        return "";
+    public String[] getOrdersToString(Boolean completed) {
+        Collection<Order> c = completeOrders;
+
+        if (!completed) {
+            c = inCompleteOrders;
+        }
+
+        String[] uncompletedOrderString = new String[c.size()];
+
+        int count = 0;
+
+        for (Order o : c) {
+            String s = String.format("%s,%s,%s,%s,%.2f,%.2f",
+                o.getOrderID().toString(),
+                o.getCustomerID(),
+                o.getTimestamp().toString(),
+                String.join(";", o.getDetails()),
+                o.getTotalCost(),
+                o.getDiscountedCost()
+            );
+
+            uncompletedOrderString[count] = s;
+
+            count++;
+        }
+
+        return uncompletedOrderString;
+    }
+
+
+    /**
+     * Method to return a summary of the purchased items and quantity
+     *
+     * @return Hashmap containing what items have been purchased
+     */
+    public HashMap<String, Double> completedOrderItemCount() {
+        HashMap<String, Double> itemCount = new HashMap<>();
+
+        double totalCost = 0;
+
+        for (Order o : completeOrders) {
+            ArrayList<String> string = o.getDetails();
+
+            totalCost += o.getTotalCost();
+
+            for (String s : string) {
+                itemCount.put(s, itemCount.getOrDefault(s, 0.0) + 1.0);
+            }
+        }
+
+        itemCount.put("Total Cost", totalCost);
+
+        return itemCount;
     }
 }
