@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import exceptions.InvalidItemIDException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.ItemCategory;
 
 import java.util.Arrays;
 import java.util.HashMap;
