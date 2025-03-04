@@ -138,7 +138,13 @@ public class Console {
                     }
                     case "placeOrder": {
                         // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
-                        orders.add(curOrder);
+                        try {
+                            orders.add(curOrder);
+                        } catch (InvalidOrderException e) {
+                            System.out.println(e.getMessage());
+                            System.out.println("Order cannot be empty, add an item or cancel the order");
+                            break;
+                        }
                         System.out.println("Order placed successfully");
                         return;
                     }
