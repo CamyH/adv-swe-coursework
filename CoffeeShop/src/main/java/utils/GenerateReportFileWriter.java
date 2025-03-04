@@ -28,7 +28,7 @@ public class GenerateReportFileWriter implements FileManager<Object, HashMap<Str
      * @return an Object, as expected by the interface
      */
     @Override
-    public Collection<Object> readFile() throws IOException {
+    public Object readFile() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

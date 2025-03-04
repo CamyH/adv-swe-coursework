@@ -3,13 +3,12 @@ package item;
 import exceptions.InvalidItemIDException;
 import interfaces.FileManager;
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Reads Item Data using JavaStream
  * @author Cameron Hunt
  */
-public class ItemFileReader implements FileManager<Item, Object> {
+public class ItemFileReader implements FileManager<ItemList, Object> {
     private final String fileName;
 
     public ItemFileReader(String fileName) {
@@ -21,7 +20,7 @@ public class ItemFileReader implements FileManager<Item, Object> {
      * @return an instance of type T representing the file content
      */
     @Override
-    public ArrayList<Item> readFile() throws IOException {
+    public ItemList readFile() throws IOException {
         File itemFile = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -53,11 +52,11 @@ public class ItemFileReader implements FileManager<Item, Object> {
 
     /**
      * Convert StringBuilder file content to a list of item objects
+     *
      * @param fileContents the contents of the read from file
      * @return an ArrayList of type item
      */
-    private ArrayList<Item> ingestFileContents(StringBuilder fileContents) {
-        ArrayList<Item> items = new ArrayList<>();
+    private ItemList ingestFileContents(StringBuilder fileContents) {
         ItemList itemList = new ItemList();
 
         try {
@@ -66,16 +65,15 @@ public class ItemFileReader implements FileManager<Item, Object> {
                 if (line.trim().isEmpty()) continue;
 
                 String[] lineData = line.split(",");
-
+                System.out.println(line);
                 Item newItem = new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]);
 
-                items.add(newItem);
                 itemList.add(newItem);
             }
         } catch (InvalidItemIDException e) {
             System.err.println("Unable to add item, skipping " + e.getMessage());
         }
-        return items;
+        return itemList;
     }
 
     /**

@@ -15,7 +15,7 @@ import java.util.*;
  * Reads and Writes Order data using Java Stream
  * @author Cameron Hunt
  */
-public class OrderFileReadWrite implements FileManager<Order, OrderList> {
+public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
     private final String fileName;
 
     public OrderFileReadWrite(String fileName) {
@@ -28,7 +28,7 @@ public class OrderFileReadWrite implements FileManager<Order, OrderList> {
      * @throws IOException for general IO exceptions
      */
     @Override
-    public Queue<Order> readFile() throws IOException {
+    public OrderList readFile() throws IOException {
         File orderFile = new File(fileName);
 
         // Throw exception early if file does not exist
@@ -77,7 +77,7 @@ public class OrderFileReadWrite implements FileManager<Order, OrderList> {
      * @param fileContents the contents of the read from file
      * @return an Array Deque of type order
      */
-    private Queue<Order> ingestFileContents(StringBuilder fileContents) {
+    private OrderList ingestFileContents(StringBuilder fileContents) {
         OrderList orderList = new OrderList();
         ItemList itemList = new ItemList();
 
@@ -102,7 +102,7 @@ public class OrderFileReadWrite implements FileManager<Order, OrderList> {
             System.err.println("Skipping " + e.getMessage());
         }
 
-        return orderList.getOrderList();
+        return orderList;
     }
 
     /**
