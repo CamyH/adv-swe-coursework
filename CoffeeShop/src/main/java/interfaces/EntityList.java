@@ -1,5 +1,7 @@
 package interfaces;
 
+import exceptions.InvalidOrderException;
+
 /**
  * @author Fraser Holman
  *
@@ -7,7 +9,7 @@ package interfaces;
  */
 
 public interface EntityList<T, R> {
-    Boolean add(T item);
+    Boolean add(T item) throws InvalidOrderException;
 
     Boolean remove(R ID);
 }
