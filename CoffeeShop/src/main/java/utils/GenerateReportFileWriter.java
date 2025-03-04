@@ -43,16 +43,4 @@ public class GenerateReportFileWriter implements FileManager<Object, HashMap<Str
             }
         }
     }
-
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * {@code try}-with-resources statement.
-     *
-     * @throws Exception if this resource cannot be closed
-     */
-    @Override
-    public void close() throws Exception {
-
-    }
 }
