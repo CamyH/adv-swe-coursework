@@ -23,7 +23,6 @@ public class Console {
 
         menu = itemList;
         orders = orderList;
-
         scanner = new Scanner(System.in);
     }
 
@@ -76,6 +75,7 @@ public class Console {
                 }
                 case "quit": {
                     System.out.println("Goodbye.");
+                    Demo.demoCloseGUI();
                     return;
                 }
                 default: {
@@ -139,6 +139,7 @@ public class Console {
                     case "placeOrder": {
                         // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
                         orders.add(curOrder);
+                        System.out.println("Order placed successfully");
                         return;
                     }
                     case "help": {

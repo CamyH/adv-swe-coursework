@@ -1,4 +1,7 @@
 package client;
+import item.ItemList;
+import order.OrderList;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +25,7 @@ public class GUI extends JFrame {
             private JPanel costsPane;
                 private JButton submitOrderButton;
                 private JPanel totalCostPane;
-                    private JLabel totalCost;
+                    private JLabel totalCostLabel;
                     private JTextField totalCostField;
                 private JPanel discountedCostPane;
                     private JLabel discountedCost;
@@ -33,14 +36,14 @@ public class GUI extends JFrame {
                 private JButton addItemButton;
         private JPanel itemListPane;
             private JScrollPane itemListScrollPane;
-                private JTextField displayList;
-    private JLabel totalCostLabel;
-    private JButton exitButton;
-
+                private JTextField displayListField;
+            private JScrollPane orderDetailsScrollPane;
+                private JTextField orderDetailsField;
+            private JButton exitButton;
 
 
     // Constructor
-    public GUI(/* ItemList menu, OrderList orders */) {
+    public GUI(ItemList menu, OrderList orders) {
 
         // UI parameters
         setContentPane(contentPanel);
@@ -50,6 +53,10 @@ public class GUI extends JFrame {
         // Ensure the UI window is shown in the center of the screen
         setLocationRelativeTo(null);
         setVisible(true);
+
+        // Make the scroll panes always have vertical scroll bars visible
+        itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Action listeners for button presses
         submitOrderButton.addActionListener(this::actionPerformed);
@@ -74,6 +81,13 @@ public class GUI extends JFrame {
         // Exit
         else if (e.getSource() == exitButton) {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
+            closeGUI();
         }
+
+    }
+
+    public void closeGUI() {
+        // close the window
+        GUI.this.dispose();
     }
 }

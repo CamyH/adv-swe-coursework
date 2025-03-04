@@ -1,6 +1,11 @@
 package client;
+import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemList;
+import order.Order;
 import order.OrderList;
+import utils.ItemCategory;
 
 /**
  * Demo initialises the CoffeeShop program
@@ -10,8 +15,9 @@ import order.OrderList;
 
 public class Demo {
 
-    private ItemList menu;
-    private OrderList orders;
+    private static ItemList menu;
+    private static OrderList orders;
+    static GUI gui;
 
     public Demo() {
         // Initialise empty Item List and Order List
@@ -25,17 +31,53 @@ public class Demo {
     }
 
     public void showGUI() {
-        GUI gui = new GUI();
+        gui = new GUI(menu,orders);
     }
 
 
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-
+    public static void main2(String[] args) {
         // Create a new demo object
         Demo demo = new Demo();
 
         demo.showGUI();
         demo.showConsole();
+    }
+
+    public static void main(String[] args) {
+        // Create a new demo object
+        Demo demo = new Demo();
+
+        // Populate menu
+        try {
+            menu.add(new Item("RL1", ItemCategory.ROLL, 3.0, "BACON ROLL"));
+            menu.add(new Item("FD1", ItemCategory.FOOD, 4.0, "BAKED POTATO"));
+            menu.add(new Item("HD1", ItemCategory.HOTDRINK, 2.0, "TEA"));
+
+        } catch (InvalidItemIDException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Populate orders
+        try {
+            Order order1 = new Order(menu);
+            order1.addItem("RL1");
+            order1.addItem("HD1");
+            Order order2 = new Order(menu);
+            order2.addItem("RL1");
+            order2.addItem("FD1");
+            order2.addItem("HD1");
+            order2.addItem("HD1");
+            orders.add(order1);
+            orders.add(order2);
+        } catch (InvalidOrderException e) {
+            throw new RuntimeException(e);
+        }
+        
+        demo.showGUI();
+        demo.showConsole();
+    }
+
+    static void demoCloseGUI(){
+        gui.closeGUI();
     }
 }

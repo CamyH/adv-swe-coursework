@@ -1,6 +1,7 @@
 package client;
 
 import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
 import order.Order;
@@ -39,42 +40,6 @@ public class ConsoleTest {
         } catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    /**
-     * Not implemented for Stage 1
-     */
-    @Test
-    void testAddToMenu(){
-
-    }
-
-    /**
-     * Not implemented for Stage 1
-     */
-    @Test
-    void testRemoveFromMenu(){
-
-    }
-
-    @Test
-    void testNewOrder(){
-
-    }
-
-    @Test
-    void testAddItem(){
-
-    }
-
-    @Test
-    void testPlaceOrder(){
-
-    }
-
-    @Test
-    void testViewOrderList(){
-
     }
 }
 
