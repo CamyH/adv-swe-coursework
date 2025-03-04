@@ -1,12 +1,13 @@
 package client;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Scanner;
 
+import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
+import utils.ItemCategory;
 
 /**
  * Console Class
@@ -51,20 +52,6 @@ public class Console {
                     newOrder();
                     break;
                 }
-
-                /*
-
-                case "addItem": {
-                    addItem();
-                    break;
-                }
-                case "placeOrder": {
-                    placeOrder();
-                    break;
-                }
-
-                */
-
                 case "viewOrderList": {
                     viewOrderList();
                     break;
@@ -94,7 +81,7 @@ public class Console {
             System.out.println("ID: " + entry.getItemID());
             System.out.println("Description: " + entry.getDescription());
             System.out.println("Category: " + entry.getCategory());
-            System.out.println("Cost: $" + entry.getCost());
+            System.out.println("Cost: £" + entry.getCost());
             System.out.println("------------------------");
         }
     }
@@ -103,84 +90,129 @@ public class Console {
      * Not implemented for Stage 1
      */
     void addToMenu() {
-
+        System.out.println("Not implemented for Stage 1");
     }
 
     /**
      * Not implemented for Stage 1
      */
     void removeFromMenu() {
-
+        System.out.println("Not implemented for Stage 1");
     }
 
     /**
      * Initialises a new order so that the user can add items and then add to order list
      */
     void newOrder() {
+        Order curOrder;
+        try {
+            curOrder = new Order(menu);
+            System.out.println("Enter the command 'addItem' to add an item to the order, then enter 'placeOrder' to place an order.");
+            System.out.println("Enter 'cancel' to cancel the order or 'help' for a list of commands.");
+            while (true) {
 
-        ;
-
-        System.out.println("Enter the command 'addItem' to add an item to the order, then enter 'placeOrder' to place an order.");
-        System.out.println("Enter 'cancel' to cancel the order or 'help' for a list of commands.");
-        while (true) {
-            /* needs menu to be initialised
-            Order order = new Order(menu);
-            */
-            System.out.println("Enter your command:");
-            String command = scanner.nextLine();
-            switch (command) {
-                case "addItem": {
-                    addItem();
-                    break;
-                }
-                case "previewOrder": {
-                    previewOrder();
-                    break;
-                }
-                case "placeOrder": {
-                    placeOrder();
-                    break;
-                }
-                case "help": {
-                    System.out.println("addItem, previewOrder, placeOrder, cancel");
-                    break;
-                }
-                case "cancel": {
-                    System.out.println("Order cancelled");
-                    return;
-                }
-                default: {
-                    System.out.println("Unknown command. Type 'help' for a list of commands.");
+                System.out.println("Enter your command:");
+                String command = scanner.nextLine();
+                switch (command) {
+                    case "addItem": {
+                        addItem(curOrder);
+                        break;
+                    }
+                    case "previewOrder": {
+                        previewOrder(curOrder);
+                        break;
+                    }
+                    case "placeOrder": {
+                        // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
+                        orders.add(curOrder);
+                        return;
+                    }
+                    case "help": {
+                        System.out.println("addItem, previewOrder, placeOrder, cancel");
+                        break;
+                    }
+                    case "cancel": {
+                        System.out.println("Order cancelled");
+                        return;
+                    }
+                    default: {
+                        System.out.println("Unknown command. Type 'help' for a list of commands.");
+                    }
                 }
             }
+        } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     /**
      * Adds an item to the current order
      */
-    void addItem() {
+    void addItem(Order curOrder) {
 
+        System.out.println("Enter the item ID:");
+        String curItemID = scanner.nextLine();
+
+        System.out.println("Enter the item category:");
+        String stringCategory = scanner.nextLine();
+        ItemCategory curCategory =  ItemCategory.valueOf(stringCategory.toUpperCase());
+
+        System.out.println("Enter the item ID:");
+        double curCost = Double.parseDouble(scanner.nextLine());
+
+        System.out.println("Enter the item ID:");
+        String curDescription = scanner.nextLine();
+
+        try {
+            Item curItem = new Item(curItemID,curCategory,curCost,curDescription);
+        } catch (InvalidItemIDException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Prints the contents of the current order to console
      */
-    void previewOrder() {
+    void previewOrder(Order curOrder) {
 
+        // Get order details
+        String orderID = curOrder.getOrderID().toString();
+        String customerID = curOrder.getCustomerID();
+        String timestamp = curOrder.getTimestamp().toString();
+        double totalCost = curOrder.getTotalCost();
+        double discountedCost = curOrder.getDiscountedCost();
+
+        // Print basic order information
+        System.out.println("Order Preview:");
+        System.out.println("Order ID: " + orderID);
+        System.out.println("Customer ID: " + customerID);
+        System.out.println("Timestamp: " + timestamp);
+        System.out.println("----------------------------");
+
+        // Print item details
+        System.out.println("Items in the Order:");
+        for (String itemID : curOrder.getDetails()) {
+            Item item = menu.getMenu().get(itemID);
+            if (item != null) {
+                System.out.println("Item ID: " + item.getItemID());
+                System.out.println("Description: " + item.getDescription());
+                System.out.println("Category: " + item.getCategory());
+                System.out.println("Cost: £" + item.getCost());
+                System.out.println("------------------------");
+            }
+        }
+
+        // Print cost details
+        System.out.println("Total Cost: £" + totalCost);
+        System.out.println("Discounted Cost: £" + discountedCost);
+        System.out.println("----------------------------");
     }
 
     /**
-     * Description
-     */
-    void placeOrder() {
-
-    }
-
-    /**
-     * Description
+     * Prints a list of all the order IDs and customer IDs to console for all incomplete orders
      */
     void viewOrderList() {
-
+        // IMPLEMENT WHEN required method in orderList is implemented
+        // orders.orderIDsToString(false)
     }
 }
