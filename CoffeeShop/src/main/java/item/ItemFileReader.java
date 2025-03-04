@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Reads Item Data using JavaStream
  * @author Cameron Hunt
  */
-public class ItemFileReader implements FileManager<Item> {
+public class ItemFileReader implements FileManager<Item, Object> {
     private final String fileName;
 
     public ItemFileReader(String fileName) {
@@ -47,7 +47,7 @@ public class ItemFileReader implements FileManager<Item> {
      * @param report all order information to be used for reporting
      */
     @Override
-    public void writeToFile(Item report) {
+    public void writeToFile(Object report) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
