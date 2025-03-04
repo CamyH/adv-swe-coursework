@@ -1,5 +1,6 @@
 package client;
 import java.util.Scanner;
+import java.util.UUID;
 
 import exceptions.InvalidOrderException;
 import item.Item;
@@ -54,8 +55,23 @@ public class Console {
                     viewOrderList();
                     break;
                 }
+                case "viewOrderDetails": {
+                    viewOrderDetails();
+                    break;
+                }
                 case "help": {
-                    System.out.println("viewMenu, newOrder, viewOrderList, addToMenu, removeFromMenu, quit");
+                    System.out.println("viewMenu, newOrder, viewOrderList, viewOrderDetails, addToMenu, removeFromMenu, help, quit");
+                    break;
+                }
+                case "cmdDescriptions": {
+                    System.out.println("viewMenu prints a list of all available items and their details.");
+                    System.out.println("newOrder starts a new order.");
+                    System.out.println("viewOrderList prints a list of all of the order IDs and their related customer IDs in the order list.");
+                    System.out.println("viewOrderDetails prints the details from the desired order ID and the contained item IDs");
+                    System.out.println("addToMenu is unimplemented in Stage 1");
+                    System.out.println("removeFromMenu is unimplemented in Stage 1");
+                    System.out.println("help shows all available commands");
+                    System.out.println("quit terminates the console");
                     break;
                 }
                 case "quit": {
@@ -196,7 +212,31 @@ public class Console {
      * Prints a list of all the order IDs and customer IDs to console for all incomplete orders
      */
     void viewOrderList() {
-        // IMPLEMENT WHEN required method in orderList is implemented
-        // orders.orderIDsToString(false)
+        String[] orderIDArr = orders.orderIDsToString(false);
+        System.out.println("Order List:");
+        for (String orderID : orderIDArr) {
+            System.out.println(orderID);
+        }
+    }
+
+    void viewOrderDetails() {
+        System.out.println("Enter the order ID:");
+        String orderID = scanner.nextLine();
+        try {
+            Order curOrder = orders.getOrder(UUID.fromString(orderID));
+            System.out.println("Order details:");
+            System.out.println("Order ID: " + curOrder.getOrderID());
+            System.out.println("Customer ID: " + curOrder.getCustomerID());
+            System.out.println("Timestamp: " + curOrder.getTimestamp());
+            System.out.println("Total Cost: " + curOrder.getTotalCost());
+            System.out.println("Discounted Cost: " + curOrder.getDiscountedCost());
+            System.out.println("--------------------------");
+            System.out.println("Items in the Order:");
+            for (String itemID : curOrder.getDetails()) {
+                System.out.println(itemID);
+            }
+        } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
