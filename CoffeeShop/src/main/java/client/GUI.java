@@ -26,27 +26,27 @@ public class GUI extends JFrame {
 
     // GUI components
     private JPanel contentPanel;
-        private JPanel detailsPane;
-            private JPanel costsPane;
-                private JButton submitOrderButton;
-                private JButton cancelOrderButton;
-                private JPanel totalCostPane;
-                    private JLabel totalCostLabel;
-                    private JTextField totalCostField;
-                private JPanel discountedCostPane;
-                    private JLabel discountedCost;
-                    private JTextField discountedCostField;
-            private JPanel itemInsertPane;
-                private JLabel enterItemID;
-                private JTextField itemIDField;
-                private JButton addItemButton;
-        private JPanel itemListPane;
-            private JScrollPane itemListScrollPane;
-                private JTextArea displayMenuField;
-            private JScrollPane orderDetailsScrollPane;
-                private JTextArea orderDetailsField;
-            private JButton exitButton;
-            private JButton removeLastItemButton;
+    private JPanel detailsPane;
+    private JPanel costsPane;
+    private JButton submitOrderButton;
+    private JButton cancelOrderButton;
+    private JPanel totalCostPane;
+    private JLabel totalCostLabel;
+    private JTextField totalCostField;
+    private JPanel discountedCostPane;
+    private JLabel discountedCost;
+    private JTextField discountedCostField;
+    private JPanel itemInsertPane;
+    private JLabel enterItemID;
+    private JTextField itemIDField;
+    private JButton addItemButton;
+    private JPanel itemListPane;
+    private JScrollPane itemListScrollPane;
+    private JTextArea displayMenuField;
+    private JScrollPane orderDetailsScrollPane;
+    private JTextArea orderDetailsField;
+    private JButton exitButton;
+    private JButton removeLastItemButton;
 
 
 
@@ -132,7 +132,7 @@ public class GUI extends JFrame {
     private void addItem() {
         String itemID = itemIDField.getText();
         try {
-            curOrder.addItem(itemID);
+            curOrder.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
             throw new RuntimeException(e);
         }

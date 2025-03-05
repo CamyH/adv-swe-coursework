@@ -1,13 +1,12 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
-import item.ItemCategory;
 import item.ItemList;
 import utils.Discount;
-import utils.DiscountDataStructure;
-
+// import ItemList class here once defined
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Represents an order placed by a customer.
@@ -31,14 +30,13 @@ public class Order {
     private final ArrayList<String> orderDetails;
 
     /** Menu containing available items and their associated costs */
-    private final ItemList menu;   // ItemList class not defined yet
+    private final ItemList menu;
 
     /** The total cost of the order before any discount is applied */
     private double totalCost;
 
-    private double discountedCost;
-
-    private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
+    /** Discount object representing the discount applied to the order */
+    private final Discount discount;
 
     /** Constructor for creating an Order with only the menu */
     public Order(ItemList menu) throws InvalidOrderException {
@@ -54,7 +52,32 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = menu;
-        this.totalCost = 0.0;   // Initialize the total cost to 0
+        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+
+        calculateTotalCost();
+    }
+
+    /**
+     * Constructor for reading in Order File
+     * @param orderID order ID string
+     * @param customerID customer ID string
+     * @param timestamp timestamp string
+     * @param menu items within the order
+     * @throws InvalidOrderException if any params are incorrect
+     */
+    public Order(String orderID,
+                 String customerID,
+                 LocalDateTime timestamp,
+                 ArrayList<String> orderDetails,
+                 ItemList menu) throws InvalidOrderException {
+        this.orderID = UUID.fromString(orderID);
+        this.customerID = UUID.fromString(customerID);
+        this.timestamp = timestamp;
+        this.orderDetails = orderDetails;
+        this.menu = menu;
+        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+
+        calculateTotalCost();
     }
 
     /**
@@ -81,7 +104,6 @@ public class Order {
     public boolean removeItem(String itemID) {
         if (orderDetails.remove(itemID)) {
             calculateTotalCost();
-            calculateDiscountedCost();
             return true;
         }
         return false;
@@ -106,41 +128,6 @@ public class Order {
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
             totalCost += menu.getCost(itemID); // Can change this method according to need
-        }
-    }
-
-    /**
-     * Calculates the discounted cost
-     */
-    private void calculateDiscountedCost() {
-        discountedCost = totalCost;
-
-        ArrayList<String> myOrderDetails = new ArrayList<>(orderDetails);
-
-        DiscountDataStructure structure = new DiscountDataStructure();
-
-        for (int i = 0; i < myOrderDetails.size(); i++) {
-            for (int j = i + 1; j < myOrderDetails.size(); j++) {
-                if (menu.getCategory(myOrderDetails.get(i)) != menu.getCategory(myOrderDetails.get(j))) {
-                    Discount d = discountsMap.get(Set.of(menu.getCategory(myOrderDetails.get(i)), menu.getCategory(myOrderDetails.get(j))));
-                    if (d != null) {
-                        structure.addEntry(d, i, j);
-                    }
-                }
-            }
-        }
-
-        ArrayList<Object> s = structure.removeEntry();
-
-        while (s != null) {
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
-            int index1 = (Integer) s.get(1);
-            int index2 = (Integer) s.get(2);
-            myOrderDetails.remove(index2);
-            myOrderDetails.remove(index1);
-
-            s = structure.removeEntry();
         }
     }
 
@@ -195,6 +182,6 @@ public class Order {
      * @return The discounted cost of the order
      */
     public double getDiscountedCost() {
-        return discountedCost;
+        return totalCost - discount.calculateDiscount(totalCost);   //can modify later according to need
     }
 }
