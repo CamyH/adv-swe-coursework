@@ -132,7 +132,7 @@ public class GUI extends JFrame {
     private void addItem() {
         String itemID = itemIDField.getText();
         try {
-            curOrder.addItem(itemID);
+            curOrder.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
             throw new RuntimeException(e);
         }
