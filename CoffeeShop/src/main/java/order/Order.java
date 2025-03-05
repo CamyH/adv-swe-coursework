@@ -63,8 +63,8 @@ public class Order {
      * @throws InvalidItemIDException if the item ID is invalid
      */
     public void addItem(String itemID) throws InvalidItemIDException{
-        if (itemID == null || itemID.isEmpty()) {
-            throw new InvalidItemIDException("Item ID cannot be null or empty.");
+        if (!menu.itemExists(itemID)) {
+            throw new InvalidItemIDException("Invalid Item ID: " + itemID);
         }
         orderDetails.add(itemID);
         totalCost = calculateTotalCost();  // Recalculate the total cost after adding an item
