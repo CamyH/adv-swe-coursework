@@ -1,6 +1,7 @@
 package item;
 
 import exceptions.InvalidItemIDException;
+import interfaces.AbstractFileManager;
 import interfaces.FileManager;
 import java.io.*;
 
@@ -8,38 +9,15 @@ import java.io.*;
  * Reads Item Data using JavaStream
  * @author Cameron Hunt
  */
-public class ItemFileReader implements FileManager<ItemList, Object> {
-    private final String fileName;
-
-    public ItemFileReader(String fileName) {
-        this.fileName = fileName;
-    }
-
+public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
     /**
-     * Reads from a given file
-     * @return an instance of type T representing the file content
+     * Constructor
+     * @param fileName the file to operate on
      */
-    @Override
-    public ItemList readFile() throws IOException {
-        File itemFile = new File(fileName);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        // Throw exception early if file does not exist
-        if (!itemFile.exists()) throw new FileNotFoundException();
-
-        try (FileInputStream fis = new FileInputStream(itemFile)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return ingestFileContents(stringBuilder);
+    public ItemFileReader(String fileName) {
+        super(fileName);
     }
+
 
     /**
      * Write to a given file
@@ -52,11 +30,11 @@ public class ItemFileReader implements FileManager<ItemList, Object> {
 
     /**
      * Convert StringBuilder file content to a list of item objects
-     *
      * @param fileContents the contents of the read from file
      * @return an ArrayList of type item
      */
-    private ItemList ingestFileContents(StringBuilder fileContents) {
+    @Override
+    protected ItemList ingestFileContents(StringBuilder fileContents) {
         ItemList itemList = new ItemList();
 
         try {
@@ -66,7 +44,10 @@ public class ItemFileReader implements FileManager<ItemList, Object> {
 
                 String[] lineData = line.split(",");
                 System.out.println(line);
-                Item newItem = new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]);
+                Item newItem = new Item(lineData[0],
+                        ItemCategory.valueOf(lineData[1]),
+                        Double.parseDouble(lineData[2]),
+                        lineData[3]);
 
                 itemList.add(newItem);
             }
