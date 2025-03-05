@@ -39,7 +39,7 @@ public class Demo {
     }
 
 
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         // Create a new demo object
         Demo demo = new Demo();
 
@@ -61,7 +61,7 @@ public class Demo {
         demo.showConsole();
     }
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         // Create a new demo object
         Demo demo = new Demo();
 

@@ -197,7 +197,8 @@ public class Console {
         double discountedCost = curOrder.getDiscountedCost();
 
         // Print basic order information
-        System.out.println("Order Preview:");
+        System.out.println("Order Preview");
+        System.out.println("--------------------------");
         System.out.println("Order ID: " + orderID);
         System.out.println("Customer ID: " + customerID);
         System.out.println("Timestamp: " + timestamp);
@@ -228,6 +229,7 @@ public class Console {
     void viewOrderList() {
         String[] orderIDArr = orders.orderIDsToString(false);
         System.out.println("Order List:");
+        System.out.println("(Order ID, Customer ID)");
         for (String orderID : orderIDArr) {
             System.out.println(orderID);
         }
@@ -246,6 +248,7 @@ public class Console {
         }
         try {
             Order curOrder = orders.getOrder(UUID.fromString(orderID));
+            System.out.println("--------------------------");
             System.out.println("Order details:");
             System.out.println("Order ID: " + curOrder.getOrderID());
             System.out.println("Customer ID: " + curOrder.getCustomerID());
