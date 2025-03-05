@@ -7,10 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.ItemCategory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ItemListTest {
     private static ItemList itemList;
@@ -100,31 +97,26 @@ public class ItemListTest {
      */
     @Test
     public void testGetCost() {
-        try {
-            /** JUnit Tests for Equal Cases */
-            assertEquals(3.0, itemList.getCost("RL1"));
-            assertEquals(3.5, itemList.getCost("RL2"));
-            assertEquals(2.8, itemList.getCost("RL3"));
-            assertEquals(3.0, itemList.getCost("RL4"));
-            assertEquals(4.0, itemList.getCost("FD1"));
-            assertEquals(4.5, itemList.getCost("FD2"));
-            assertEquals(5.0, itemList.getCost("FD3"));
-            assertEquals(4.5, itemList.getCost("FD4"));
-            assertEquals(3.0, itemList.getCost("FD5"));
+        /** JUnit Tests for Equal Cases */
+        assertEquals(3.0, itemList.getCost("RL1"));
+        assertEquals(3.5, itemList.getCost("RL2"));
+        assertEquals(2.8, itemList.getCost("RL3"));
+        assertEquals(3.0, itemList.getCost("RL4"));
+        assertEquals(4.0, itemList.getCost("FD1"));
+        assertEquals(4.5, itemList.getCost("FD2"));
+        assertEquals(5.0, itemList.getCost("FD3"));
+        assertEquals(4.5, itemList.getCost("FD4"));
+        assertEquals(3.0, itemList.getCost("FD5"));
 
-            /** JUnit Tests for Non Equal Cases */
-            assertNotEquals(1.99, itemList.getCost("HD1"));
-            assertNotEquals(3.51, itemList.getCost("HD6"));
-            assertNotEquals(2.4, itemList.getCost("SD3"));
-            assertNotEquals(3.1, itemList.getCost("SD8"));
-            assertNotEquals(1.4, itemList.getCost("SCK1"));
-            assertNotEquals(3.0, itemList.getCost("SCK7"));
-            assertNotEquals(2.0, itemList.getCost("PSY1"));
-            assertNotEquals(3.0, itemList.getCost("PSY4"));
-        }
-        catch (InvalidItemIDException e) {
-            System.out.println(e.getMessage());
-        }
+        /** JUnit Tests for Non Equal Cases */
+        assertNotEquals(1.99, itemList.getCost("HD1"));
+        assertNotEquals(3.51, itemList.getCost("HD6"));
+        assertNotEquals(2.4, itemList.getCost("SD3"));
+        assertNotEquals(3.1, itemList.getCost("SD8"));
+        assertNotEquals(1.4, itemList.getCost("SCK1"));
+        assertNotEquals(3.0, itemList.getCost("SCK7"));
+        assertNotEquals(2.0, itemList.getCost("PSY1"));
+        assertNotEquals(3.0, itemList.getCost("PSY4"));
     }
 
     /**
@@ -274,7 +266,7 @@ public class ItemListTest {
     @Test
     void testGetMenu() {
         /** Retrieve the menu */
-        HashMap<String, Item> menu = itemList.getMenu();
+        LinkedHashMap<String, Item> menu = itemList.getMenu();
 
         /** JUnit test to check that the menu is not null */
         assertNotNull(menu);
@@ -331,11 +323,65 @@ public class ItemListTest {
 
         /** Convert to set as order of data structure does not matter */
         Set<String> expectedSet = new HashSet<>(Arrays.asList(itemIDs));
-        Set<String> actualSet = new HashSet<>(Arrays.asList(itemList.getSummaryMenu()));
+        Set<String> actualSet = new HashSet<>(Arrays.asList(itemList.getItemIDs()));
 
         assertEquals(expectedSet, actualSet);
 
     }
 
+    /**
+     * Test Method to test getMenuDetails() method works as intended
+     */
+    @Test
+    void testGetMenuDetails() {
+        String[] itemDetails = {
+                "RL1,BACON ROLL,3.00",
+                "RL2,SAUSAGE ROLL,3.50",
+                "RL3,EGG ROLL,2.80",
+                "RL4,CHEESE ROLL,3.00",
+
+                "FD1,BAKED POTATO,4.00",
+                "FD2,SANDWICH,4.50",
+                "FD3,PANINI,5.00",
+                "FD4,SALAD,4.50",
+                "FD5,CHIPS,3.00",
+
+                "HD1,TEA,2.00",
+                "HD2,ESPRESSO,2.20",
+                "HD3,AMERICANO,2.50",
+                "HD4,LATTE,3.00",
+                "HD5,CAPPUCCINO,3.20",
+                "HD6,MOCHA,3.50",
+                "HD7,HOT CHOCOLATE,3.50",
+
+                "SD1,STILL WATER,1.50",
+                "SD2,SPARKLING WATER,1.80",
+                "SD3,ORANGE JUICE,2.50",
+                "SD4,APPLE JUICE,2.50",
+                "SD5,LEMONADE,2.80",
+                "SD6,COLA,2.50",
+                "SD7,FANTA,2.50",
+                "SD8,ROOT BEER,3.00",
+                "SD9,GINGER BEER,3.00",
+
+                "SCK1,CHOCOLATE BAR,1.80",
+                "SCK2,CRISPS,1.50",
+                "SCK3,POPCORN,2.00",
+                "SCK4,PRETZELS,1.80",
+                "SCK5,SHORTBREAD,2.00",
+                "SCK6,GRANOLA BARS,2.20",
+                "SCK7,CHEESE,2.50",
+                "SCK8,CRACKERS,2.00",
+
+                "PSY1,CROISSANT,2.50",
+                "PSY2,DANISH PASTRY,2.80",
+                "PSY3,CINNAMON ROLL,3.00",
+                "PSY4,MACARONS,3.50",
+                "PSY5,PAIN AU CHOCOLAT,2.80"
+        };
+
+        assertArrayEquals(itemDetails, itemList.getMenuDetails());
+
+    }
 
 }
