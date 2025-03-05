@@ -7,11 +7,11 @@ import java.sql.SQLOutput;
 import java.util.*;
 
 /**
- * @author Fraser Holman
- *
  * Class represents a list of current orders
  *
  * Contains a queue of different orders created by customers
+ *
+ * @author Fraser Holman
  */
 
 public class OrderList implements EntityList<Order, UUID> {
@@ -34,7 +34,10 @@ public class OrderList implements EntityList<Order, UUID> {
      * @param order The order to be added to the queue
      */
     @Override
-    public Boolean add(Order order) {
+    public Boolean add(Order order) throws InvalidOrderException {
+        if (order.getDetails().isEmpty()) {
+            throw new InvalidOrderException("Order details cannot be null");
+        }
         return inCompleteOrders.offer(order);
     }
 
@@ -146,5 +149,30 @@ public class OrderList implements EntityList<Order, UUID> {
         itemCount.put("Total Cost", totalCost);
 
         return itemCount;
+    }
+
+    public String[] orderIDsToString(boolean completed) {
+        Collection<Order> c = completeOrders;
+
+        if (!completed) {
+            c = inCompleteOrders;
+        }
+
+        String[] orderIDsArr = new String[c.size()];
+
+        int count = 0;
+
+        for (Order o : c) {
+            String s = String.format("%s,%s",
+                    o.getOrderID().toString(),
+                    o.getCustomerID()
+            );
+
+            orderIDsArr[count] = s;
+
+            count++;
+        }
+
+        return orderIDsArr;
     }
 }

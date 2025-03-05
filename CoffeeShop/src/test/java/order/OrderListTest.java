@@ -128,6 +128,17 @@ public class OrderListTest {
     }
 
     @Test
+    void testAddOrder() {
+        try {
+            Order o = new Order(itemList);
+            assertThrows(InvalidOrderException.class, () -> {orderList.add(o);});
+        }
+        catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
     void testRemove() {
         try {
             Order o = new Order(itemList);
