@@ -108,6 +108,16 @@ public class Order {
     }
 
     /**
+     * Removes the last item added to the order.
+     * The total cost is recalculated after the item is removed.
+     *
+     */
+    public void removeLastItem() {
+        orderDetails.removeLast();
+        calculateTotalCost();
+    }
+
+    /**
      * Calculates the total cost of the order based on the items in the order.
      * The cost of each item is fetched from the menu.
      */

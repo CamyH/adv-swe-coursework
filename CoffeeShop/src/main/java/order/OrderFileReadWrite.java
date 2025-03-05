@@ -28,12 +28,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     @Override
     public void writeToFile(OrderList orders) {
         String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             // Write the orders to the order file
-            // appends onto the end
             for (String order : ordersToWrite) {
                 writer.write(order);
-                writer.newLine();
             }
 
             writer.newLine();
@@ -60,7 +58,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
 
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
-
                 orderList.add(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),

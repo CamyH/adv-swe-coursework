@@ -108,13 +108,11 @@ public class OrderList implements EntityList<Order, UUID> {
         int count = 0;
 
         for (Order o : c) {
-            String s = String.format("%s,%s,%s,%s,%.2f,%.2f",
+            String s = String.format("%s,%s,%s,%s",
                 o.getOrderID().toString(),
                 o.getCustomerID(),
                 o.getTimestamp().toString(),
-                String.join(";", o.getDetails()),
-                o.getTotalCost(),
-                o.getDiscountedCost()
+                String.join(";", o.getDetails())
             );
 
             uncompletedOrderString[count] = s;
