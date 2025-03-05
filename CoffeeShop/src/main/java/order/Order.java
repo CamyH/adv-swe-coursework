@@ -60,8 +60,12 @@ public class Order {
      * The total cost is recalculated after the item is added.
      *
      * @param itemID The ID of the item to add to the order
+     * @throws InvalidItemIDException if the item ID is invalid
      */
-    public void addItem(String itemID) {
+    public void addItem(String itemID) throws InvalidItemIDException{
+        if (!menu.itemExists(itemID)) {
+            throw new InvalidItemIDException("Invalid Item ID: " + itemID);
+        }
         orderDetails.add(itemID);
         totalCost = calculateTotalCost();  // Recalculate the total cost after adding an item
     }
@@ -94,29 +98,29 @@ public class Order {
         return orderID;
     }
 
-   /**
-    * Returns the customer ID associated with the order.
-    *
-    * @return The customer ID as a string
-    */
+    /**
+     * Returns the customer ID associated with the order.
+     *
+     * @return The customer ID as a string
+     */
     public String getCustomerID() {
         return customerID;
     }
 
-   /**
-    * Returns the timestamp when the order was placed.
-    *
-    * @return The timestamp as a LocalDateTime object
-    */
+    /**
+     * Returns the timestamp when the order was placed.
+     *
+     * @return The timestamp as a LocalDateTime object
+     */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
     /**
-    * Returns the order details.
-    *
-    * @return the order details
-    */
+     * Returns the order details.
+     *
+     * @return the order details
+     */
     public ArrayList<String> getDetails() {
         return orderDetails;
     }
@@ -130,11 +134,11 @@ public class Order {
         return totalCost;
     }
 
-   /**
-    * Returns the total cost of the order after applying any applicable discounts.
-    * The discount is calculated using the Discount object associated with the order.
-    * @return The discounted cost of the order
-    */
+    /**
+     * Returns the total cost of the order after applying any applicable discounts.
+     * The discount is calculated using the Discount object associated with the order.
+     * @return The discounted cost of the order
+     */
     public double getDiscountedCost() {
         return totalCost - discount.calculateDiscount(totalCost);   //can modify later according to need
     }
