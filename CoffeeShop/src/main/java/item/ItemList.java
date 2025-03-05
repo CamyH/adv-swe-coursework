@@ -5,8 +5,6 @@ import interfaces.EntityList;
 
 import java.util.*;
 
-import order.Order;
-import utils.ItemCategory;
 
 /**
  * Class represents a list of all avaible items that can be ordered
