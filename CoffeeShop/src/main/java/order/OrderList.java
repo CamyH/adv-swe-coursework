@@ -144,7 +144,7 @@ public class OrderList implements EntityList<Order, UUID> {
             }
         }
 
-        itemCount.put("Total Cost", totalCost);
+        itemCount.put("total-cost", totalCost);
 
         return itemCount;
     }
