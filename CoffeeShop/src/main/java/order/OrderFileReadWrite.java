@@ -17,8 +17,8 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * Constructor
      * @param fileName the file to operate on
      */
-    public OrderFileReadWrite(String fileName) {
-        super(fileName);
+    public OrderFileReadWrite(String fileName, ItemList menu) {
+        super(fileName, menu);
     }
 
     /**
@@ -48,7 +48,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     @Override
     protected OrderList ingestFileContents(StringBuilder fileContents) {
         OrderList orderList = new OrderList();
-        ItemList itemList = new ItemList();
 
         try {
             // We only really care about the InvalidOrderException
@@ -62,7 +61,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
                         new ArrayList<>(List.of(itemIds)),
-                        itemList));
+                        menu));
             }
         } catch (InvalidOrderException e) {
             System.err.println("Skipping " + e.getMessage());
