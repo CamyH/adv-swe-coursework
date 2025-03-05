@@ -22,7 +22,7 @@ public class ItemFileReaderTest {
     @BeforeAll
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("ItemsTest.txt")));
-
+        SetupItemFile.generateItemList();
         String itemListString = SetupItemFile.convertItemListToString();
         try {
             Files.write(Path.of(tempFile), itemListString.getBytes());

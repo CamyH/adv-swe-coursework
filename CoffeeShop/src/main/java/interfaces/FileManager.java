@@ -1,7 +1,6 @@
 package interfaces;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Defines contracts for reading to and writing from a file.

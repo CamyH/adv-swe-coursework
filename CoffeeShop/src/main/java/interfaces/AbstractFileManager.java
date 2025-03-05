@@ -1,65 +1,62 @@
-package item;
+package interfaces;
 
-import exceptions.InvalidItemIDException;
-import interfaces.AbstractFileManager;
-import interfaces.FileManager;
 import java.io.*;
 
 /**
- * Reads Item Data using JavaStream
- * @author Cameron Hunt
+ * Abstract Implementation of File Manager
+ * Contains the readFile code to reduce duplication
+ * @param <T> readFile return type
+ * @param <R> writeToFile param type
  */
-public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
+public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
+    protected final String fileName;
+
     /**
      * Constructor
-     * @param fileName the file to operate on
+     * @param fileName of the file to operate on
      */
-    public ItemFileReader(String fileName) {
-        super(fileName);
+    public AbstractFileManager(String fileName) {
+        this.fileName = fileName;
     }
 
+    /**
+     * Reads from a given file
+     *
+     * @return an instance of type T representing the file content
+     * @throws IOException for general IO exceptions
+     */
+    @Override
+    public T readFile() throws IOException {
+        File file = new File(fileName);
+
+        // Throw exception early if file does not exist
+        if (!file.exists()) throw new FileNotFoundException();
+
+        StringBuilder fileContents = new StringBuilder();
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileContents.append(line);
+                fileContents.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            System.out.println("Skipping " + e.getMessage());
+        }
+
+        return ingestFileContents(fileContents);
+    }
 
     /**
      * Write to a given file
-     * @param report all order information to be used for reporting
+     *
+     * @param list all information to be written to the file
      */
     @Override
-    public void writeToFile(Object report) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+    public abstract void writeToFile(R list) throws IOException;
 
-    /**
-     * Convert StringBuilder file content to a list of item objects
-     * @param fileContents the contents of the read from file
-     * @return an ArrayList of type item
-     */
-    @Override
-    protected ItemList ingestFileContents(StringBuilder fileContents) {
-        ItemList itemList = new ItemList();
-
-        try {
-            for (String line : fileContents.toString().split("\n")) {
-                // Skip empty lines
-                if (line.trim().isEmpty()) continue;
-
-                String[] lineData = line.split(",");
-<<<<<<< HEAD
-                Item newItem = new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]);
-=======
-                System.out.println(line);
-                Item newItem = new Item(lineData[0],
-                        ItemCategory.valueOf(lineData[1]),
-                        Double.parseDouble(lineData[2]),
-                        lineData[3]);
->>>>>>> main
-
-                itemList.add(newItem);
-            }
-        } catch (InvalidItemIDException e) {
-            System.err.println("Unable to add item, skipping " + e.getMessage());
-        }
-        return itemList;
-    }
+    protected abstract T ingestFileContents(StringBuilder fileContents) throws IOException;
 
     /**
      * Closes this resource, relinquishing any underlying resources.
@@ -107,6 +104,6 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
      */
     @Override
     public void close() throws Exception {
-        // Not used
+        // Not used here
     }
 }

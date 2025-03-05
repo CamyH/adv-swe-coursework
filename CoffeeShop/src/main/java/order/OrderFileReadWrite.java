@@ -1,11 +1,8 @@
 package order;
 
-import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
-import interfaces.FileManager;
-import item.Item;
+import interfaces.AbstractFileManager;
 import item.ItemList;
-import utils.Discount;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -15,18 +12,12 @@ import java.util.*;
  * Reads and Writes Order data using Java Stream
  * @author Cameron Hunt
  */
-public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
-    private final String fileName;
-
-    public OrderFileReadWrite(String fileName) {
-        this.fileName = fileName;
-    }
-
+public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList> {
     /**
-     * Reads from a given file
-     * @return an instance of type T representing the file content
-     * @throws IOException for general IO exceptions
+     * Constructor
+     * @param fileName the file to operate on
      */
+<<<<<<< HEAD
     @Override
     public OrderList readFile() throws IOException {
         File orderFile = new File(fileName);
@@ -47,6 +38,10 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
         }
 
         return ingestFileContents(stringBuilder);
+=======
+    public OrderFileReadWrite(String fileName) {
+        super(fileName);
+>>>>>>> main
     }
 
     /**
@@ -75,7 +70,8 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
      * @param fileContents the contents of the read from file
      * @return an Array Deque of type order
      */
-    private OrderList ingestFileContents(StringBuilder fileContents) {
+    @Override
+    protected OrderList ingestFileContents(StringBuilder fileContents) {
         OrderList orderList = new OrderList();
         ItemList itemList = new ItemList();
 
