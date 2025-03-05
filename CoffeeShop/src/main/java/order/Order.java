@@ -52,8 +52,9 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = menu;
-        this.totalCost = 0.0;   // Initialize the total cost to 0
         this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+
+        calculateTotalCost();
     }
 
     /**
@@ -74,8 +75,9 @@ public class Order {
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.menu = menu;
-        this.totalCost = 0.0;   // Initialize the total cost to 0
         this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+
+        calculateTotalCost();
     }
 
     /**
