@@ -62,24 +62,20 @@ public class Order {
      * @param customerID customer ID string
      * @param timestamp timestamp string
      * @param menu items within the order
-     * @param totalCost total cost of the order
-     * @param discount the discount
      * @throws InvalidOrderException if any params are incorrect
      */
     public Order(String orderID,
                  String customerID,
                  LocalDateTime timestamp,
                  ArrayList<String> orderDetails,
-                 ItemList menu,
-                 double totalCost,
-                 Discount discount) throws InvalidOrderException {
+                 ItemList menu) throws InvalidOrderException {
         this.orderID = UUID.fromString(orderID);
         this.customerID = UUID.fromString(customerID);
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.menu = menu;
-        this.totalCost = totalCost;
-        this.discount = discount;
+        this.totalCost = 0.0;   // Initialize the total cost to 0
+        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
     }
 
     /**

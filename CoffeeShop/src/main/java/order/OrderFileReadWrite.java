@@ -95,9 +95,7 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
                         new ArrayList<>(List.of(itemIds)),
-                        itemList,
-                        Double.parseDouble(lineData[3]),
-                        Discount.valueOf(lineData[4])));
+                        itemList));
             }
         } catch (InvalidOrderException e) {
             System.err.println("Skipping " + e.getMessage());
