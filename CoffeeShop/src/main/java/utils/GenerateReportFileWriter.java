@@ -31,7 +31,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
      */
     @Override
     public void writeToFile(ArrayList<String> report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             // Write the orders to the order file
             // appends onto the end
             for (String order : report) {
