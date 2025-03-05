@@ -29,6 +29,7 @@ public class GUI extends JFrame {
         private JPanel detailsPane;
             private JPanel costsPane;
                 private JButton submitOrderButton;
+                private JButton cancelOrderButton;
                 private JPanel totalCostPane;
                     private JLabel totalCostLabel;
                     private JTextField totalCostField;
@@ -45,6 +46,9 @@ public class GUI extends JFrame {
             private JScrollPane orderDetailsScrollPane;
                 private JTextArea orderDetailsField;
             private JButton exitButton;
+            private JButton removeLastItemButton;
+
+
 
 
     // Constructor
@@ -78,8 +82,12 @@ public class GUI extends JFrame {
 
         // Action listeners for button presses
         submitOrderButton.addActionListener(this::actionPerformed);
+        cancelOrderButton.addActionListener(this::actionPerformed);
         addItemButton.addActionListener(this::actionPerformed);
+        removeLastItemButton.addActionListener(this::actionPerformed);
         exitButton.addActionListener(this::actionPerformed);
+
+
 
         totalCostField.setText("£0.00");
         discountedCostField.setText("£0.00");
@@ -98,6 +106,10 @@ public class GUI extends JFrame {
         // Submit Order button functionality
         if (e.getSource() == submitOrderButton) {
             submitOrder();
+        }
+
+        else if (e.getSource() == cancelOrderButton) {
+            cancelOrder();
         }
 
         // Add Item button functionality
@@ -121,12 +133,7 @@ public class GUI extends JFrame {
             throw new RuntimeException(e);
         }
         itemIDField.setText("");
-        orderDetailsField.setText("Current Order: \n");
-        for (String entry : curOrder.getDetails()) {
-            orderDetailsField.append(entry + "\n");
-        }
-        totalCostField.setText("£" + curOrder.getTotalCost() + "0");
-        discountedCostField.setText("£" + curOrder.getDiscountedCost() + "0");
+        updateUI();
     }
 
     public void submitOrder(){
@@ -134,17 +141,34 @@ public class GUI extends JFrame {
             orders.add(curOrder);
             Demo.demoWriteOrders();
             JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
-            orderDetailsField.setText("Current Order: \n");
-            totalCostField.setText("£0.00");
-            discountedCostField.setText("£0.00");
         } catch (InvalidOrderException e) {
             JOptionPane.showMessageDialog(GUI.this,"Can't submit an empty order");
         }
         try {
             curOrder = new Order(menu);
+            updateUI();
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void cancelOrder() {
+        JOptionPane.showMessageDialog(GUI.this, "Order Cancelled");
+        try {
+            curOrder = new Order(menu);
+            updateUI();
+        } catch (InvalidOrderException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void updateUI() {
+        orderDetailsField.setText("Current Order: \n");
+        for (String entry : curOrder.getDetails()) {
+            orderDetailsField.append(entry + "\n");
+        }
+        totalCostField.setText("£" + curOrder.getTotalCost() + "0");
+        discountedCostField.setText("£" + curOrder.getDiscountedCost() + "0");
     }
 
     public void closeGUI() {
