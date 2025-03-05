@@ -1,9 +1,9 @@
 package utils;
 
 /**
- * Author: Cameron Hunt
  * Enum for storing the discounts available
  * Contains a method to calculate the discount for the current price
+ * @author Cameron Hunt
  */
 public enum Discount {
     DISCOUNT0(0),

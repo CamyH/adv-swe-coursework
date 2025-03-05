@@ -3,10 +3,10 @@ package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
+import item.ItemCategory;
 import item.ItemList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.ItemCategory;
 
 import static org.junit.jupiter.api.Assertions.*;
 

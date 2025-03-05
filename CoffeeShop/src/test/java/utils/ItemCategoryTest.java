@@ -1,11 +1,12 @@
 package utils;
 
+import item.ItemCategory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Author: Cameron Hunt
  * Unit tests for the ItemCategory enum
+ * @author Cameron Hunt
  */
 public class ItemCategoryTest {
     /**
