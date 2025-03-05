@@ -17,31 +17,8 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * Constructor
      * @param fileName the file to operate on
      */
-<<<<<<< HEAD
-    @Override
-    public OrderList readFile() throws IOException {
-        File orderFile = new File(fileName);
-
-        // Throw exception early if file does not exist
-        if (!orderFile.exists()) throw new FileNotFoundException();
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try (FileInputStream fis = new FileInputStream(orderFile)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            System.out.println("Skipping " + e.getMessage());
-        }
-
-        return ingestFileContents(stringBuilder);
-=======
     public OrderFileReadWrite(String fileName) {
         super(fileName);
->>>>>>> main
     }
 
     /**
@@ -51,12 +28,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     @Override
     public void writeToFile(OrderList orders) {
         String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             // Write the orders to the order file
-            // appends onto the end
             for (String order : ordersToWrite) {
                 writer.write(order);
-                writer.newLine();
             }
 
             writer.newLine();

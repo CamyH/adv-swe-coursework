@@ -64,14 +64,7 @@ public class Console {
                     break;
                 }
                 case "cmdDescriptions": {
-                    System.out.println("viewMenu prints a list of all available items and their details.");
-                    System.out.println("newOrder starts a new order.");
-                    System.out.println("viewOrderList prints a list of all of the order IDs and their related customer IDs in the order list.");
-                    System.out.println("viewOrderDetails prints the details from the desired order ID and the contained item IDs");
-                    System.out.println("addToMenu is unimplemented in Stage 1");
-                    System.out.println("removeFromMenu is unimplemented in Stage 1");
-                    System.out.println("help shows all available commands");
-                    System.out.println("quit terminates the console and closes the GUI, if it is open");
+                    printCmdDescriptions();
                     break;
                 }
                 case "quit": {
@@ -133,25 +126,21 @@ public class Console {
                         addItem(curOrder);
                         break;
                     }
+                    case "removeLastItem": {
+                        removeLastItem(curOrder);
+                        break;
+                    }
                     case "previewOrder": {
                         previewOrder(curOrder);
                         break;
                     }
                     case "placeOrder": {
                         // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
-                        try {
-                            orders.add(curOrder);
-                            Demo.demoWriteOrders();
-                        } catch (InvalidOrderException e) {
-                            System.out.println(e.getMessage());
-                            System.out.println("Order cannot be empty, add an item or cancel the order");
-                            break;
-                        }
-                        System.out.println("Order placed successfully");
+                        placeOrder(curOrder);
                         return;
                     }
                     case "help": {
-                        System.out.println("addItem, previewOrder, placeOrder, cancel");
+                        System.out.println("addItem, removeLastItem, previewOrder, placeOrder, cancel");
                         break;
                     }
                     case "cancel": {
@@ -182,6 +171,11 @@ public class Console {
             System.out.println("Invalid item ID");
         }
 
+    }
+
+    void removeLastItem(Order curOrder) {
+        curOrder.removeLastItem();
+        System.out.println("Removed the last item from the current order");
     }
 
     /**
@@ -222,6 +216,28 @@ public class Console {
         System.out.println("Total Cost: £" + totalCost);
         System.out.println("Discounted Cost: £" + discountedCost);
         System.out.println("----------------------------");
+    }
+
+    private void placeOrder(Order curOrder) {
+        try {
+            orders.add(curOrder);
+            Demo.demoWriteOrders();
+            System.out.println("Order placed successfully");
+        } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Order cannot be empty, add an item or cancel the order");
+        }
+    }
+
+    void printCmdDescriptions() {
+        System.out.println("viewMenu prints a list of all available items and their details.");
+        System.out.println("newOrder starts a new order.");
+        System.out.println("viewOrderList prints a list of all of the order IDs and their related customer IDs in the order list.");
+        System.out.println("viewOrderDetails prints the details from the desired order ID and the contained item IDs");
+        System.out.println("addToMenu is unimplemented in Stage 1");
+        System.out.println("removeFromMenu is unimplemented in Stage 1");
+        System.out.println("help shows all available commands");
+        System.out.println("quit terminates the console and closes the GUI, if it is open");
     }
 
     /**

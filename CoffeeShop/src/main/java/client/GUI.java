@@ -117,6 +117,10 @@ public class GUI extends JFrame {
             addItem();
         }
 
+        else if (e.getSource() == removeLastItemButton) {
+            removeLastItem();
+        }
+
         // Exit
         else if (e.getSource() == exitButton) {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
@@ -133,6 +137,11 @@ public class GUI extends JFrame {
             throw new RuntimeException(e);
         }
         itemIDField.setText("");
+        updateUI();
+    }
+
+    private void removeLastItem(){
+        curOrder.removeLastItem();
         updateUI();
     }
 
