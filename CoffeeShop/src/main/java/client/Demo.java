@@ -3,8 +3,10 @@ import item.ItemFileReader;
 import item.ItemList;
 import order.OrderFileReadWrite;
 import order.OrderList;
+import utils.GenerateReportFileWriter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Demo initialises the CoffeeShop program
@@ -60,6 +62,9 @@ public class Demo {
 
     static void demoCloseGUI(){
         gui.closeGUI();
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("src/main/java/files/test.txt");
+        ArrayList<String> test2 = generateReportFileWriter.generateReport(orders, menu);
+        generateReportFileWriter.writeToFile(test2);
     }
 
     static void demoWriteOrders(){
