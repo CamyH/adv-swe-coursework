@@ -1,78 +1,62 @@
-package order;
-
-import exceptions.InvalidOrderException;
-import interfaces.AbstractFileManager;
-import item.ItemList;
+package interfaces;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
- * Reads and Writes Order data using Java Stream
- * @author Cameron Hunt
+ * Abstract Implementation of File Manager
+ * Contains the readFile code to reduce duplication
+ * @param <T> readFile return type
+ * @param <R> writeToFile param type
  */
-public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList> {
+public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
+    protected final String fileName;
+
     /**
      * Constructor
-     * @param fileName the file to operate on
+     * @param fileName of the file to operate on
      */
-    public OrderFileReadWrite(String fileName) {
-        super(fileName);
+    public AbstractFileManager(String fileName) {
+        this.fileName = fileName;
+    }
+
+    /**
+     * Reads from a given file
+     *
+     * @return an instance of type T representing the file content
+     * @throws IOException for general IO exceptions
+     */
+    @Override
+    public T readFile() throws IOException {
+        File file = new File(fileName);
+
+        // Throw exception early if file does not exist
+        if (!file.exists()) throw new FileNotFoundException();
+
+        StringBuilder fileContents = new StringBuilder();
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileContents.append(line);
+                fileContents.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            System.out.println("Skipping " + e.getMessage());
+        }
+
+        return ingestFileContents(fileContents);
     }
 
     /**
      * Write to a given file
-     * @param orders all order information to be added to the end of the file
+     *
+     * @param list all information to be written to the file
      */
     @Override
-    public void writeToFile(OrderList orders) {
-        String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            // Write the orders to the order file
-            // appends onto the end
-            for (String order : ordersToWrite) {
-                writer.write(order);
-                writer.newLine();
-            }
+    public abstract void writeToFile(R list) throws IOException;
 
-            writer.newLine();
-        } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Convert StringBuilder file content to a queue of Orders
-     * @param fileContents the contents of the read from file
-     * @return an Array Deque of type order
-     */
-    @Override
-    protected OrderList ingestFileContents(StringBuilder fileContents) {
-        OrderList orderList = new OrderList();
-        ItemList itemList = new ItemList();
-
-        try {
-            // We only really care about the InvalidOrderException
-            for (String line : fileContents.toString().split("\n")) {
-                // Skip empty lines
-                if (line.trim().isEmpty()) continue;
-
-                String[] lineData = line.split(",");
-                String[] itemIds = lineData[3].split(";");
-
-                orderList.add(new Order(lineData[0],
-                        lineData[1],
-                        LocalDateTime.parse(lineData[2]),
-                        new ArrayList<>(List.of(itemIds)),
-                        itemList));
-            }
-        } catch (InvalidOrderException e) {
-            System.err.println("Skipping " + e.getMessage());
-        }
-
-        return orderList;
-    }
+    protected abstract T ingestFileContents(StringBuilder fileContents) throws IOException;
 
     /**
      * Closes this resource, relinquishing any underlying resources.
@@ -120,6 +104,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      */
     @Override
     public void close() throws Exception {
-        // Not used
+        // Not used here
     }
 }
