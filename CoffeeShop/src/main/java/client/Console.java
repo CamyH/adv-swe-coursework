@@ -2,6 +2,7 @@ package client;
 import java.util.Scanner;
 import java.util.UUID;
 
+import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
@@ -173,7 +174,12 @@ public class Console {
 
         System.out.println("Enter the item ID:");
         String curItemID = scanner.nextLine();
-        curOrder.addItem(curItemID);
+        try {
+            curOrder.addItem(curItemID);
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Invalid item ID");
+        }
 
     }
 
@@ -185,7 +191,7 @@ public class Console {
 
         // Get order details
         String orderID = curOrder.getOrderID().toString();
-        String customerID = curOrder.getCustomerID();
+        String customerID = curOrder.getCustomerID().toString();
         String timestamp = curOrder.getTimestamp().toString();
         double totalCost = curOrder.getTotalCost();
         double discountedCost = curOrder.getDiscountedCost();

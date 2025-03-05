@@ -59,16 +59,20 @@ public class Demo {
 
         // Populate orders
         try {
-            Order order1 = new Order(menu);
-            order1.addItem("RL1");
-            order1.addItem("HD1");
-            Order order2 = new Order(menu);
-            order2.addItem("RL1");
-            order2.addItem("FD1");
-            order2.addItem("HD1");
-            order2.addItem("HD1");
-            orders.add(order1);
-            orders.add(order2);
+            try {
+                Order order1 = new Order(menu);
+                order1.addItem("RL1");
+                order1.addItem("HD1");
+                Order order2 = new Order(menu);
+                order2.addItem("RL1");
+                order2.addItem("FD1");
+                order2.addItem("HD1");
+                order2.addItem("HD1");
+                orders.add(order1);
+                orders.add(order2);
+            } catch (InvalidItemIDException e) {
+                throw new RuntimeException(e);
+            }
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
         }

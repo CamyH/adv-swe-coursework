@@ -1,8 +1,10 @@
 package client;
+import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
 import order.OrderList;
 import order.Order;
+import item.Item;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +18,7 @@ import java.awt.event.ActionListener;
 public class GUI extends JFrame {
 
     // The item list (menu) to be displayed
-    private ItemList menu;
+    private final ItemList menu;
 
     // The order list to add submitted orders to
     private OrderList orders;
@@ -48,8 +50,10 @@ public class GUI extends JFrame {
 
 
     // Constructor
-    public GUI(ItemList menu, OrderList orders) {
+    public GUI(ItemList itemList, OrderList orderList) {
 
+        orders = orderList;
+        menu = itemList;
         try {
             curOrder = new Order(menu);
         } catch (InvalidOrderException e) {
@@ -79,10 +83,11 @@ public class GUI extends JFrame {
         addItemButton.addActionListener(this::actionPerformed);
         exitButton.addActionListener(this::actionPerformed);
 
-        totalCostField.setText("£62.55");
-        discountedCostField.setText("£50.02");
-        for (String entry : menu.()) {
-            displayMenuField.append(entry + "/n");
+        totalCostField.setText("£0.00");
+        discountedCostField.setText("£0.00");
+        displayMenuField.append("Item ID, Name, Cost \n");
+        for (String entry : menu.getMenuDetails()) {
+            displayMenuField.append(entry + "\n");
         }
 
         orderDetailsField.setText("Empty");
@@ -95,7 +100,6 @@ public class GUI extends JFrame {
         // Submit Order button functionality
         if (e.getSource() == submitOrderButton) {
             submitOrder();
-            JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
         }
 
         // Add Item button functionality
@@ -113,11 +117,35 @@ public class GUI extends JFrame {
 
     private void addItem() {
         String itemID = itemIDField.getText();
-        JOptionPane.showMessageDialog(GUI.this, itemID);
+        try {
+            curOrder.addItem(itemID);
+        } catch (InvalidItemIDException e) {
+            throw new RuntimeException(e);
+        }
+        itemIDField.setText("");
+        orderDetailsField.setText("Current Order: \n");
+        for (String entry : curOrder.getDetails()) {
+            orderDetailsField.append(entry + "\n");
+        }
+        totalCostField.setText(String.valueOf("£" + curOrder.getTotalCost() + "0"));
+        discountedCostField.setText(String.valueOf("£" + curOrder.getDiscountedCost() + "0"));
     }
 
     public void submitOrder(){
-
+        try {
+            orders.add(curOrder);
+            JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
+            orderDetailsField.setText("Current Order: \n");
+            totalCostField.setText("£0.00");
+            discountedCostField.setText("£0.00");
+        } catch (InvalidOrderException e) {
+            JOptionPane.showMessageDialog(GUI.this,"Can't submit an empty order");
+        }
+        try {
+            curOrder = new Order(menu);
+        } catch (InvalidOrderException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void closeGUI() {
