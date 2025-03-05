@@ -1,9 +1,6 @@
 package order;
 
-import item.Item;
-import item.ItemCategory;
-import item.ItemFileReader;
-import item.SetupItemFile;
+import item.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -25,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class OrderFileReadWriteTest {
     private static String tempFile;
 
+    private static ItemList menu;
+
     @BeforeAll
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("OrdersTest.txt")));
@@ -33,12 +32,14 @@ public class OrderFileReadWriteTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        menu = SetupItemFile.generateItemList();
     }
 
     @Test
     void testReadFile() throws IOException {
         // Arrange
-        OrderFileReadWrite fileReader = new OrderFileReadWrite(tempFile);
+        OrderFileReadWrite fileReader = new OrderFileReadWrite(tempFile, menu);
 
         // Act
         OrderList orders = fileReader.readFile();
@@ -50,7 +51,7 @@ public class OrderFileReadWriteTest {
     @Test
     void testWriteFile() throws IOException {
         // Arrange
-        OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile);
+        OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile, menu);
 
 
         // Act

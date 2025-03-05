@@ -238,7 +238,7 @@ public class OrderListTest {
         myMap.put("PSY1", 1.0);
         myMap.put("PSY5", 1.0);
 
-        myMap.put("Total Cost", 19.8);
+        myMap.put("total-cost", 19.8);
 
         HashMap<String, Double> itemCount = newOrderList.completedOrderItemCount();
 

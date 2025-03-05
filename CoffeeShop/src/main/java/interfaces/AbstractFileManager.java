@@ -1,5 +1,7 @@
 package interfaces;
 
+import item.ItemList;
+
 import java.io.*;
 
 /**
@@ -11,12 +13,24 @@ import java.io.*;
 public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     protected final String fileName;
 
+    protected ItemList menu;
+
     /**
      * Constructor
      * @param fileName of the file to operate on
      */
     public AbstractFileManager(String fileName) {
         this.fileName = fileName;
+    }
+
+    /**
+     * Constructor
+     * @param fileName of the file to operate on
+     * @param menu the menu
+     */
+    public AbstractFileManager(String fileName, ItemList menu) {
+        this.fileName = fileName;
+        this.menu = menu;
     }
 
     /**
@@ -56,7 +70,12 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     @Override
     public abstract void writeToFile(R list) throws IOException;
 
-    protected abstract T ingestFileContents(StringBuilder fileContents) throws IOException;
+    /**
+     * Handle file content and assign to appropriate lists
+     * @param fileContents the content of the file to ingest
+     * @return the ingested file contents of the correct type
+     */
+    protected abstract T ingestFileContents(StringBuilder fileContents);
 
     /**
      * Closes this resource, relinquishing any underlying resources.
