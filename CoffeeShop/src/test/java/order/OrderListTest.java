@@ -128,22 +128,18 @@ public class OrderListTest {
             newOrderList.remove(first.getOrderID());
             newOrderList.remove(second.getOrderID());
 
-            String s1 = String.format("%s,%s,%s,%s,%.2f,%.2f",
+            String s1 = String.format("%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5",
-                    first.getTotalCost(),
-                    first.getDiscountedCost()
+                    "RL2;SD4;PSY5"
             );
 
-            String s2 = String.format("%s,%s,%s,%s,%.2f,%.2f",
+            String s2 = String.format("%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1",
-                    second.getTotalCost(),
-                    second.getDiscountedCost()
+                    "RL1;HD4;SD7;PSY1"
             );
 
             arr[0] = s1;
@@ -180,22 +176,18 @@ public class OrderListTest {
             second.addItem("PSY1");
             newOrderList.add(second);
 
-            String s1 = String.format("%s,%s,%s,%s,%.2f,%.2f",
+            String s1 = String.format("%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5",
-                    first.getTotalCost(),
-                    first.getDiscountedCost()
+                    "RL2;SD4;PSY5"
             );
 
-            String s2 = String.format("%s,%s,%s,%s,%.2f,%.2f",
+            String s2 = String.format("%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1",
-                    second.getTotalCost(),
-                    second.getDiscountedCost()
+                    "RL1;HD4;SD7;PSY1"
             );
 
             arr[0] = s1;
