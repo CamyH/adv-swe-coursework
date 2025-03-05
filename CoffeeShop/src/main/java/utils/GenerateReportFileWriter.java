@@ -1,12 +1,16 @@
 package utils;
 
-import interfaces.FileManager;
+import interfaces.AbstractFileManager;
+import item.Item;
+import item.ItemList;
+import order.Order;
+import order.OrderList;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,35 +19,79 @@ import java.util.Map;
  * Run on program exit
  * @author Cameron Hunt
  */
-public class GenerateReportFileWriter implements FileManager<Object, HashMap<String, Double>> {
-    private final String fileName;
-
-    GenerateReportFileWriter(String fileName) {
-        this.fileName = fileName;
+public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayList<String>> {
+    public GenerateReportFileWriter(String fileName) {
+        super(fileName);
     }
 
     /**
-     * Read the file (this method is not supported yet)
+     * Write to a given file
      *
-     * @return an Object, as expected by the interface
+     * @param report all information to be written to the file
      */
     @Override
-    public Object readFile() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Write the end of program report to the given file
-     * @param items all item information to be written to the file
-     */
-    @Override
-    public void writeToFile(HashMap<String, Double> items) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            for (Map.Entry<String, Double> item : items.entrySet()) {
-                writer.write(item.getKey() + "\t" + item.getValue() + "\n");
+    public void writeToFile(ArrayList<String> report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            // Write the orders to the order file
+            for (String order : report) {
+                writer.write(order);
+                writer.newLine();
             }
+
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
         }
     }
+
+    public static ArrayList<String> generateReport(OrderList orders, ItemList items) {
+        ArrayList<String> reportDetails = new ArrayList<>();
+        HashMap<String, Integer> itemCount = new HashMap<>();
+        double totalIncome = 0;
+        int totalOrders = 0;
+
+        for (Item item : items.getMenu().values()) {
+            itemCount.put(item.getItemID(), 0);
+        }
+
+        for (Order order : orders.getOrderList()) {
+            if (order.getDetails().isEmpty()) continue;
+
+            totalIncome += order.getTotalCost();
+            totalOrders++;
+
+            String itemList = String.join(";", order.getDetails());
+            String[] itemIds = itemList.split(";");
+
+            for (String itemId : itemIds) {
+                itemCount.put(itemId, itemCount.getOrDefault(itemId, 0) + 1);
+            }
+        }
+
+        reportDetails.add("=======================");
+
+        for (Map.Entry<String, Integer> item : itemCount.entrySet()) {
+            reportDetails.add(item.getKey() + " = " + item.getValue());
+        }
+
+        reportDetails.add("-----------------------");
+        reportDetails.add("Total Income: £" + totalIncome);
+        reportDetails.add("Total Orders: " + totalOrders);
+        reportDetails.add("Average Spend Per Order: " + totalIncome / totalOrders);
+
+        return reportDetails;
+    }
+
+    /**
+     * Handle file content and assign to appropriate lists
+     * @param fileContents the content of the file to ingest
+     * @return the ingested file contents of the correct type
+     */
+    @Override
+    protected Object ingestFileContents(StringBuilder fileContents) {
+        throw new UnsupportedOperationException("Not Implemented.");
+    }
+
 
     /**
      * Closes this resource, relinquishing any underlying resources.
