@@ -4,11 +4,9 @@ import exceptions.InvalidOrderException;
 import item.ItemList;
 import order.OrderList;
 import order.Order;
-import item.Item;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * GUI Class
@@ -127,8 +125,8 @@ public class GUI extends JFrame {
         for (String entry : curOrder.getDetails()) {
             orderDetailsField.append(entry + "\n");
         }
-        totalCostField.setText(String.valueOf("£" + curOrder.getTotalCost() + "0"));
-        discountedCostField.setText(String.valueOf("£" + curOrder.getDiscountedCost() + "0"));
+        totalCostField.setText("£" + curOrder.getTotalCost() + "0");
+        discountedCostField.setText("£" + curOrder.getDiscountedCost() + "0");
     }
 
     public void submitOrder(){
