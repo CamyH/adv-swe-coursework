@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
 import item.SetupItemFile;
@@ -56,7 +57,7 @@ public class SetupOrderFile {
             o.addItem("PSY4");
             o.addItem("SCK6");
             orderList.add(o);
-        } catch (InvalidOrderException e) {
+        } catch (InvalidOrderException | InvalidItemIDException e) {
             System.out.println(e.getMessage());
         }
 
