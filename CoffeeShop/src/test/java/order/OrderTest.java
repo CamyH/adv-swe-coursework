@@ -7,7 +7,10 @@ import item.ItemCategory;
 import item.ItemList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Discount;
+import utils.ItemCategory;
 
+import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -205,4 +208,38 @@ public class OrderTest {
             new Order(null);  // Should throw InvalidOrderException
         }, "Creating an order with a null menu should throw InvalidOrderException.");
     }
+
+    @Test
+    public void testDiscountedCost() {
+        try {
+            order.addItem("SD1"); // 1.5
+            order.addItem("HD1"); // 2
+            order.addItem("SCK1"); // 1.8
+            order.addItem("PSY1"); // 2.5
+
+            double totalCost = 1.5 + 1.8 + 2 + 2.5;  // RL1 + HD1 + SD1 + SD1
+            assertEquals(totalCost, order.getTotalCost(), "Total cost should match the sum of added items.");
+            assertNotEquals(totalCost, order.getDiscountedCost(), "Discounted cost should not match the sum of added items.");
+
+            double discountCost = 1.5 * 0.9 + 1.8 * 0.9 + 2 * 0.5 + 2.5 * 0.5;
+            assertEquals(discountCost, order.getDiscountedCost(), "Discount cost should match the sum of added items.");
+
+            order.addItem("RL1"); // 3
+            order.addItem("SCK2"); // 1.5
+            order.addItem("FD4"); // 4.5
+            order.addItem("SD3"); // 2.5
+
+            totalCost = 1.5 + 2 + 1.8 + 2.5 + 3 + 1.5 + 4.5+ 2.5;
+            assertEquals(totalCost, order.getTotalCost(), "Total cost should match the sum of added items.");
+            assertNotEquals(totalCost, order.getDiscountedCost(), "Discounted cost should not match the sum of added items.");
+
+            discountCost = 1.5 * 0.75 + 2 * 0.5 + 1.8 * 0.9 + 2.5 * 0.5 + 3 + 1.5 + 4.5 * 0.75 + 2.5 * 0.9;
+            assertEquals(discountCost, order.getDiscountedCost(), "Discount cost should match the sum of added items.");
+
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
 }

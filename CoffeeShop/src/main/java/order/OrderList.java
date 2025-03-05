@@ -18,7 +18,10 @@ public class OrderList implements EntityList<Order, UUID> {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 
+    /** A queue to hold completed Order objects
+     * This will be used more in Stage 2 */
     private ArrayList<Order> completeOrders;
+
     /**
      * Initialises the queue to contain all the orders
      */
