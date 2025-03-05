@@ -71,7 +71,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the correct item
      * @return a double which holds cost information
      */
-    public double getCost(String itemID) throws InvalidItemIDException {
+    public double getCost(String itemID) {
         return items.get(itemID).getCost();
     }
 

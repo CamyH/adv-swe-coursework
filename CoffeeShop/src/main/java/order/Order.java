@@ -21,7 +21,7 @@ public class Order {
     private final UUID orderID;
 
     /** Unique identifier for the customer who placed the order */
-    private final String customerID;
+    private final UUID customerID;
 
     /** Timestamp representing when the order was placed */
     private final LocalDateTime timestamp;
@@ -47,7 +47,7 @@ public class Order {
         }
 
         // Initialize fields
-        this.customerID = UUID.randomUUID().toString(); // Generate a random UUID for customer ID
+        this.customerID = UUID.randomUUID(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
@@ -87,29 +87,40 @@ public class Order {
      * The total cost is recalculated after the item is added.
      *
      * @param itemID The ID of the item to add to the order
+     * @throws InvalidItemIDException if the item ID is invalid
      */
-    public void addItem(String itemID) {
-        orderDetails.add(itemID);
-        totalCost = calculateTotalCost();  // Recalculate the total cost after adding an item
+    public void addItem(String itemID) throws InvalidItemIDException{
+        if (!menu.itemExists(itemID)) {
+            throw new InvalidItemIDException("Invalid Item ID: " + itemID);
+        }
+
+        if (orderDetails.add(itemID)) calculateTotalCost();  // Recalculate the total cost after adding an item
+    }
+
+    /**
+     * Removes an item to the order.
+     * The total cost is recalculated after the item is removed.
+     *
+     * @param itemID The ID of the item to remove from the order
+     */
+    public boolean removeItem(String itemID) {
+        if (orderDetails.remove(itemID)) {
+            calculateTotalCost();
+            return true;
+        }
+        return false;
     }
 
     /**
      * Calculates the total cost of the order based on the items in the order.
      * The cost of each item is fetched from the menu.
-     * @return The total cost of the order
      */
-    private double calculateTotalCost() {
-        double cost = 0.0;      //assuming default cost here
+    private void calculateTotalCost() {
+        totalCost = 0.0;      //assuming default cost here
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
-            try {
-                cost += menu.getCost(itemID); // Can change this method according to need
-            }
-            catch (InvalidItemIDException e) {
-                System.out.println(e.getMessage());
-            }
+            totalCost += menu.getCost(itemID); // Can change this method according to need
         }
-        return cost;
     }
 
     /**
@@ -121,29 +132,29 @@ public class Order {
         return orderID;
     }
 
-   /**
-    * Returns the customer ID associated with the order.
-    *
-    * @return The customer ID as a string
-    */
-    public String getCustomerID() {
+    /**
+     * Returns the customer ID associated with the order.
+     *
+     * @return The customer ID as a string
+     */
+    public UUID getCustomerID() {
         return customerID;
     }
 
-   /**
-    * Returns the timestamp when the order was placed.
-    *
-    * @return The timestamp as a LocalDateTime object
-    */
+    /**
+     * Returns the timestamp when the order was placed.
+     *
+     * @return The timestamp as a LocalDateTime object
+     */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
     /**
-    * Returns the order details.
-    *
-    * @return the order details
-    */
+     * Returns the order details.
+     *
+     * @return the order details
+     */
     public ArrayList<String> getDetails() {
         return orderDetails;
     }
@@ -157,11 +168,11 @@ public class Order {
         return totalCost;
     }
 
-   /**
-    * Returns the total cost of the order after applying any applicable discounts.
-    * The discount is calculated using the Discount object associated with the order.
-    * @return The discounted cost of the order
-    */
+    /**
+     * Returns the total cost of the order after applying any applicable discounts.
+     * The discount is calculated using the Discount object associated with the order.
+     * @return The discounted cost of the order
+     */
     public double getDiscountedCost() {
         return totalCost - discount.calculateDiscount(totalCost);   //can modify later according to need
     }
