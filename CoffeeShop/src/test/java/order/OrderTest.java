@@ -128,14 +128,15 @@ public class OrderTest {
             order.addItem("RL1");
             order.addItem("HD1");
             order.addItem("SD1");
+            order.addItem("SD1");
 
-            assertEquals(3, order.getDetails().size(), "Order should have three items.");
+            assertEquals(4, order.getDetails().size(), "Order should have three items.");
             assertTrue(order.getDetails().contains("RL1"), "Order details should contain 'RL1'.");
             assertTrue(order.getDetails().contains("HD1"), "Order details should contain 'HD1'.");
             assertTrue(order.getDetails().contains("SD1"), "Order details should contain 'SD1'.");
 
             // Check the total cost after adding multiple items
-            double expectedCost = 3.0 + 2.0 + 1.5;  // RL1 + HD1 + SD1
+            double expectedCost = 3.0 + 2.0 + 1.5 + 1.5;  // RL1 + HD1 + SD1 + SD1
             assertEquals(expectedCost, order.getTotalCost(), "Total cost should match the sum of added items.");
         }
         catch (InvalidItemIDException e) {
@@ -150,6 +151,48 @@ public class OrderTest {
     public void testInvalidItemIDThrowsException() {
         // Try adding an invalid item and expect an exception
         assertThrows(InvalidItemIDException.class, () -> {order.addItem("invalidItemID");}, "Adding an invalid item ID should throw InvalidItemIDException.");
+        assertThrows(InvalidItemIDException.class, () -> {order.addItem("");}, "Adding an invalid item ID should throw InvalidItemIDException.");
+        assertThrows(InvalidItemIDException.class, () -> {order.addItem(null);}, "Adding an invalid item ID should throw InvalidItemIDException.");
+    }
+
+    /**
+     * Tests that remove method works as intended
+     */
+    @Test
+    public void testRemoveMethod() {
+        try {
+            order.addItem("RL1");
+            order.addItem("HD1");
+            order.addItem("SD1");
+            order.addItem("SD1");
+
+            assertTrue(order.removeItem("RL1"));
+
+            assertEquals(3, order.getDetails().size(), "Order should have three items.");
+            assertFalse(order.getDetails().contains("RL1"), "Order details should not contain 'RL1'.");
+            assertTrue(order.getDetails().contains("HD1"), "Order details should contain 'HD1'.");
+            assertTrue(order.getDetails().contains("SD1"), "Order details should contain 'SD1'.");
+
+            // Check the total cost after adding multiple items
+            double expectedCost = 2.0 + 1.5 + 1.5;  // HD1 + SD1 + SD1
+            assertEquals(expectedCost, order.getTotalCost(), "Total cost should match the sum of added items.");
+
+            assertFalse(order.removeItem("RL1"), "Removing an invalid item ID should return false");
+
+            assertTrue(order.removeItem("SD1"), "Removing one of the duplicate items");
+
+            assertEquals(2, order.getDetails().size(), "Order should have three items.");
+            assertFalse(order.getDetails().contains("RL1"), "Order details should not contain 'RL1'.");
+            assertTrue(order.getDetails().contains("HD1"), "Order details should contain 'HD1'.");
+            assertTrue(order.getDetails().contains("SD1"), "Order details should contain 'SD1'.");
+
+            // Check the total cost after adding multiple items
+            expectedCost = 2.0 + 1.5;  // HD1 + SD1 + SD1
+            assertEquals(expectedCost, order.getTotalCost(), "Total cost should match the sum of added items.");
+        }
+        catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

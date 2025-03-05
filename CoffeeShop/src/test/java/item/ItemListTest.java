@@ -97,31 +97,26 @@ public class ItemListTest {
      */
     @Test
     public void testGetCost() {
-        try {
-            /** JUnit Tests for Equal Cases */
-            assertEquals(3.0, itemList.getCost("RL1"));
-            assertEquals(3.5, itemList.getCost("RL2"));
-            assertEquals(2.8, itemList.getCost("RL3"));
-            assertEquals(3.0, itemList.getCost("RL4"));
-            assertEquals(4.0, itemList.getCost("FD1"));
-            assertEquals(4.5, itemList.getCost("FD2"));
-            assertEquals(5.0, itemList.getCost("FD3"));
-            assertEquals(4.5, itemList.getCost("FD4"));
-            assertEquals(3.0, itemList.getCost("FD5"));
+        /** JUnit Tests for Equal Cases */
+        assertEquals(3.0, itemList.getCost("RL1"));
+        assertEquals(3.5, itemList.getCost("RL2"));
+        assertEquals(2.8, itemList.getCost("RL3"));
+        assertEquals(3.0, itemList.getCost("RL4"));
+        assertEquals(4.0, itemList.getCost("FD1"));
+        assertEquals(4.5, itemList.getCost("FD2"));
+        assertEquals(5.0, itemList.getCost("FD3"));
+        assertEquals(4.5, itemList.getCost("FD4"));
+        assertEquals(3.0, itemList.getCost("FD5"));
 
-            /** JUnit Tests for Non Equal Cases */
-            assertNotEquals(1.99, itemList.getCost("HD1"));
-            assertNotEquals(3.51, itemList.getCost("HD6"));
-            assertNotEquals(2.4, itemList.getCost("SD3"));
-            assertNotEquals(3.1, itemList.getCost("SD8"));
-            assertNotEquals(1.4, itemList.getCost("SCK1"));
-            assertNotEquals(3.0, itemList.getCost("SCK7"));
-            assertNotEquals(2.0, itemList.getCost("PSY1"));
-            assertNotEquals(3.0, itemList.getCost("PSY4"));
-        }
-        catch (InvalidItemIDException e) {
-            System.out.println(e.getMessage());
-        }
+        /** JUnit Tests for Non Equal Cases */
+        assertNotEquals(1.99, itemList.getCost("HD1"));
+        assertNotEquals(3.51, itemList.getCost("HD6"));
+        assertNotEquals(2.4, itemList.getCost("SD3"));
+        assertNotEquals(3.1, itemList.getCost("SD8"));
+        assertNotEquals(1.4, itemList.getCost("SCK1"));
+        assertNotEquals(3.0, itemList.getCost("SCK7"));
+        assertNotEquals(2.0, itemList.getCost("PSY1"));
+        assertNotEquals(3.0, itemList.getCost("PSY4"));
     }
 
     /**

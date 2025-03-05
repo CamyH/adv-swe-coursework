@@ -20,7 +20,7 @@ public class Order {
     private final UUID orderID;
 
     /** Unique identifier for the customer who placed the order */
-    private final String customerID;
+    private final UUID customerID;
 
     /** Timestamp representing when the order was placed */
     private final LocalDateTime timestamp;
@@ -46,7 +46,7 @@ public class Order {
         }
 
         // Initialize fields
-        this.customerID = UUID.randomUUID().toString(); // Generate a random UUID for customer ID
+        this.customerID = UUID.randomUUID(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
@@ -66,27 +66,34 @@ public class Order {
         if (!menu.itemExists(itemID)) {
             throw new InvalidItemIDException("Invalid Item ID: " + itemID);
         }
-        orderDetails.add(itemID);
-        totalCost = calculateTotalCost();  // Recalculate the total cost after adding an item
+
+        if (orderDetails.add(itemID)) calculateTotalCost();  // Recalculate the total cost after adding an item
+    }
+
+    /**
+     * Removes an item to the order.
+     * The total cost is recalculated after the item is removed.
+     *
+     * @param itemID The ID of the item to remove from the order
+     */
+    public boolean removeItem(String itemID) {
+        if (orderDetails.remove(itemID)) {
+            calculateTotalCost();
+            return true;
+        }
+        return false;
     }
 
     /**
      * Calculates the total cost of the order based on the items in the order.
      * The cost of each item is fetched from the menu.
-     * @return The total cost of the order
      */
-    private double calculateTotalCost() {
-        double cost = 0.0;      //assuming default cost here
+    private void calculateTotalCost() {
+        totalCost = 0.0;      //assuming default cost here
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
-            try {
-                cost += menu.getCost(itemID); // Can change this method according to need
-            }
-            catch (InvalidItemIDException e) {
-                System.out.println(e.getMessage());
-            }
+            totalCost += menu.getCost(itemID); // Can change this method according to need
         }
-        return cost;
     }
 
     /**
@@ -103,7 +110,7 @@ public class Order {
      *
      * @return The customer ID as a string
      */
-    public String getCustomerID() {
+    public UUID getCustomerID() {
         return customerID;
     }
 
