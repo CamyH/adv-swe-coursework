@@ -31,10 +31,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             // Write the orders to the order file
             for (String order : ordersToWrite) {
-                writer.write(order);
+                writer.write(order + ',');
+                writer.newLine();
             }
 
-            writer.newLine();
         } catch (IOException e) {
             System.err.println("Error writing to the file: " + e.getMessage());
         }
