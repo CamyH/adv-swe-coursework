@@ -10,6 +10,10 @@ import java.io.*;
  * @author Cameron Hunt
  */
 public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
+    /**
+     * Constructor
+     * @param fileName the file to operate on
+     */
     public ItemFileReader(String fileName) {
         super(fileName);
     }

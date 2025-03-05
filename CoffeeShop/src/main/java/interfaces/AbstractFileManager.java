@@ -2,9 +2,19 @@ package interfaces;
 
 import java.io.*;
 
+/**
+ * Abstract Implementation of File Manager
+ * Contains the readFile code to reduce duplication
+ * @param <T> readFile return type
+ * @param <R> writeToFile param type
+ */
 public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     protected final String fileName;
 
+    /**
+     * Constructor
+     * @param fileName of the file to operate on
+     */
     public AbstractFileManager(String fileName) {
         this.fileName = fileName;
     }

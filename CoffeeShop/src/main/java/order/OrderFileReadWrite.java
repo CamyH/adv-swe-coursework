@@ -13,6 +13,10 @@ import java.util.*;
  * @author Cameron Hunt
  */
 public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList> {
+    /**
+     * Constructor
+     * @param fileName the file to operate on
+     */
     public OrderFileReadWrite(String fileName) {
         super(fileName);
     }
