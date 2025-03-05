@@ -1,15 +1,12 @@
 package client;
 
 import exceptions.InvalidItemIDException;
-import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
-import order.Order;
 import order.OrderList;
-import client.Console;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.ItemCategory;
+import item.ItemCategory;
 
 /**
  * author: Caelan Mackenzie
