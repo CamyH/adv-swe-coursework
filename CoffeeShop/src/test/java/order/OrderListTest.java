@@ -124,6 +124,8 @@ public class OrderListTest {
             orderList.add(o);
         } catch (InvalidOrderException e) {
             System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -156,6 +158,8 @@ public class OrderListTest {
             assertFalse(orderList.remove(o1.getOrderID()));
         } catch (InvalidOrderException e) {
             System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -187,6 +191,8 @@ public class OrderListTest {
             assertEquals(o1.getCustomerID(), o.getCustomerID());
             assertEquals(o1.getDetails(), o.getDetails());
         } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -252,6 +258,8 @@ public class OrderListTest {
         }
         catch (InvalidOrderException e) {
             System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
         }
 
         assertEquals(arr[0], newOrderList.getOrdersToString(true)[0]);
@@ -304,6 +312,8 @@ public class OrderListTest {
         }
         catch (InvalidOrderException e) {
             System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
         }
 
         assertEquals(arr[0], newOrderList.getOrdersToString(false)[0]);
@@ -338,6 +348,8 @@ public class OrderListTest {
             newOrderList.remove(second.getOrderID());
         }
         catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
+        } catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
         }
 
