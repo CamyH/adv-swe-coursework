@@ -135,7 +135,6 @@ public class Console {
                         break;
                     }
                     case "placeOrder": {
-                        // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
                         placeOrder(curOrder);
                         return;
                     }
