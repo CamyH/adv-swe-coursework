@@ -1,6 +1,8 @@
 package client;
+import exceptions.InvalidOrderException;
 import item.ItemList;
 import order.OrderList;
+import order.Order;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,10 +16,13 @@ import java.awt.event.ActionListener;
 public class GUI extends JFrame {
 
     // The item list (menu) to be displayed
-    // private ItemList menu;
+    private ItemList menu;
 
     // The order list to add submitted orders to
-    // private OrderList orders
+    private OrderList orders;
+
+    // An instance of the order object to edit before submitting
+    private Order curOrder;
 
     // GUI components
     private JPanel contentPanel;
@@ -45,6 +50,12 @@ public class GUI extends JFrame {
     // Constructor
     public GUI(ItemList menu, OrderList orders) {
 
+        try {
+            curOrder = new Order(menu);
+        } catch (InvalidOrderException e) {
+            throw new RuntimeException(e);
+        }
+
         // UI parameters
         setContentPane(contentPanel);
         setTitle("Coffee Shop App");
@@ -70,9 +81,10 @@ public class GUI extends JFrame {
 
         totalCostField.setText("£62.55");
         discountedCostField.setText("£50.02");
-        for (int i = 1; i<30; i++) {
-            displayMenuField.append("ItemName, £" + i + "\n");
+        for (String entry : menu.()) {
+            displayMenuField.append(entry + "/n");
         }
+
         orderDetailsField.setText("Empty");
 
     }
@@ -82,13 +94,13 @@ public class GUI extends JFrame {
 
         // Submit Order button functionality
         if (e.getSource() == submitOrderButton) {
+            submitOrder();
             JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
         }
 
         // Add Item button functionality
         else if (e.getSource() == addItemButton) {
-            String itemID = itemIDField.getText();
-            JOptionPane.showMessageDialog(GUI.this, itemID);
+            addItem();
         }
 
         // Exit
@@ -96,6 +108,15 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
             closeGUI();
         }
+
+    }
+
+    private void addItem() {
+        String itemID = itemIDField.getText();
+        JOptionPane.showMessageDialog(GUI.this, itemID);
+    }
+
+    public void submitOrder(){
 
     }
 
