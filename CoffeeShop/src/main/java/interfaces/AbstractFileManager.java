@@ -56,7 +56,12 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     @Override
     public abstract void writeToFile(R list) throws IOException;
 
-    protected abstract T ingestFileContents(StringBuilder fileContents) throws IOException;
+    /**
+     * Handle file content and assign to appropriate lists
+     * @param fileContents the content of the file to ingest
+     * @return the ingested file contents of the correct type
+     */
+    protected abstract T ingestFileContents(StringBuilder fileContents);
 
     /**
      * Closes this resource, relinquishing any underlying resources.
