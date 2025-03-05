@@ -8,7 +8,6 @@ import item.ItemList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.Discount;
-import utils.ItemCategory;
 
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
@@ -209,6 +208,9 @@ public class OrderTest {
         }, "Creating an order with a null menu should throw InvalidOrderException.");
     }
 
+    /**
+     * Tests that Calculating Discounts works as intended
+     */
     @Test
     public void testDiscountedCost() {
         try {

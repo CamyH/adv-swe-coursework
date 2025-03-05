@@ -136,11 +136,15 @@ public class OrderList implements EntityList<Order, UUID> {
         HashMap<String, Double> itemCount = new HashMap<>();
 
         double totalCost = 0;
+        double discountCost = 0;
+        double numOrders = 0;
 
-        for (Order o : completeOrders) {
+        for (Order o : inCompleteOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
+            discountCost += o.getDiscountedCost();
+            numOrders++;
 
             for (String s : string) {
                 itemCount.put(s, itemCount.getOrDefault(s, 0.0) + 1.0);
@@ -148,6 +152,8 @@ public class OrderList implements EntityList<Order, UUID> {
         }
 
         itemCount.put("total-cost", totalCost);
+        itemCount.put("discount-cost", discountCost);
+        itemCount.put("num-orders", numOrders);
 
         return itemCount;
     }

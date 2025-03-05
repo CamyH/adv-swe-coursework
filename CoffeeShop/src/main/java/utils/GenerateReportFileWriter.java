@@ -46,6 +46,37 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
 
     public static ArrayList<String> generateReport(OrderList orders, ItemList items) {
         ArrayList<String> reportDetails = new ArrayList<>();
+
+        String[] IDs = items.getItemIDs();
+        HashMap<String, Double> orderedItems = orders.completedOrderItemCount();
+
+        reportDetails.add("=======================");
+
+        reportDetails.add("Number of Items Ordered");
+        reportDetails.add("-----------------------");
+
+        for (String ID : IDs) {
+            reportDetails.add(ID + " = " + (int) orderedItems.getOrDefault(ID, 0.0).doubleValue());
+        }
+
+        reportDetails.add("-----------------------");
+        reportDetails.add("Cost Breakdown");
+        reportDetails.add("-----------------------");
+
+        reportDetails.add("Total Income (Excluding Discounts) : £" + String.format("%.2f", orderedItems.get("total-cost")));
+        reportDetails.add("Total Income (Including Discounts) : £" + String.format("%.2f", orderedItems.get("discount-cost")));
+        reportDetails.add("Total Orders : " + ((int) orderedItems.get("num-orders").doubleValue()));
+        reportDetails.add("Average Spend Per Order (Excluding Discounts) : " + String.format("%.2f",
+                orderedItems.get("num-orders") != 0
+                        ? orderedItems.get("total-cost") / orderedItems.get("num-orders")
+                        : 0.0));
+        reportDetails.add("Average Spend Per Order (Including Discounts) : " + String.format("%.2f",
+                orderedItems.get("num-orders") != 0
+                        ? orderedItems.get("discount-cost") / orderedItems.get("num-orders")
+                        : 0.0));
+        reportDetails.add("=======================");
+
+        /*
         HashMap<String, Integer> itemCount = new HashMap<>();
         double totalIncome = 0;
         int totalOrders = 0;
@@ -57,7 +88,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         for (Order order : orders.getOrderList()) {
             if (order.getDetails().isEmpty()) continue;
 
-            totalIncome += order.getTotalCost();
+            totalIncome += order.getDiscountedCost();
             totalOrders++;
 
             String itemList = String.join(";", order.getDetails());
@@ -78,7 +109,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         reportDetails.add("Total Income: £" + totalIncome);
         reportDetails.add("Total Orders: " + totalOrders);
         reportDetails.add("Average Spend Per Order: " + totalIncome / totalOrders);
-
+        */
         return reportDetails;
     }
 

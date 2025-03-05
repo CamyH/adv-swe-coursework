@@ -53,7 +53,6 @@ public class GUI extends JFrame {
 
     // Constructor
     public GUI(ItemList itemList, OrderList orderList) {
-
         orders = orderList;
         menu = itemList;
         try {

@@ -12,8 +12,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the OrderFileReadWrite class
@@ -52,10 +51,16 @@ public class OrderFileReadWriteTest {
     void testWriteFile() throws IOException {
         // Arrange
         OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile, menu);
-
+        OrderList orders = SetupOrderFile.generateOrderList();
 
         // Act
+        fileWriter.writeToFile(orders);
+        OrderList readOrders = fileWriter.readFile();
 
         // Assert
+        assertFalse(tempFile.isEmpty(), "The file should exist");
+        assertEquals(readOrders.getOrderList().element().getOrderID(),
+                orders.getOrderList().element().getOrderID(),
+                "Check the first OrderID of each element is identical");
     }
 }
