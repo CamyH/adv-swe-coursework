@@ -132,6 +132,7 @@ public class GUI extends JFrame {
     public void submitOrder(){
         try {
             orders.add(curOrder);
+            Demo.demoWriteOrders();
             JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
             orderDetailsField.setText("Current Order: \n");
             totalCostField.setText("£0.00");

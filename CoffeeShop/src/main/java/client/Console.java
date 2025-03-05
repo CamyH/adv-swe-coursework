@@ -141,6 +141,7 @@ public class Console {
                         // UPDATE WITH TRY/CATCH WHEN EMPTY ORDER EXCEPTION IS ADDED TO OrderList.add(Order)
                         try {
                             orders.add(curOrder);
+                            Demo.demoWriteOrders();
                         } catch (InvalidOrderException e) {
                             System.out.println(e.getMessage());
                             System.out.println("Order cannot be empty, add an item or cancel the order");

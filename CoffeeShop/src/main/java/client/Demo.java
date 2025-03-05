@@ -21,6 +21,8 @@ public class Demo {
 
     private static ItemList menu;
     private static OrderList orders;
+    private static OrderFileReadWrite orderReader;
+    private static ItemFileReader itemReader;
     static GUI gui;
 
     public Demo() {
@@ -43,14 +45,14 @@ public class Demo {
         // Create a new demo object
         Demo demo = new Demo();
 
-        OrderFileReadWrite orderReader = new OrderFileReadWrite("src/main/java/files/orders.txt");
+        orderReader = new OrderFileReadWrite("src/main/java/files/orders.txt");
         try {
             orders = orderReader.readFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        ItemFileReader itemReader = new ItemFileReader("src/main/java/files/menu.txt");
+        itemReader = new ItemFileReader("src/main/java/files/menu.txt");
         try {
             menu = itemReader.readFile();
         } catch (IOException e) {
@@ -101,5 +103,9 @@ public class Demo {
 
     static void demoCloseGUI(){
         gui.closeGUI();
+    }
+
+    static void demoWriteOrders(){
+        orderReader.writeToFile(orders);
     }
 }

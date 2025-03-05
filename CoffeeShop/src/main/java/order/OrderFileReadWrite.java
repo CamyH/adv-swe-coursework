@@ -46,8 +46,6 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
             System.out.println("Skipping " + e.getMessage());
         }
 
-        System.out.println(stringBuilder.toString());
-
         return ingestFileContents(stringBuilder);
     }
 
@@ -89,8 +87,6 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
 
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
-
-                System.out.println(line);
                 orderList.add(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),

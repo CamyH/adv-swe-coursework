@@ -65,7 +65,6 @@ public class ItemFileReader implements FileManager<ItemList, Object> {
                 if (line.trim().isEmpty()) continue;
 
                 String[] lineData = line.split(",");
-                System.out.println(line);
                 Item newItem = new Item(lineData[0], ItemCategory.valueOf(lineData[1]), Double.parseDouble(lineData[2]), lineData[3]);
 
                 itemList.add(newItem);
