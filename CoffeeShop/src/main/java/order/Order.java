@@ -74,7 +74,7 @@ public class Order {
                  double totalCost,
                  Discount discount) throws InvalidOrderException {
         this.orderID = UUID.fromString(orderID);
-        this.customerID = customerID;
+        this.customerID = UUID.fromString(customerID);
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.menu = menu;
