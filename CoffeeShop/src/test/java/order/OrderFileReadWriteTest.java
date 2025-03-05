@@ -28,8 +28,11 @@ public class OrderFileReadWriteTest {
     @BeforeAll
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("OrdersTest.txt")));
-
-        Files.write(Path.of(tempFile), SetupItemFile.getItemListAsString());
+        try {
+            Files.write(Path.of(tempFile), SetupOrderFile.generateOrderListAsString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

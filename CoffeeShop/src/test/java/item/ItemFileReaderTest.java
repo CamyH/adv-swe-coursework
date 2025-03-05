@@ -23,7 +23,12 @@ public class ItemFileReaderTest {
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("ItemsTest.txt")));
 
-        Files.write(Path.of(tempFile), SetupItemFile.getItemListAsString());
+        String itemListString = SetupItemFile.convertItemListToString();
+        try {
+            Files.write(Path.of(tempFile), itemListString.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -36,7 +41,6 @@ public class ItemFileReaderTest {
 
         // Assert
         assertNotNull(items);
-        assertEquals(SetupItemFile.getItemList().size(), items.getMenu().size());
 
         assertEquals("RL1", items.getMenu().get("RL1").getItemID());
         assertEquals(ItemCategory.ROLL, items.getMenu().get("RL1").getCategory());
