@@ -4,7 +4,6 @@ import exceptions.InvalidItemIDException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import utils.ItemCategory;
 
     /**
      * JUnit test class for the Item class.

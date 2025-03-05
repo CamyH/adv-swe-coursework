@@ -3,6 +3,7 @@ import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
 import utils.Discount;
+// import ItemList class here once defined
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class Order {
     private final ArrayList<String> orderDetails;
 
     /** Menu containing available items and their associated costs */
-    private final ItemList menu;   // ItemList class not defined yet
+    private final ItemList menu;
 
     /** The total cost of the order before any discount is applied */
     private double totalCost;
@@ -53,6 +54,32 @@ public class Order {
         this.menu = menu;
         this.totalCost = 0.0;   // Initialize the total cost to 0
         this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+    }
+
+    /**
+     * Constructor for reading in Order File
+     * @param orderID order ID string
+     * @param customerID customer ID string
+     * @param timestamp timestamp string
+     * @param menu items within the order
+     * @param totalCost total cost of the order
+     * @param discount the discount
+     * @throws InvalidOrderException if any params are incorrect
+     */
+    public Order(String orderID,
+                 String customerID,
+                 LocalDateTime timestamp,
+                 ArrayList<String> orderDetails,
+                 ItemList menu,
+                 double totalCost,
+                 Discount discount) throws InvalidOrderException {
+        this.orderID = UUID.fromString(orderID);
+        this.customerID = UUID.fromString(customerID);
+        this.timestamp = timestamp;
+        this.orderDetails = orderDetails;
+        this.menu = menu;
+        this.totalCost = totalCost;
+        this.discount = discount;
     }
 
     /**
