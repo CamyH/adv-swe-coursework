@@ -238,7 +238,12 @@ public class Console {
      */
     void viewOrderDetails() {
         System.out.println("Enter the order ID:");
+        System.out.println("Enter 'cancel' to cancel");
         String orderID = scanner.nextLine();
+        if (orderID.equals("cancel")) {
+            System.out.println("View order cancelled");
+            return;
+        }
         try {
             Order curOrder = orders.getOrder(UUID.fromString(orderID));
             System.out.println("Order details:");
@@ -252,8 +257,10 @@ public class Console {
             for (String itemID : curOrder.getDetails()) {
                 System.out.println(itemID);
             }
-        } catch (InvalidOrderException e) {
+            System.out.println("--------------------------");
+        } catch (InvalidOrderException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            System.out.println("Invalid Order ID");
         }
     }
 }

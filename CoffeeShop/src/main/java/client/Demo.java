@@ -2,10 +2,14 @@ package client;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
+import item.ItemCategory;
+import item.ItemFileReader;
 import item.ItemList;
 import order.Order;
+import order.OrderFileReadWrite;
 import order.OrderList;
-import utils.ItemCategory;
+
+import java.io.IOException;
 
 /**
  * Demo initialises the CoffeeShop program
@@ -38,6 +42,20 @@ public class Demo {
     public static void main2(String[] args) {
         // Create a new demo object
         Demo demo = new Demo();
+
+        OrderFileReadWrite orderReader = new OrderFileReadWrite("src/main/java/files/orders.txt");
+        try {
+            orders = orderReader.readFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ItemFileReader itemReader = new ItemFileReader("src/main/java/files/menu.txt");
+        try {
+            menu = itemReader.readFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         demo.showGUI();
         demo.showConsole();

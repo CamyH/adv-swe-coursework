@@ -90,6 +90,7 @@ public class OrderFileReadWrite implements FileManager<OrderList, OrderList> {
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
 
+                System.out.println(line);
                 orderList.add(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
