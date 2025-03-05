@@ -6,7 +6,7 @@ import item.SetupItemFile;
 
 public class SetupOrderFile {
     private static final OrderList orderList = new OrderList();
-    private static final ItemList itemList = SetupItemFile.getItemList();
+    private static final ItemList itemList = SetupItemFile.generateItemList();
 
     /**
      * Generate an order list to be used for tests
