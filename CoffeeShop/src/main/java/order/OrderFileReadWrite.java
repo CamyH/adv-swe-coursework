@@ -28,7 +28,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     @Override
     public void writeToFile(OrderList orders) {
         String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             // Write the orders to the order file
             for (String order : ordersToWrite) {
                 writer.write(order + ',');
@@ -57,6 +57,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
 
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
+
+                UUID.fromString(lineData[0]);
+                UUID.fromString(lineData[1]);
+
                 orderList.add(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
@@ -64,7 +68,9 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         menu));
             }
         } catch (InvalidOrderException e) {
-            System.err.println("Skipping " + e.getMessage());
+            System.err.println("Skipping : " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Skipping : " + e.getMessage());
         }
 
         return orderList;

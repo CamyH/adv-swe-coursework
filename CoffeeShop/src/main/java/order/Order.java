@@ -5,7 +5,6 @@ import item.ItemCategory;
 import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
-// import ItemList class here once defined
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -74,11 +73,21 @@ public class Order {
                  LocalDateTime timestamp,
                  ArrayList<String> orderDetails,
                  ItemList menu) throws InvalidOrderException {
+
         this.orderID = UUID.fromString(orderID);
         this.customerID = UUID.fromString(customerID);
+
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
+
+        if (menu == null) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
+        if (menu.getMenu().isEmpty()) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
         this.menu = menu;
+
         discountsMap = Discount.createDiscounts();
 
         calculateTotalCost();

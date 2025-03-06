@@ -48,7 +48,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
         StringBuilder fileContents = new StringBuilder();
 
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = getClass().getResourceAsStream(fileName)) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
             String line;
             while ((line = reader.readLine()) != null) {

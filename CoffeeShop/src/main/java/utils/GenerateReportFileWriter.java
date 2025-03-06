@@ -76,50 +76,16 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         reportDetails.add("Total Income (Excluding Discounts) : £" + String.format("%.2f", orderedItems.get("total-cost")));
         reportDetails.add("Total Income (Including Discounts) : £" + String.format("%.2f", orderedItems.get("discount-cost")));
         reportDetails.add("Total Orders : " + ((int) orderedItems.get("num-orders").doubleValue()));
-        reportDetails.add("Average Spend Per Order (Excluding Discounts) : " + String.format("%.2f",
+        reportDetails.add("Average Spend Per Order (Excluding Discounts) : £" + String.format("%.2f",
                 orderedItems.get("num-orders") != 0
                         ? orderedItems.get("total-cost") / orderedItems.get("num-orders")
                         : 0.0));
-        reportDetails.add("Average Spend Per Order (Including Discounts) : " + String.format("%.2f",
+        reportDetails.add("Average Spend Per Order (Including Discounts) : £" + String.format("%.2f",
                 orderedItems.get("num-orders") != 0
                         ? orderedItems.get("discount-cost") / orderedItems.get("num-orders")
                         : 0.0));
         reportDetails.add("=======================");
 
-        /*
-        HashMap<String, Integer> itemCount = new HashMap<>();
-        double totalIncome = 0;
-        int totalOrders = 0;
-
-        for (Item item : items.getMenu().values()) {
-            itemCount.put(item.getItemID(), 0);
-        }
-
-        for (Order order : orders.getOrderList()) {
-            if (order.getDetails().isEmpty()) continue;
-
-            totalIncome += order.getDiscountedCost();
-            totalOrders++;
-
-            String itemList = String.join(";", order.getDetails());
-            String[] itemIds = itemList.split(";");
-
-            for (String itemId : itemIds) {
-                itemCount.put(itemId, itemCount.getOrDefault(itemId, 0) + 1);
-            }
-        }
-
-        reportDetails.add("=======================");
-
-        for (Map.Entry<String, Integer> item : itemCount.entrySet()) {
-            reportDetails.add(item.getKey() + " = " + item.getValue());
-        }
-
-        reportDetails.add("-----------------------");
-        reportDetails.add("Total Income: £" + totalIncome);
-        reportDetails.add("Total Orders: " + totalOrders);
-        reportDetails.add("Average Spend Per Order: " + totalIncome / totalOrders);
-        */
         return reportDetails;
     }
 

@@ -19,7 +19,7 @@ public class OrderList implements EntityList<Order, UUID> {
     private Queue<Order> inCompleteOrders;
 
     /** A queue to hold completed Order objects
-     * This will be used more in Stage 2 */
+     * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
 
     /**
@@ -139,7 +139,7 @@ public class OrderList implements EntityList<Order, UUID> {
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : completeOrders) {
+        for (Order o : inCompleteOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
@@ -158,6 +158,12 @@ public class OrderList implements EntityList<Order, UUID> {
         return itemCount;
     }
 
+    /**
+     * Method to
+     *
+     * @param completed
+     * @return String[]
+     */
     public String[] orderIDsToString(boolean completed) {
         Collection<Order> c = completeOrders;
 

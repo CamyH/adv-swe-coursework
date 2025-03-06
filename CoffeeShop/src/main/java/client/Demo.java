@@ -42,14 +42,15 @@ public class Demo {
         // Create a new demo object
         Demo demo = new Demo();
 
-        itemReader = new ItemFileReader("src/main/java/files/menu.txt");
+        //itemReader = new ItemFileReader("src/main/java/files/menu.txt");
+        itemReader = new ItemFileReader("/files/menu.txt");
         try {
             menu = itemReader.readFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        orderReader = new OrderFileReadWrite("src/main/java/files/orders.txt", menu);
+        orderReader = new OrderFileReadWrite("/files/orders.txt", menu);
         try {
             orders = orderReader.readFile();
         } catch (IOException e) {
@@ -62,7 +63,7 @@ public class Demo {
 
     static void demoCloseGUI(){
         gui.closeGUI();
-        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("src/main/java/files/report.txt");
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("/files/report.txt");
         ArrayList<String> report = GenerateReportFileWriter.generateReport(orders, menu);
         generateReportFileWriter.writeToFile(report);
     }
