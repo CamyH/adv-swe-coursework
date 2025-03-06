@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -239,6 +240,10 @@ public class OrderListTest {
         myMap.put("PSY5", 1.0);
 
         myMap.put("total-cost", 19.8);
+        myMap.put("discount-cost", 19.8 - 1.5 - 1.25);
+        myMap.put("num-orders", 2.0);
+
+        // 3 + 3* 0.5 + 2.5 + 2.50 * 0.5
 
         HashMap<String, Double> itemCount = newOrderList.completedOrderItemCount();
 

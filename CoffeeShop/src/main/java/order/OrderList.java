@@ -139,7 +139,7 @@ public class OrderList implements EntityList<Order, UUID> {
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : inCompleteOrders) {
+        for (Order o : completeOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
