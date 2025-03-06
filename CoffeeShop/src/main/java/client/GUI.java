@@ -51,7 +51,12 @@ public class GUI extends JFrame {
     private JButton removeItemButton;
 
 
-    // Constructor
+    /**
+     * Sets up the GUI
+     *
+     * @param itemList takes an item List object
+     * @param orderList takes an order List object
+     */
     public GUI(ItemList itemList, OrderList orderList) {
         
         orders = orderList;
@@ -105,7 +110,11 @@ public class GUI extends JFrame {
 
     }
 
-    // Functionality for when a button is pressed
+    /**
+     * Method to check for button clicks and interactions within the GUI
+     *
+     * @param e Action e
+     */
     public void actionPerformed(ActionEvent e) {
 
         // Submit Order button functionality
@@ -138,6 +147,9 @@ public class GUI extends JFrame {
 
     }
 
+    /**
+     * Adds items to GUI
+     */
     private void addItem() {
         String itemID = itemIDField.getText();
         try {
@@ -149,6 +161,9 @@ public class GUI extends JFrame {
         updateUI();
     }
 
+    /**
+     * Removes item from GUI order
+     */
     private void removeItem(){
         String itemID = itemIDField.getText();
         if (!curOrder.removeItem(itemID.toUpperCase())) JOptionPane.showMessageDialog(GUI.this, itemID.toUpperCase() + " is not a valid item ID");
@@ -157,11 +172,17 @@ public class GUI extends JFrame {
         updateUI();
     }
 
+    /**
+     * Removes last item from GUI order
+     */
     private void removeLastItem(){
         if (!curOrder.removeLastItem()) JOptionPane.showMessageDialog(GUI.this,  "No Items in this Order");
         updateUI();
     }
 
+    /**
+     * Submits GUI order
+     */
     public void submitOrder(){
         try {
             orders.add(curOrder);
@@ -178,6 +199,9 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Cancels GUI order
+     */
     public void cancelOrder() {
         JOptionPane.showMessageDialog(GUI.this, "Order Cancelled");
         try {
@@ -188,6 +212,9 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Updates GUI
+     */
     private void updateUI() {
         orderDetailsField.setText("Current Order: \n");
         for (String entry : curOrder.getDetails()) {
@@ -197,6 +224,9 @@ public class GUI extends JFrame {
         discountedCostField.setText("£" + String.format("%.2f", curOrder.getDiscountedCost()));
     }
 
+    /**
+     * Closes GUI
+     */
     public void closeGUI() {
         // close the window
         GUI.this.dispose();

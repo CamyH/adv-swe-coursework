@@ -20,6 +20,12 @@ public class Console {
 
     public Scanner scanner;
 
+    /**
+     * starts up the console
+     *
+     * @param itemList takes in itemList
+     * @param orderList takes in orderList
+     */
     public Console(ItemList itemList, OrderList orderList) {
 
         menu = itemList;
@@ -27,6 +33,9 @@ public class Console {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Runs the console
+     */
     public void run(){
         System.out.println("Coffee Shop Console");
         System.out.println("Type 'help' for a list of commands.");
@@ -186,6 +195,11 @@ public class Console {
 
     }
 
+    /**
+     * Removes the last item from the current order object
+     *
+     * @param curOrder The order to remove the last item from
+     */
     void removeLastItem(Order curOrder) {
         curOrder.removeLastItem();
         System.out.println("Removed the last item from the current order");
@@ -231,6 +245,11 @@ public class Console {
         System.out.println("----------------------------");
     }
 
+    /**
+     * Method to place and order from the console
+     *
+     * @param curOrder Current Order that should be placed
+     */
     private void placeOrder(Order curOrder) {
         try {
             orders.add(curOrder);
@@ -242,6 +261,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to print console command descriptions
+     */
     void printCmdDescriptions() {
         System.out.println("viewMenu prints a list of all available items and their details.");
         System.out.println("newOrder starts a new order.");
@@ -266,7 +288,7 @@ public class Console {
     }
 
     /**
-     *
+     * Method to view order details
      */
     void viewOrderDetails() {
         System.out.println("Enter the order ID:");

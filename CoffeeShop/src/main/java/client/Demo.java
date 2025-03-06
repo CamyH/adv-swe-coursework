@@ -22,22 +22,33 @@ public class Demo {
     private static ItemFileReader itemReader;
     static GUI gui;
 
+    /**
+     * Initialises and Empty ItemList and OrderList
+     */
     public Demo() {
         // Initialise empty Item List and Order List
         menu = new ItemList();
         orders = new OrderList();
     }
 
+    /**
+     * Runs the Console Code
+     */
     public void showConsole() {
         Console console =  new Console(menu,orders);
         console.run();
     }
 
+    /**
+     * Starts the GUI
+     */
     public void showGUI() {
         gui = new GUI(menu,orders);
     }
 
-
+    /**
+     * Starts the whole system
+     */
     public static void main(String[] args) {
         // Create a new demo object
         Demo demo = new Demo();
@@ -61,6 +72,9 @@ public class Demo {
         demo.showConsole();
     }
 
+    /**
+     * Closes the GUI
+     */
     static void demoCloseGUI(){
         gui.closeGUI();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("/files/report.txt");
@@ -68,6 +82,9 @@ public class Demo {
         generateReportFileWriter.writeToFile(report);
     }
 
+    /**
+     * Writes to order txt file
+     */
     static void demoWriteOrders(){
         orderReader.writeToFile(orders);
     }
