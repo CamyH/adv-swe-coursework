@@ -54,28 +54,41 @@ gradle build
 
 _This will download necessary dependencies and compile the project._
 
+<h2 align="center">Running the Project</h2>
+
+Once the project is built, you can run the main application:
+
+java -jar CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar
+
+
 <h2 align="center">Repository Structure</h2>
 
 The repository is split mainly into coursework and src files. The src files contain both the main and testing code.
 
 * [Coursework](https://github.com/CamyH/adv-swe-coursework)
   * [CoffeeShop/](CoffeeShop)  # Codebase
-  * [README.md](README.md)  #read me
+    * [out/artifacts/CoffeeShop_jar/](CoffeeShop/out/artifacts/CoffeeShop_jar)   # jar file to run the application
+      * [files/](CoffeeShop/out/artifacts/CoffeeShop_jar/files)  # txt files
+      * [CoffeeShop.jar](CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar)   # App to run
+     * [src/](CoffeeShop/src)    # source files
+       * [main/](CoffeeShop/src/main)
+         * [java/](CoffeeShop/src/main/java)
+           * [client/](CoffeeShop/src/main/java/client) # GUI files
+           * [exceptions/](CoffeeShop/src/main/java/exceptions)
+           * [files/](CoffeeShop/src/main/java/files)  # txt files
+           * [interfaces/](CoffeeShop/src/main/java/interfaces) 
+           * [item/](CoffeeShop/src/main/java/item) 
+           * [order/](CoffeeShop/src/main/java/order)
+           * [utils/](CoffeeShop/src/main/java/utils)
+         * [resources/files/](CoffeeShop/src/main/resources/files)
+       * [test/java/](CoffeeShop/src/test/java)   # All test classes
+         * [client/](CoffeeShop/src/test/java/client)  # GUI and Console Test classes
+         * [item](CoffeeShop/src/test/java/item)  # Item test classes
+         * [order](CoffeeShop/src/test/java/order)  # Order test classes
+         * [utils](CoffeeShop/src/test/java/utils)
+  * [README.md](README.md)
   * [menu.txt](menu.txt)
-* [src/](CoffeeShop/src)    # source files
-  * [main/java/](CoffeeShop/src/main/java)
-    * [client/](CoffeeShop/src/main/java/client) # GUI files
-    * [exceptions/](CoffeeShop/src/main/java/exceptions)  # Custom exceptions
-    * [files/](CoffeeShop/src/main/java/files)  # txt files
-    * [interfaces/](CoffeeShop/src/main/java/interfaces)  # Interfaces
-    * [item/](CoffeeShop/src/main/java/item) # All item classes
-    * [order/](CoffeeShop/src/main/java/order) # All Order Classes
-    * [utils/](CoffeeShop/src/main/java/utils)
-  * [test/java/](CoffeeShop/src/test/java)   # All test classes
-    * [client/](CoffeeShop/src/test/java/client)  # GUI and Console Test classes
-    * [item](CoffeeShop/src/test/java/item)  # Item test classes
-    * [order](CoffeeShop/src/test/java/order)  # Order test classes
-    * [utils](CoffeeShop/src/test/java/utils)
+
 
 
 <h2 align="center">Data Structures Used </h2>
