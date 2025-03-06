@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,10 +49,19 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         ArrayList<String> reportDetails = new ArrayList<>();
 
         String[] IDs = items.getItemIDs();
+        String[] orderStrings = orders.getOrdersToString(false);
         HashMap<String, Double> orderedItems = orders.completedOrderItemCount();
 
         reportDetails.add("=======================");
 
+        reportDetails.add("Current Order Details");
+        reportDetails.add("-----------------------");
+
+        for (String o : orderStrings) {
+            reportDetails.add(o);
+        }
+
+        reportDetails.add("-----------------------");
         reportDetails.add("Number of Items Ordered");
         reportDetails.add("-----------------------");
 
@@ -60,7 +70,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         }
 
         reportDetails.add("-----------------------");
-        reportDetails.add("Cost Breakdown");
+        reportDetails.add("Total Cost Breakdown");
         reportDetails.add("-----------------------");
 
         reportDetails.add("Total Income (Excluding Discounts) : £" + String.format("%.2f", orderedItems.get("total-cost")));
