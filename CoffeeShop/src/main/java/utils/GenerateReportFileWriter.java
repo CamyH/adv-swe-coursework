@@ -1,15 +1,15 @@
 package utils;
 
+import client.GUI;
 import interfaces.AbstractFileManager;
 import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
 
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.print.attribute.URISyntax;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +32,16 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
      */
     @Override
     public void writeToFile(ArrayList<String> report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        String jarDirPath = "";
+        try {
+            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
+
+        File filePath = new File(jarDirPath, fileName);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the orders to the order file
             for (String order : report) {
                 writer.write(order);

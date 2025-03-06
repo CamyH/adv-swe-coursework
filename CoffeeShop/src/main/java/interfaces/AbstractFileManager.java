@@ -1,8 +1,10 @@
 package interfaces;
 
+import client.GUI;
 import item.ItemList;
 
 import java.io.*;
+import java.net.URISyntaxException;
 
 /**
  * Abstract Implementation of File Manager
@@ -41,26 +43,30 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      */
     @Override
     public T readFile() throws IOException {
-        File file = new File(fileName);
+        String jarDirPath = "";
+        try {
+            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
 
-        // Throw exception early if file does not exist
-        if (!file.exists()) throw new FileNotFoundException();
+        // Construct the full path to the file
+        File filePath = new File(jarDirPath, fileName);
 
         StringBuilder fileContents = new StringBuilder();
 
-        try (InputStream fis = getClass().getResourceAsStream(fileName)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 fileContents.append(line);
                 fileContents.append(System.lineSeparator());
             }
         } catch (IOException e) {
-            System.out.println("Skipping " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
 
-        return ingestFileContents(fileContents);
-    }
+            return ingestFileContents(fileContents);
+        }
 
     /**
      * Write to a given file

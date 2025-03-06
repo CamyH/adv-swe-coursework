@@ -1,10 +1,12 @@
 package order;
 
+import client.GUI;
 import exceptions.InvalidOrderException;
 import interfaces.AbstractFileManager;
 import item.ItemList;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -27,8 +29,17 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      */
     @Override
     public void writeToFile(OrderList orders) {
+        String jarDirPath = "";
+        try {
+            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
+
+        File filePath = new File(jarDirPath, fileName);
+
         String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the orders to the order file
             for (String order : ordersToWrite) {
                 writer.write(order + ',');
