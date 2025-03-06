@@ -23,6 +23,12 @@ public class OrderFileReadWriteTest {
 
     private static ItemList menu;
 
+    /**
+     * Sets up the temporary file
+     *
+     * @param tempDir creates a temporary file directory
+     * @throws IOException if file cannot be opened
+     */
     @BeforeAll
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("OrdersTest.txt")));
@@ -35,6 +41,11 @@ public class OrderFileReadWriteTest {
         menu = SetupItemFile.generateItemList();
     }
 
+    /**
+     * Tests if file can be read
+     *
+     * @throws IOException if file cannot be opened
+     */
     @Test
     void testReadFile() throws IOException {
         // Arrange
@@ -47,6 +58,11 @@ public class OrderFileReadWriteTest {
         assertNotNull(orders);
     }
 
+    /**
+     * Tests if a file can be written to
+     *
+     * @throws IOException if file cannot be opened
+     */
     @Test
     void testWriteFile() throws IOException {
         // Arrange

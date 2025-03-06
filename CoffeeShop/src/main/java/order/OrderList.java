@@ -159,10 +159,10 @@ public class OrderList implements EntityList<Order, UUID> {
     }
 
     /**
-     * Method to
+     * Method to return a string array of Order IDs to be used on the console
      *
-     * @param completed
-     * @return String[]
+     * @param completed chooses whether to convert completed or incomplete order IDs to string
+     * @return String[] returns a string array of IDs that can be printed directly
      */
     public String[] orderIDsToString(boolean completed) {
         Collection<Order> c = completeOrders;

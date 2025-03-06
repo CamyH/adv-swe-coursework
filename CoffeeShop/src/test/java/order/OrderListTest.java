@@ -13,6 +13,12 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * JUnit tests for the Order List class.
+ *
+ * @author Fraser Holman
+ */
+
 public class OrderListTest {
     OrderList orderList;
 
@@ -20,6 +26,9 @@ public class OrderListTest {
 
     Order first;
 
+    /**
+     * Sets up the menu in an ItemList object and generates a basic OrderList class
+     */
     @BeforeEach
     public void setUp() {
         itemList = SetupItemFile.generateItemList();
@@ -27,6 +36,9 @@ public class OrderListTest {
         first = orderList.getOrder();
     }
 
+    /**
+     * Tests adding orders to the OrderList
+     */
     @Test
     void testAddOrder() {
         try {
@@ -38,6 +50,9 @@ public class OrderListTest {
         }
     }
 
+    /**
+     * Tests removing orders from an order List object
+     */
     @Test
     void testRemove() {
         try {
@@ -59,6 +74,9 @@ public class OrderListTest {
         }
     }
 
+    /**
+     * Tests getting the first order in the queue
+     */
     @Test
     void testGetOrder() {
         Order o1 = orderList.getOrder();
@@ -71,6 +89,9 @@ public class OrderListTest {
         assertEquals(o1.getDetails(), first.getDetails());
     }
 
+    /**
+     * Tests getting an order with its Order ID
+     */
     @Test
     void testGetOrderWithID() {
         try {
@@ -91,6 +112,9 @@ public class OrderListTest {
         }
     }
 
+    /**
+     * Tests getting the Order List data structure
+     */
     @Test
     void testGetOrderList() {
         Queue<Order> myList = orderList.getOrderList();
@@ -104,6 +128,9 @@ public class OrderListTest {
         assertNotEquals(orderList.getOrder(), myList.peek());
     }
 
+    /**
+     * Tests getting a string array of completed order details
+     */
     @Test
     void testGetCompletedOrdersToString() {
         String[] arr = new String[2];
@@ -155,6 +182,9 @@ public class OrderListTest {
         assertEquals(arr.length, newOrderList.getOrdersToString(true).length);
     }
 
+    /**
+     * Tests getting a string array of in complete order details
+     */
     @Test
     void testGetUnCompletedOrdersToString() {
         String[] arr = new String[2];
@@ -204,6 +234,9 @@ public class OrderListTest {
 
     }
 
+    /**
+     * Tests getting a summary of the number of items purchased in a session
+     */
     @Test
     void testCompletedOrderItemCount() {
         HashMap<String, Double> myMap = new HashMap<>();

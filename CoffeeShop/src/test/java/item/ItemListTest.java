@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+/**
+ * JUnit tests for the Item List class.
+ *
+ * @author Fraser Holman
+ */
 public class ItemListTest {
     private static ItemList itemList;
 

@@ -19,6 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ItemFileReaderTest {
     private static String tempFile;
+
+    /**
+     * Sets up a temporary file directory to be used for tests
+     *
+     * @param tempDir sets up a temporary file directory
+     * @throws IOException if file cannot be opened
+     */
     @BeforeAll
     static void setup(@TempDir Path tempDir) throws IOException {
         tempFile = String.valueOf(Files.createFile(tempDir.resolve("ItemsTest.txt")));
@@ -31,6 +38,11 @@ public class ItemFileReaderTest {
         }
     }
 
+    /**
+     * Tests if the file can be read
+     *
+     * @throws IOException if file cannot be opened
+     */
     @Test
     void testReadFile() throws IOException {
         // Arrange
@@ -48,6 +60,9 @@ public class ItemFileReaderTest {
         assertEquals("BACON ROLL", items.getMenu().get("RL1").getDescription());
     }
 
+    /**
+     * Tests if the read file is not null
+     */
     @Test
     void testReadFileNotNull() {
         try (ItemFileReader itemFileReader = new ItemFileReader(tempFile.toString())) {
@@ -59,6 +74,9 @@ public class ItemFileReaderTest {
         }
     }
 
+    /**
+     * Tests if the file being read does not exist
+     */
     @Test
     void testReadFileDoesNotExist() {
         assertThrows(FileNotFoundException.class, () -> {
