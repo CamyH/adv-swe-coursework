@@ -17,12 +17,35 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
     protected ItemList menu;
 
+    protected File filePath;
+
     /**
      * Constructor
      * @param fileName of the file to operate on
      */
     public AbstractFileManager(String fileName) {
         this.fileName = fileName;
+
+        String jarDirPath = "";
+        try {
+            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
+
+        File jarFilePath = new File(jarDirPath, fileName);
+
+        // File location for IDE execution (assuming "src/main/java/files/")
+        File ideFilePath = new File("src/main/java/files/", fileName);
+
+        filePath = null;
+
+        if (jarFilePath.exists()) {
+            filePath = jarFilePath;
+        }
+        else if (ideFilePath.exists()) {
+            filePath = ideFilePath;
+        }
     }
 
     /**
@@ -31,7 +54,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      * @param menu the menu
      */
     public AbstractFileManager(String fileName, ItemList menu) {
-        this.fileName = fileName;
+        this(fileName);
         this.menu = menu;
     }
 
@@ -43,30 +66,25 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      */
     @Override
     public T readFile() throws IOException {
-        String jarDirPath = "";
-        try {
-            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-        } catch (URISyntaxException e) {
-            System.err.println(e.getMessage());
-        }
-
-        // Construct the full path to the file
-        File filePath = new File(jarDirPath, fileName);
-
         StringBuilder fileContents = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                fileContents.append(line);
-                fileContents.append(System.lineSeparator());
+        if (filePath != null) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileContents.append(line);
+                    fileContents.append(System.lineSeparator());
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+        }
+        else {
+            throw new RuntimeException();
         }
 
-            return ingestFileContents(fileContents);
-        }
+        return ingestFileContents(fileContents);
+    }
 
     /**
      * Write to a given file
