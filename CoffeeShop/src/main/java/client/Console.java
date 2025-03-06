@@ -15,11 +15,20 @@ import order.OrderList;
  */
 public class Console {
 
+    /** ItemList object holding the item information */
     private final ItemList menu;
+
+    /** Order List holding all existing orders */
     private final OrderList orders;
 
     public Scanner scanner;
 
+    /**
+     * starts up the console
+     *
+     * @param itemList takes in itemList
+     * @param orderList takes in orderList
+     */
     public Console(ItemList itemList, OrderList orderList) {
 
         menu = itemList;
@@ -27,6 +36,9 @@ public class Console {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Runs the console
+     */
     public void run(){
         System.out.println("Coffee Shop Console");
         System.out.println("Type 'help' for a list of commands.");
@@ -68,7 +80,6 @@ public class Console {
                     break;
                 }
                 case "quit": {
-                    System.out.println("Goodbye.");
                     Demo.demoCloseGUI();
                     return;
                 }
@@ -130,6 +141,10 @@ public class Console {
                         removeLastItem(curOrder);
                         break;
                     }
+                    case "removeItem": {
+                        removeItem(curOrder);
+                        break;
+                    }
                     case "previewOrder": {
                         previewOrder(curOrder);
                         break;
@@ -139,7 +154,7 @@ public class Console {
                         return;
                     }
                     case "help": {
-                        System.out.println("addItem, removeLastItem, previewOrder, placeOrder, cancel");
+                        System.out.println("addItem, removeItem, removeLastItem, previewOrder, placeOrder, cancel");
                         break;
                     }
                     case "cancel": {
@@ -164,14 +179,29 @@ public class Console {
         System.out.println("Enter the item ID:");
         String curItemID = scanner.nextLine();
         try {
-            curOrder.addItem(curItemID);
+            curOrder.addItem(curItemID.toUpperCase());
         } catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
-            System.out.println("Invalid item ID");
         }
 
     }
 
+    /**
+     * Removes a specific item from the current order
+     */
+    void removeItem(Order curOrder) {
+
+        System.out.println("Enter the item ID:");
+        String curItemID = scanner.nextLine();
+        if (!curOrder.removeItem(curItemID.toUpperCase())) System.out.println(curItemID.toUpperCase() + " not a valid item ID");
+
+    }
+
+    /**
+     * Removes the last item from the current order object
+     *
+     * @param curOrder The order to remove the last item from
+     */
     void removeLastItem(Order curOrder) {
         curOrder.removeLastItem();
         System.out.println("Removed the last item from the current order");
@@ -206,28 +236,36 @@ public class Console {
                 System.out.println("Item ID: " + item.getItemID());
                 System.out.println("Description: " + item.getDescription());
                 System.out.println("Category: " + item.getCategory());
-                System.out.println("Cost: £" + item.getCost());
+                System.out.println("Cost: £" + String.format("%.2f", item.getCost()));
                 System.out.println("------------------------");
             }
         }
 
         // Print cost details
-        System.out.println("Total Cost: £" + totalCost);
-        System.out.println("Discounted Cost: £" + discountedCost);
+        System.out.println("Total Cost: £" + String.format("%.2f", totalCost));
+        System.out.println("Discounted Cost: £" + String.format("%.2f", discountedCost));
         System.out.println("----------------------------");
     }
 
+    /**
+     * Method to place and order from the console
+     *
+     * @param curOrder Current Order that should be placed
+     */
     private void placeOrder(Order curOrder) {
         try {
             orders.add(curOrder);
             Demo.demoWriteOrders();
             System.out.println("Order placed successfully");
         } catch (InvalidOrderException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             System.out.println("Order cannot be empty, add an item or cancel the order");
         }
     }
 
+    /**
+     * Method to print console command descriptions
+     */
     void printCmdDescriptions() {
         System.out.println("viewMenu prints a list of all available items and their details.");
         System.out.println("newOrder starts a new order.");
@@ -252,7 +290,7 @@ public class Console {
     }
 
     /**
-     *
+     * Method to view order details
      */
     void viewOrderDetails() {
         System.out.println("Enter the order ID:");
@@ -269,8 +307,8 @@ public class Console {
             System.out.println("Order ID: " + curOrder.getOrderID());
             System.out.println("Customer ID: " + curOrder.getCustomerID());
             System.out.println("Timestamp: " + curOrder.getTimestamp());
-            System.out.println("Total Cost: " + curOrder.getTotalCost());
-            System.out.println("Discounted Cost: " + curOrder.getDiscountedCost());
+            System.out.println("Total Cost: £" + String.format("%.2f", curOrder.getTotalCost()));
+            System.out.println("Discounted Cost: £" + String.format("%.2f", curOrder.getDiscountedCost()));
             System.out.println("--------------------------");
             System.out.println("Items in the Order:");
             for (String itemID : curOrder.getDetails()) {

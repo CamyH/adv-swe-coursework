@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,23 +17,27 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Cameron Hunt
  */
 public class ItemFileReaderTest {
-    private static String tempFile;
+    private static String itemFile;
+
+    /**
+     * Sets up a temporary file directory to be used for tests
+     *
+     * @throws IOException if file cannot be opened
+     */
     @BeforeAll
-    static void setup(@TempDir Path tempDir) throws IOException {
-        tempFile = String.valueOf(Files.createFile(tempDir.resolve("ItemsTest.txt")));
-        SetupItemFile.generateItemList();
-        String itemListString = SetupItemFile.convertItemListToString();
-        try {
-            Files.write(Path.of(tempFile), itemListString.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    static void setup() throws IOException {
+        itemFile = "menu.txt";
     }
 
+    /**
+     * Tests if the file can be read
+     *
+     * @throws IOException if file cannot be opened
+     */
     @Test
     void testReadFile() throws IOException {
         // Arrange
-        ItemFileReader fileReader = new ItemFileReader(tempFile);
+        ItemFileReader fileReader = new ItemFileReader(itemFile);
 
         // Act
         ItemList items = fileReader.readFile();
@@ -48,9 +51,12 @@ public class ItemFileReaderTest {
         assertEquals("BACON ROLL", items.getMenu().get("RL1").getDescription());
     }
 
+    /**
+     * Tests if the read file is not null
+     */
     @Test
     void testReadFileNotNull() {
-        try (ItemFileReader itemFileReader = new ItemFileReader(tempFile.toString())) {
+        try (ItemFileReader itemFileReader = new ItemFileReader(itemFile.toString())) {
             ItemList data = itemFileReader.readFile();
 
             Assertions.assertNotNull(data);
@@ -59,6 +65,9 @@ public class ItemFileReaderTest {
         }
     }
 
+    /**
+     * Tests if the file being read does not exist
+     */
     @Test
     void testReadFileDoesNotExist() {
         assertThrows(FileNotFoundException.class, () -> {

@@ -3,7 +3,6 @@ package order;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -18,7 +17,10 @@ public class OrderList implements EntityList<Order, UUID> {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 
+    /** A queue to hold completed Order objects
+     * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
+
     /**
      * Initialises the queue to contain all the orders
      */
@@ -133,11 +135,15 @@ public class OrderList implements EntityList<Order, UUID> {
         HashMap<String, Double> itemCount = new HashMap<>();
 
         double totalCost = 0;
+        double discountCost = 0;
+        double numOrders = 0;
 
-        for (Order o : completeOrders) {
+        for (Order o : inCompleteOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
+            discountCost += o.getDiscountedCost();
+            numOrders++;
 
             for (String s : string) {
                 itemCount.put(s, itemCount.getOrDefault(s, 0.0) + 1.0);
@@ -145,10 +151,18 @@ public class OrderList implements EntityList<Order, UUID> {
         }
 
         itemCount.put("total-cost", totalCost);
+        itemCount.put("discount-cost", discountCost);
+        itemCount.put("num-orders", numOrders);
 
         return itemCount;
     }
 
+    /**
+     * Method to return a string array of Order IDs to be used on the console
+     *
+     * @param completed chooses whether to convert completed or incomplete order IDs to string
+     * @return String[] returns a string array of IDs that can be printed directly
+     */
     public String[] orderIDsToString(boolean completed) {
         Collection<Order> c = completeOrders;
 

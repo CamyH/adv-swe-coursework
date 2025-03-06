@@ -26,17 +26,22 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * @param orders all order information to be added to the end of the file
      */
     @Override
-    public void writeToFile(OrderList orders) {
-        String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
-            // Write the orders to the order file
-            for (String order : ordersToWrite) {
-                writer.write(order + ',');
-                writer.newLine();
-            }
+    public void writeToFile(OrderList orders) throws IOException {
+        if (filePath != null) {
+            String[] ordersToWrite = orders.getOrdersToString(false);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                // Write the orders to the order file
+                for (String order : ordersToWrite) {
+                    writer.write(order + ',');
+                    writer.newLine();
+                }
 
-        } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Error writing to the file: " + e.getMessage());
+            }
+        }
+        else {
+            throw new FileNotFoundException("File Path is null");
         }
     }
 
@@ -57,6 +62,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
 
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
+
+                UUID.fromString(lineData[0]);
+                UUID.fromString(lineData[1]);
+
                 orderList.add(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
@@ -64,7 +73,9 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         menu));
             }
         } catch (InvalidOrderException e) {
-            System.err.println("Skipping " + e.getMessage());
+            System.err.println("Skipping : " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Skipping : " + e.getMessage());
         }
 
         return orderList;

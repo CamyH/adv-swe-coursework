@@ -61,7 +61,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param itemID The item ID used to find the desired item
      * @return an ItemCategory enum containing category information
      */
-    public ItemCategory getCategory(String itemID) throws InvalidItemIDException {
+    public ItemCategory getCategory(String itemID) {
         return items.get(itemID).getCategory();
     }
 
@@ -139,5 +139,4 @@ public class ItemList implements EntityList<Item, String> {
 
         return menuDetailsString;
     }
-
 }

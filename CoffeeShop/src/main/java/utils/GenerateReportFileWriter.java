@@ -1,18 +1,12 @@
 package utils;
 
 import interfaces.AbstractFileManager;
-import item.Item;
 import item.ItemList;
-import order.Order;
 import order.OrderList;
 
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Generates a report of all information from that day
@@ -31,53 +25,71 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
      */
     @Override
     public void writeToFile(ArrayList<String> report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            // Write the orders to the order file
-            for (String order : report) {
-                writer.write(order);
-                writer.newLine();
-            }
+        if (filePath != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                // Write the orders to the order file
+                for (String order : report) {
+                    writer.write(order);
+                    writer.newLine();
+                }
 
-            writer.newLine();
-        } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+                writer.newLine();
+            } catch (IOException e) {
+                System.err.println("Error writing to the file: " + e.getMessage());
+            }
+        }
+        else {
+            throw new RuntimeException("File Path is null");
         }
     }
 
+    /**
+     * Returns an Array List to be printed to the final output report
+     *
+     * @param orders list of Orders where the report information can be retrieved from
+     * @param items list of items where the item information can be retrieved
+     * @return an array list to be outputted to the report.txt file
+     */
     public static ArrayList<String> generateReport(OrderList orders, ItemList items) {
         ArrayList<String> reportDetails = new ArrayList<>();
-        HashMap<String, Integer> itemCount = new HashMap<>();
-        double totalIncome = 0;
-        int totalOrders = 0;
 
-        for (Item item : items.getMenu().values()) {
-            itemCount.put(item.getItemID(), 0);
-        }
-
-        for (Order order : orders.getOrderList()) {
-            if (order.getDetails().isEmpty()) continue;
-
-            totalIncome += order.getTotalCost();
-            totalOrders++;
-
-            String itemList = String.join(";", order.getDetails());
-            String[] itemIds = itemList.split(";");
-
-            for (String itemId : itemIds) {
-                itemCount.put(itemId, itemCount.getOrDefault(itemId, 0) + 1);
-            }
-        }
+        String[] IDs = items.getItemIDs();
+        String[] orderStrings = orders.getOrdersToString(false);
+        HashMap<String, Double> orderedItems = orders.completedOrderItemCount();
 
         reportDetails.add("=======================");
 
-        for (Map.Entry<String, Integer> item : itemCount.entrySet()) {
-            reportDetails.add(item.getKey() + " = " + item.getValue());
+        reportDetails.add("Current Order Details");
+        reportDetails.add("-----------------------");
+
+        for (String o : orderStrings) {
+            reportDetails.add(o);
         }
 
         reportDetails.add("-----------------------");
-        reportDetails.add("Total Income: £" + totalIncome);
-        reportDetails.add("Total Orders: " + totalOrders);
-        reportDetails.add("Average Spend Per Order: " + totalIncome / totalOrders);
+        reportDetails.add("Number of Items Ordered");
+        reportDetails.add("-----------------------");
+
+        for (String ID : IDs) {
+            reportDetails.add(ID + " = " + (int) orderedItems.getOrDefault(ID, 0.0).doubleValue());
+        }
+
+        reportDetails.add("-----------------------");
+        reportDetails.add("Total Cost Breakdown");
+        reportDetails.add("-----------------------");
+
+        reportDetails.add("Total Income (Excluding Discounts) : £" + String.format("%.2f", orderedItems.get("total-cost")));
+        reportDetails.add("Total Income (Including Discounts) : £" + String.format("%.2f", orderedItems.get("discount-cost")));
+        reportDetails.add("Total Orders : " + ((int) orderedItems.get("num-orders").doubleValue()));
+        reportDetails.add("Average Spend Per Order (Excluding Discounts) : £" + String.format("%.2f",
+                orderedItems.get("num-orders") != 0
+                        ? orderedItems.get("total-cost") / orderedItems.get("num-orders")
+                        : 0.0));
+        reportDetails.add("Average Spend Per Order (Including Discounts) : £" + String.format("%.2f",
+                orderedItems.get("num-orders") != 0
+                        ? orderedItems.get("discount-cost") / orderedItems.get("num-orders")
+                        : 0.0));
+        reportDetails.add("=======================");
 
         return reportDetails;
     }
