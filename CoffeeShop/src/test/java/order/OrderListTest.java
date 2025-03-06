@@ -243,8 +243,6 @@ public class OrderListTest {
         myMap.put("discount-cost", 19.8 - 1.5 - 1.25);
         myMap.put("num-orders", 2.0);
 
-        // 3 + 3* 0.5 + 2.5 + 2.50 * 0.5
-
         HashMap<String, Double> itemCount = newOrderList.completedOrderItemCount();
 
         assertEquals(itemCount, myMap);
