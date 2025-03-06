@@ -6,6 +6,7 @@ import order.OrderList;
 import order.Order;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -47,12 +48,12 @@ public class GUI extends JFrame {
     private JTextArea orderDetailsField;
     private JButton exitButton;
     private JButton removeLastItemButton;
-
-
+    private JButton removeItemButton;
 
 
     // Constructor
     public GUI(ItemList itemList, OrderList orderList) {
+        
         orders = orderList;
         menu = itemList;
         try {
@@ -71,9 +72,13 @@ public class GUI extends JFrame {
         setVisible(true);
 
         totalCostField.setEnabled(false);
+        totalCostField.setDisabledTextColor(Color.BLACK);
         discountedCostField.setEnabled(false);
+        discountedCostField.setDisabledTextColor(Color.BLACK);
         displayMenuField.setEnabled(false);
+        displayMenuField.setDisabledTextColor(Color.BLACK);
         orderDetailsField.setEnabled(false);
+        orderDetailsField.setDisabledTextColor(Color.BLACK);
 
         // Make the scroll panes always have vertical scroll bars visible
         itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -84,6 +89,7 @@ public class GUI extends JFrame {
         cancelOrderButton.addActionListener(this::actionPerformed);
         addItemButton.addActionListener(this::actionPerformed);
         removeLastItemButton.addActionListener(this::actionPerformed);
+        removeItemButton.addActionListener(this::actionPerformed);
         exitButton.addActionListener(this::actionPerformed);
 
 
@@ -120,6 +126,10 @@ public class GUI extends JFrame {
             removeLastItem();
         }
 
+        else if (e.getSource() == removeItemButton) {
+            removeItem();
+        }
+
         // Exit
         else if (e.getSource() == exitButton) {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
@@ -133,14 +143,22 @@ public class GUI extends JFrame {
         try {
             curOrder.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(GUI.this, itemID.toUpperCase() + " is not a valid item ID");
         }
         itemIDField.setText("");
         updateUI();
     }
 
+    private void removeItem(){
+        String itemID = itemIDField.getText();
+        if (!curOrder.removeItem(itemID.toUpperCase())) JOptionPane.showMessageDialog(GUI.this, itemID.toUpperCase() + " is not a valid item ID");
+
+        itemIDField.setText("");
+        updateUI();
+    }
+
     private void removeLastItem(){
-        curOrder.removeLastItem();
+        if (!curOrder.removeLastItem()) JOptionPane.showMessageDialog(GUI.this,  "No Items in this Order");
         updateUI();
     }
 
@@ -175,8 +193,8 @@ public class GUI extends JFrame {
         for (String entry : curOrder.getDetails()) {
             orderDetailsField.append(entry + "\n");
         }
-        totalCostField.setText("£" + curOrder.getTotalCost() + "0");
-        discountedCostField.setText("£" + curOrder.getDiscountedCost() + "0");
+        totalCostField.setText("£" + String.format("%.2f", curOrder.getTotalCost()));
+        discountedCostField.setText("£" + String.format("%.2f", curOrder.getDiscountedCost()));
     }
 
     public void closeGUI() {

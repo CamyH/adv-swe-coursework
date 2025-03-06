@@ -123,10 +123,14 @@ public class Order {
      * The total cost is recalculated after the item is removed.
      *
      */
-    public void removeLastItem() {
+    public boolean removeLastItem() {
+        if (orderDetails.isEmpty()) return false;
+
         orderDetails.removeLast();
         calculateTotalCost();
         calculateDiscountedCost();
+
+        return true;
     }
 
     /**

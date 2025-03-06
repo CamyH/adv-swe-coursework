@@ -130,6 +130,10 @@ public class Console {
                         removeLastItem(curOrder);
                         break;
                     }
+                    case "removeItem": {
+                        removeItem(curOrder);
+                        break;
+                    }
                     case "previewOrder": {
                         previewOrder(curOrder);
                         break;
@@ -139,7 +143,7 @@ public class Console {
                         return;
                     }
                     case "help": {
-                        System.out.println("addItem, removeLastItem, previewOrder, placeOrder, cancel");
+                        System.out.println("addItem, removeItem, removeLastItem, previewOrder, placeOrder, cancel");
                         break;
                     }
                     case "cancel": {
@@ -164,11 +168,21 @@ public class Console {
         System.out.println("Enter the item ID:");
         String curItemID = scanner.nextLine();
         try {
-            curOrder.addItem(curItemID);
+            curOrder.addItem(curItemID.toUpperCase());
         } catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());
-            System.out.println("Invalid item ID");
         }
+
+    }
+
+    /**
+     * Removes a specific item from the current order
+     */
+    void removeItem(Order curOrder) {
+
+        System.out.println("Enter the item ID:");
+        String curItemID = scanner.nextLine();
+        if (!curOrder.removeItem(curItemID.toUpperCase())) System.out.println(curItemID.toUpperCase() + " not a valid item ID");
 
     }
 
@@ -206,14 +220,14 @@ public class Console {
                 System.out.println("Item ID: " + item.getItemID());
                 System.out.println("Description: " + item.getDescription());
                 System.out.println("Category: " + item.getCategory());
-                System.out.println("Cost: £" + item.getCost());
+                System.out.println("Cost: £" + String.format("%.2f", item.getCost()));
                 System.out.println("------------------------");
             }
         }
 
         // Print cost details
-        System.out.println("Total Cost: £" + totalCost);
-        System.out.println("Discounted Cost: £" + discountedCost);
+        System.out.println("Total Cost: £" + String.format("%.2f", totalCost));
+        System.out.println("Discounted Cost: £" + String.format("%.2f", discountedCost));
         System.out.println("----------------------------");
     }
 
@@ -223,7 +237,7 @@ public class Console {
             Demo.demoWriteOrders();
             System.out.println("Order placed successfully");
         } catch (InvalidOrderException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             System.out.println("Order cannot be empty, add an item or cancel the order");
         }
     }
@@ -269,8 +283,8 @@ public class Console {
             System.out.println("Order ID: " + curOrder.getOrderID());
             System.out.println("Customer ID: " + curOrder.getCustomerID());
             System.out.println("Timestamp: " + curOrder.getTimestamp());
-            System.out.println("Total Cost: " + curOrder.getTotalCost());
-            System.out.println("Discounted Cost: " + curOrder.getDiscountedCost());
+            System.out.println("Total Cost: £" + String.format("%.2f", curOrder.getTotalCost()));
+            System.out.println("Discounted Cost: £" + String.format("%.2f", curOrder.getDiscountedCost()));
             System.out.println("--------------------------");
             System.out.println("Items in the Order:");
             for (String itemID : curOrder.getDetails()) {
