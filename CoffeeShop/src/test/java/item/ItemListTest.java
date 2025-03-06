@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+/**
+ * JUnit tests for the Item List class.
+ *
+ * @author Fraser Holman
+ */
 public class ItemListTest {
     private static ItemList itemList;
 
@@ -77,25 +82,20 @@ public class ItemListTest {
      */
     @Test
     public void testGetCategory() {
-        try {
-            /** JUnit Tests for Equal Cases */
-            assertEquals(ItemCategory.ROLL, itemList.getCategory("RL1"));
-            assertEquals(ItemCategory.FOOD, itemList.getCategory("FD3"));
-            assertEquals(ItemCategory.HOTDRINK, itemList.getCategory("HD5"));
-            assertEquals(ItemCategory.SOFTDRINK, itemList.getCategory("SD6"));
-            assertEquals(ItemCategory.SNACK, itemList.getCategory("SCK2"));
-            assertEquals(ItemCategory.PASTRY, itemList.getCategory("PSY1"));
+        /** JUnit Tests for Equal Cases */
+        assertEquals(ItemCategory.ROLL, itemList.getCategory("RL1"));
+        assertEquals(ItemCategory.FOOD, itemList.getCategory("FD3"));
+        assertEquals(ItemCategory.HOTDRINK, itemList.getCategory("HD5"));
+        assertEquals(ItemCategory.SOFTDRINK, itemList.getCategory("SD6"));
+        assertEquals(ItemCategory.SNACK, itemList.getCategory("SCK2"));
+        assertEquals(ItemCategory.PASTRY, itemList.getCategory("PSY1"));
 
-            /** JUnit Tests for Non Equal Cases */
-            assertNotEquals(ItemCategory.ROLL, itemList.getCategory("FD1"));
-            assertNotEquals(ItemCategory.FOOD, itemList.getCategory("SD3"));
-            assertNotEquals(ItemCategory.HOTDRINK, itemList.getCategory("SCK4"));
-            assertNotEquals(ItemCategory.SOFTDRINK, itemList.getCategory("HD2"));
-            assertNotEquals(ItemCategory.SNACK, itemList.getCategory("PSY3"));
-        }
-        catch (InvalidItemIDException e) {
-            System.out.println(e.getMessage());
-        }
+        /** JUnit Tests for Non Equal Cases */
+        assertNotEquals(ItemCategory.ROLL, itemList.getCategory("FD1"));
+        assertNotEquals(ItemCategory.FOOD, itemList.getCategory("SD3"));
+        assertNotEquals(ItemCategory.HOTDRINK, itemList.getCategory("SCK4"));
+        assertNotEquals(ItemCategory.SOFTDRINK, itemList.getCategory("HD2"));
+        assertNotEquals(ItemCategory.SNACK, itemList.getCategory("PSY3"));
     }
 
     /**

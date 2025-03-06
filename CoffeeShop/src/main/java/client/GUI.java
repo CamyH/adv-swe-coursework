@@ -6,6 +6,7 @@ import order.OrderList;
 import order.Order;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -47,13 +48,17 @@ public class GUI extends JFrame {
     private JTextArea orderDetailsField;
     private JButton exitButton;
     private JButton removeLastItemButton;
+    private JButton removeItemButton;
 
 
-
-
-    // Constructor
+    /**
+     * Sets up the GUI
+     *
+     * @param itemList takes an item List object
+     * @param orderList takes an order List object
+     */
     public GUI(ItemList itemList, OrderList orderList) {
-
+        
         orders = orderList;
         menu = itemList;
         try {
@@ -72,9 +77,13 @@ public class GUI extends JFrame {
         setVisible(true);
 
         totalCostField.setEnabled(false);
+        totalCostField.setDisabledTextColor(Color.BLACK);
         discountedCostField.setEnabled(false);
+        discountedCostField.setDisabledTextColor(Color.BLACK);
         displayMenuField.setEnabled(false);
+        displayMenuField.setDisabledTextColor(Color.BLACK);
         orderDetailsField.setEnabled(false);
+        orderDetailsField.setDisabledTextColor(Color.BLACK);
 
         // Make the scroll panes always have vertical scroll bars visible
         itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -85,6 +94,7 @@ public class GUI extends JFrame {
         cancelOrderButton.addActionListener(this::actionPerformed);
         addItemButton.addActionListener(this::actionPerformed);
         removeLastItemButton.addActionListener(this::actionPerformed);
+        removeItemButton.addActionListener(this::actionPerformed);
         exitButton.addActionListener(this::actionPerformed);
 
 
@@ -96,11 +106,15 @@ public class GUI extends JFrame {
             displayMenuField.append(entry + "\n");
         }
 
-        orderDetailsField.setText("Empty");
+        orderDetailsField.setText("Current Order: \n");
 
     }
 
-    // Functionality for when a button is pressed
+    /**
+     * Method to check for button clicks and interactions within the GUI
+     *
+     * @param e Action e
+     */
     public void actionPerformed(ActionEvent e) {
 
         // Submit Order button functionality
@@ -121,30 +135,54 @@ public class GUI extends JFrame {
             removeLastItem();
         }
 
+        else if (e.getSource() == removeItemButton) {
+            removeItem();
+        }
+
         // Exit
         else if (e.getSource() == exitButton) {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
-            closeGUI();
+            closeProgram();
         }
 
     }
 
+    /**
+     * Adds items to GUI
+     */
     private void addItem() {
         String itemID = itemIDField.getText();
         try {
             curOrder.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(GUI.this, itemID.toUpperCase() + " is not a valid item ID");
         }
         itemIDField.setText("");
         updateUI();
     }
 
-    private void removeLastItem(){
-        curOrder.removeLastItem();
+    /**
+     * Removes item from GUI order
+     */
+    private void removeItem(){
+        String itemID = itemIDField.getText();
+        if (!curOrder.removeItem(itemID.toUpperCase())) JOptionPane.showMessageDialog(GUI.this, itemID.toUpperCase() + " is not a valid item ID");
+
+        itemIDField.setText("");
         updateUI();
     }
 
+    /**
+     * Removes last item from GUI order
+     */
+    private void removeLastItem(){
+        if (!curOrder.removeLastItem()) JOptionPane.showMessageDialog(GUI.this,  "No Items in this Order");
+        updateUI();
+    }
+
+    /**
+     * Submits GUI order
+     */
     public void submitOrder(){
         try {
             orders.add(curOrder);
@@ -161,6 +199,9 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Cancels GUI order
+     */
     public void cancelOrder() {
         JOptionPane.showMessageDialog(GUI.this, "Order Cancelled");
         try {
@@ -171,15 +212,28 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Updates GUI
+     */
     private void updateUI() {
         orderDetailsField.setText("Current Order: \n");
         for (String entry : curOrder.getDetails()) {
             orderDetailsField.append(entry + "\n");
         }
-        totalCostField.setText("£" + curOrder.getTotalCost() + "0");
-        discountedCostField.setText("£" + curOrder.getDiscountedCost() + "0");
+        totalCostField.setText("£" + String.format("%.2f", curOrder.getTotalCost()));
+        discountedCostField.setText("£" + String.format("%.2f", curOrder.getDiscountedCost()));
     }
 
+    /**
+     * Closes the program
+     */
+    public void closeProgram() {
+        Demo.demoCloseGUI();
+    }
+
+    /**
+     * Closes GUI
+     */
     public void closeGUI() {
         // close the window
         GUI.this.dispose();
