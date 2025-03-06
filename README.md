@@ -40,8 +40,8 @@ Clone the project to your local machine:
 
 git clone [https://github.com/CamyH/adv-swe-coursework.git](https://github.com/CamyH/adv-swe-coursework.git)
 
-<h2 align="center">Technologies Used</h2>
-### Build the Project
+<h2 align="center">Build the Project</h2>
+
 After cloning the repository, navigate into the project directory and run the following commands to build the project.
 
 #### Using Maven
@@ -98,7 +98,8 @@ This project defines custom exceptions to handle various error cases: <br/>
 <h2 align="center">Tests</h2>
 
 This project includes junit tests for all the classes to ensure that the core functionalities work correctly.
-To run the tests, use Maven or Gradle commands listed above.
+
+_To run the tests, use Maven or Gradle commands listed above._
 
 <h2 align="center">Contributors</h2>
 
