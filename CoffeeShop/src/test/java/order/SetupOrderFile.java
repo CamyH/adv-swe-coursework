@@ -5,6 +5,12 @@ import exceptions.InvalidOrderException;
 import item.ItemList;
 import item.SetupItemFile;
 
+/**
+ * Sets up an ItemList object with the menu
+ *
+ * @author Cameron Hunt
+ */
+
 public class SetupOrderFile {
     private static final OrderList orderList = new OrderList();
     private static final ItemList itemList = SetupItemFile.generateItemList();
@@ -65,28 +71,28 @@ public class SetupOrderFile {
     }
 
     /**
- * Generate the OrderList as string
- * @return a string of the order list
- */
-public static String generateOrderListAsString() {
-    StringBuilder sb = new StringBuilder();
+     * Generate the OrderList as string
+     * @return a string of the order list
+     */
+    public static String generateOrderListAsString() {
+        StringBuilder sb = new StringBuilder();
 
-    for (Order order : orderList.getOrderList()) {
-        sb.append("Order ID: ").append(order.getOrderID()).append("\n");
+        for (Order order : orderList.getOrderList()) {
+            sb.append("Order ID: ").append(order.getOrderID()).append("\n");
 
-        // Adding the semicolon between itemIds
-        for (String itemId : order.getDetails()) {
-            sb.append(itemId).append(";");
+            // Adding the semicolon between itemIds
+            for (String itemId : order.getDetails()) {
+                sb.append(itemId).append(";");
+            }
+
+            // Remove trailing comma and space if they exist
+            if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
+                sb.delete(sb.length() - 2, sb.length());
+            }
+
+            sb.append("\n\n");
         }
 
-        // Remove trailing comma and space if they exist
-        if (!sb.isEmpty() && sb.charAt(sb.length() - 2) == ',') {
-            sb.delete(sb.length() - 2, sb.length());
-        }
-
-        sb.append("\n\n");
+        return sb.toString();
     }
-
-    return sb.toString();
-}
 }

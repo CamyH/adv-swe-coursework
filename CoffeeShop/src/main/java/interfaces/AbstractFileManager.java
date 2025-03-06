@@ -1,8 +1,10 @@
 package interfaces;
 
+import client.GUI;
 import item.ItemList;
 
 import java.io.*;
+import java.net.URISyntaxException;
 
 /**
  * Abstract Implementation of File Manager
@@ -15,12 +17,34 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
     protected ItemList menu;
 
+    protected File filePath;
+
     /**
      * Constructor
      * @param fileName of the file to operate on
      */
     public AbstractFileManager(String fileName) {
         this.fileName = fileName;
+
+        String jarDirPath = "";
+        try {
+            jarDirPath = new File(GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
+
+        File jarFilePath = new File(jarDirPath, "files/"+fileName);
+
+        File ideFilePath = new File("src/main/java/files/", fileName);
+
+        filePath = null;
+
+        if (jarFilePath.exists()) {
+            filePath = jarFilePath;
+        }
+        else if (ideFilePath.exists()) {
+            filePath = ideFilePath;
+        }
     }
 
     /**
@@ -29,7 +53,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      * @param menu the menu
      */
     public AbstractFileManager(String fileName, ItemList menu) {
-        this.fileName = fileName;
+        this(fileName);
         this.menu = menu;
     }
 
@@ -40,23 +64,22 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      * @throws IOException for general IO exceptions
      */
     @Override
-    public T readFile() throws IOException {
-        File file = new File(fileName);
-
-        // Throw exception early if file does not exist
-        if (!file.exists()) throw new FileNotFoundException();
-
+    public T readFile() throws FileNotFoundException {
         StringBuilder fileContents = new StringBuilder();
 
-        try (FileInputStream fis = new FileInputStream(file)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                fileContents.append(line);
-                fileContents.append(System.lineSeparator());
+        if (filePath != null) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileContents.append(line);
+                    fileContents.append(System.lineSeparator());
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Skipping " + e.getMessage());
+        }
+        else {
+            throw new FileNotFoundException("File Path is null");
         }
 
         return ingestFileContents(fileContents);

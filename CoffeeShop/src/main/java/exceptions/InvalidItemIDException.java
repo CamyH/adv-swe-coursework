@@ -2,6 +2,8 @@ package exceptions; // Package declaration
 
 /**
  * Exception thrown when an invalid item ID is encountered.
+ *
+ * @author Akash Poonia
  */
 public class InvalidItemIDException extends Exception{
     private final String msg;

@@ -1,12 +1,12 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.ItemCategory;
 import item.ItemList;
 import utils.Discount;
-// import ItemList class here once defined
+import utils.DiscountDataStructure;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents an order placed by a customer.
@@ -35,8 +35,10 @@ public class Order {
     /** The total cost of the order before any discount is applied */
     private double totalCost;
 
-    /** Discount object representing the discount applied to the order */
-    private final Discount discount;
+    /** The total discounted cost of the order */
+    private double discountedCost;
+
+    private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
     /** Constructor for creating an Order with only the menu */
     public Order(ItemList menu) throws InvalidOrderException {
@@ -52,9 +54,10 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = menu;
-        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+        discountsMap = Discount.createDiscounts();
 
         calculateTotalCost();
+        calculateDiscountedCost();
     }
 
     /**
@@ -70,14 +73,25 @@ public class Order {
                  LocalDateTime timestamp,
                  ArrayList<String> orderDetails,
                  ItemList menu) throws InvalidOrderException {
+
         this.orderID = UUID.fromString(orderID);
         this.customerID = UUID.fromString(customerID);
+
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
+
+        if (menu == null) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
+        if (menu.getMenu().isEmpty()) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
         this.menu = menu;
-        this.discount = Discount.DISCOUNT0; // Set a default discount for the order
+
+        discountsMap = Discount.createDiscounts();
 
         calculateTotalCost();
+        calculateDiscountedCost();
     }
 
     /**
@@ -92,7 +106,10 @@ public class Order {
             throw new InvalidItemIDException("Invalid Item ID: " + itemID);
         }
 
-        if (orderDetails.add(itemID)) calculateTotalCost();  // Recalculate the total cost after adding an item
+        if (orderDetails.add(itemID)) {
+            calculateTotalCost();  // Recalculate the total cost after adding an item
+            calculateDiscountedCost();
+        }
     }
 
     /**
@@ -104,6 +121,7 @@ public class Order {
     public boolean removeItem(String itemID) {
         if (orderDetails.remove(itemID)) {
             calculateTotalCost();
+            calculateDiscountedCost();
             return true;
         }
         return false;
@@ -114,9 +132,14 @@ public class Order {
      * The total cost is recalculated after the item is removed.
      *
      */
-    public void removeLastItem() {
+    public boolean removeLastItem() {
+        if (orderDetails.isEmpty()) return false;
+
         orderDetails.removeLast();
         calculateTotalCost();
+        calculateDiscountedCost();
+
+        return true;
     }
 
     /**
@@ -128,6 +151,47 @@ public class Order {
         for (String itemID : orderDetails) {
             // Assuming each item has a fixed cost, and the cost is added up (we can modify according to need)
             totalCost += menu.getCost(itemID); // Can change this method according to need
+        }
+    }
+
+    /**
+     * Calculates the discounted cost
+     */
+    private void calculateDiscountedCost() {
+        discountedCost = totalCost;
+
+        ArrayList<String> myOrderDetails = new ArrayList<>(orderDetails);
+
+        DiscountDataStructure structure = new DiscountDataStructure();
+
+        /** Nested for loop to compare each item to another to check for available discounts */
+        for (int i = 0; i < myOrderDetails.size(); i++) {
+            for (int j = i + 1; j < myOrderDetails.size(); j++) {
+                if (menu.getCategory(myOrderDetails.get(i)) != menu.getCategory(myOrderDetails.get(j))) {
+                    /** If a discount is found this will then be added to the custom DiscountDataStructure */
+                    Discount d = discountsMap.get(Set.of(menu.getCategory(myOrderDetails.get(i)), menu.getCategory(myOrderDetails.get(j))));
+                    if (d != null) {
+                        structure.addEntry(d, i, j);
+                    }
+                }
+            }
+        }
+
+        /** Removes and looks at the first entry in the discount data structure (ie the first discount to apply) */
+        ArrayList<Object> s = structure.removeEntry();
+
+        while (s != null) {
+            /** Applies the discount */
+            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
+            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
+            int index1 = (Integer) s.get(1);
+            int index2 = (Integer) s.get(2);
+            /** Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again */
+            myOrderDetails.remove(index2);
+            myOrderDetails.remove(index1);
+
+            /** This is then repeated for anymore available discounts */
+            s = structure.removeEntry();
         }
     }
 
@@ -182,6 +246,6 @@ public class Order {
      * @return The discounted cost of the order
      */
     public double getDiscountedCost() {
-        return totalCost - discount.calculateDiscount(totalCost);   //can modify later according to need
+        return discountedCost;   //can modify later according to need
     }
 }
