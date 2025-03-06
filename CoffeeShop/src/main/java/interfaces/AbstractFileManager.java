@@ -33,7 +33,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
             System.err.println(e.getMessage());
         }
 
-        File jarFilePath = new File(jarDirPath, fileName);
+        File jarFilePath = new File(jarDirPath, "files/"+fileName);
 
         File ideFilePath = new File("src/main/java/files/", fileName);
 

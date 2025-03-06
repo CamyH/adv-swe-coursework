@@ -21,7 +21,8 @@ public class Demo {
     private static OrderList orders;
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
-    static GUI gui;
+    private static GUI gui;
+    private static Console console;
 
     /**
      * Initialises and Empty ItemList and OrderList
@@ -36,7 +37,7 @@ public class Demo {
      * Runs the Console Code
      */
     public void showConsole() {
-        Console console =  new Console(menu,orders);
+        console =  new Console(menu,orders);
         console.run();
     }
 
@@ -79,11 +80,14 @@ public class Demo {
      * Closes the GUI
      */
     static void demoCloseGUI(){
+        System.out.println("Goodbye.");
         gui.closeGUI();
         //GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("/files/report.txt");
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         ArrayList<String> report = GenerateReportFileWriter.generateReport(orders, menu);
         generateReportFileWriter.writeToFile(report);
+
+        System.exit(0);
     }
 
     /**

@@ -142,7 +142,7 @@ public class GUI extends JFrame {
         // Exit
         else if (e.getSource() == exitButton) {
             JOptionPane.showMessageDialog(GUI.this, "Good Bye!");
-            closeGUI();
+            closeProgram();
         }
 
     }
@@ -222,6 +222,13 @@ public class GUI extends JFrame {
         }
         totalCostField.setText("£" + String.format("%.2f", curOrder.getTotalCost()));
         discountedCostField.setText("£" + String.format("%.2f", curOrder.getDiscountedCost()));
+    }
+
+    /**
+     * Closes the program
+     */
+    public void closeProgram() {
+        Demo.demoCloseGUI();
     }
 
     /**
