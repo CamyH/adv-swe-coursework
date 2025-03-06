@@ -26,17 +26,22 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * @param orders all order information to be added to the end of the file
      */
     @Override
-    public void writeToFile(OrderList orders) {
-        String[] ordersToWrite = orders.getOrdersToString(false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Write the orders to the order file
-            for (String order : ordersToWrite) {
-                writer.write(order + ',');
-                writer.newLine();
-            }
+    public void writeToFile(OrderList orders) throws IOException {
+        if (filePath != null) {
+            String[] ordersToWrite = orders.getOrdersToString(false);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                // Write the orders to the order file
+                for (String order : ordersToWrite) {
+                    writer.write(order + ',');
+                    writer.newLine();
+                }
 
-        } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Error writing to the file: " + e.getMessage());
+            }
+        }
+        else {
+            throw new FileNotFoundException("File Path is null");
         }
     }
 

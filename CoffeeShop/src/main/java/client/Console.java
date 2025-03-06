@@ -15,7 +15,10 @@ import order.OrderList;
  */
 public class Console {
 
+    /** ItemList object holding the item information */
     private final ItemList menu;
+
+    /** OrderList object holding all existing orders */
     private final OrderList orders;
 
     public Scanner scanner;

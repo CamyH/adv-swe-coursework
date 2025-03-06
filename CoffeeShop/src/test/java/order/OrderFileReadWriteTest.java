@@ -5,12 +5,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,17 +24,11 @@ public class OrderFileReadWriteTest {
     /**
      * Sets up the temporary file
      *
-     * @param tempDir creates a temporary file directory
      * @throws IOException if file cannot be opened
      */
     @BeforeAll
-    static void setup(@TempDir Path tempDir) throws IOException {
-        tempFile = String.valueOf(Files.createFile(tempDir.resolve("OrdersTest.txt")));
-        try {
-            Files.write(Path.of(tempFile), SetupOrderFile.generateOrderListAsString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    static void setup() throws IOException {
+        tempFile = "OrdersTest.txt";
 
         menu = SetupItemFile.generateItemList();
     }

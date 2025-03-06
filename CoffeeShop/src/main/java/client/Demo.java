@@ -5,6 +5,7 @@ import order.OrderFileReadWrite;
 import order.OrderList;
 import utils.GenerateReportFileWriter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -58,7 +59,7 @@ public class Demo {
         itemReader = new ItemFileReader("menu.txt");
         try {
             menu = itemReader.readFile();
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -66,7 +67,7 @@ public class Demo {
         orderReader = new OrderFileReadWrite("orders.txt", menu);
         try {
             orders = orderReader.readFile();
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -89,6 +90,11 @@ public class Demo {
      * Writes to order txt file
      */
     static void demoWriteOrders(){
-        orderReader.writeToFile(orders);
+        try {
+            orderReader.writeToFile(orders);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

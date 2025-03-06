@@ -2,15 +2,11 @@ package order;
 
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
-import item.Item;
-import item.ItemCategory;
 import item.ItemList;
 import item.SetupItemFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.Discount;
 
-import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -235,6 +231,4 @@ public class OrderTest {
             System.out.println(e.getMessage());
         }
     }
-
-
 }

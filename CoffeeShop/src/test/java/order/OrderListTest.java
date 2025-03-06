@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -259,8 +258,8 @@ public class OrderListTest {
             second.addItem("PSY1");
             newOrderList.add(second);
 
-            newOrderList.remove(first.getOrderID());
-            newOrderList.remove(second.getOrderID());
+//            newOrderList.remove(first.getOrderID());
+//            newOrderList.remove(second.getOrderID());
         }
         catch (InvalidOrderException | InvalidItemIDException e) {
             System.out.println(e.getMessage());

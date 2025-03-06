@@ -106,7 +106,7 @@ public class GUI extends JFrame {
             displayMenuField.append(entry + "\n");
         }
 
-        orderDetailsField.setText("Empty");
+        orderDetailsField.setText("Current Order: \n");
 
     }
 

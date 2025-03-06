@@ -58,39 +58,39 @@ public class DiscountDataStructure {
         if (structure.isEmpty()) return null;
 
         /** Removes the first entry or the highest discount from the datastructure */
-        ArrayList<Object> n = structure.removeFirst();
+        ArrayList<Object> lastEntry = structure.removeFirst();
 
         /** For loop to check for recurring item indexs that occur for different discounts
          * This is important as we only want to apply one discount to one item
          * So any item that has a discount applied to can be removed from the data structure */
         for (int i=0; i<structure.size(); i++) {
             /** Checks if the data structures second column contains an item which will have the discount applied and then removes this entry */
-            if (Objects.equals(structure.get(i).get(1), n.get(1)) || Objects.equals(structure.get(i).get(1), n.get(2))) {
+            if (Objects.equals(structure.get(i).get(1), lastEntry.get(1)) || Objects.equals(structure.get(i).get(1), lastEntry.get(2))) {
                 structure.remove(i);
                 i-=1;
             }
             /** Checks if the data structures third column contains an item which will have the discount applied and then removes this entry */
-            else if (Objects.equals(structure.get(i).get(2), n.get(1)) || Objects.equals(structure.get(i).get(2), n.get(2))) {
+            else if (Objects.equals(structure.get(i).get(2), lastEntry.get(1)) || Objects.equals(structure.get(i).get(2), lastEntry.get(2))) {
                 structure.remove(i);
                 i-=1;
             }
             /** Then needs to shift the index value for any other discount entries in the data structure accordingly */
             else {
-                if ((Integer) structure.get(i).get(1) > (Integer) n.get(2)) {
+                if ((Integer) structure.get(i).get(1) > (Integer) lastEntry.get(2)) {
                     structure.get(i).set(1, (Integer) structure.get(i).get(1) - 1);
                 }
-                if ((Integer) structure.get(i).get(1) > (Integer) n.get(1)) {
+                if ((Integer) structure.get(i).get(1) > (Integer) lastEntry.get(1)) {
                     structure.get(i).set(1, (Integer) structure.get(i).get(1) - 1);
                 }
-                if ((Integer) structure.get(i).get(2) > (Integer) n.get(2)) {
+                if ((Integer) structure.get(i).get(2) > (Integer) lastEntry.get(2)) {
                     structure.get(i).set(2, (Integer) structure.get(i).get(2) - 1);
                 }
-                if ((Integer) structure.get(i).get(2) > (Integer) n.get(1)) {
+                if ((Integer) structure.get(i).get(2) > (Integer) lastEntry.get(1)) {
                     structure.get(i).set(2, (Integer) structure.get(i).get(2) - 1);
                 }
             }
         }
 
-        return n;
+        return lastEntry;
     }
 }

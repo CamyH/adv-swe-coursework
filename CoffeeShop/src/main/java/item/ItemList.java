@@ -139,8 +139,4 @@ public class ItemList implements EntityList<Item, String> {
 
         return menuDetailsString;
     }
-
-//    public boolean isEmpty() {
-//        return items.isEmpty();
-//    }
 }

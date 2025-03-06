@@ -35,7 +35,6 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
         File jarFilePath = new File(jarDirPath, fileName);
 
-        // File location for IDE execution (assuming "src/main/java/files/")
         File ideFilePath = new File("src/main/java/files/", fileName);
 
         filePath = null;
@@ -65,7 +64,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      * @throws IOException for general IO exceptions
      */
     @Override
-    public T readFile() throws IOException {
+    public T readFile() throws FileNotFoundException {
         StringBuilder fileContents = new StringBuilder();
 
         if (filePath != null) {
@@ -80,7 +79,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
             }
         }
         else {
-            throw new RuntimeException();
+            throw new FileNotFoundException("File Path is null");
         }
 
         return ingestFileContents(fileContents);

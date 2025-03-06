@@ -25,19 +25,31 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
      */
     @Override
     public void writeToFile(ArrayList<String> report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Write the orders to the order file
-            for (String order : report) {
-                writer.write(order);
-                writer.newLine();
-            }
+        if (filePath != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                // Write the orders to the order file
+                for (String order : report) {
+                    writer.write(order);
+                    writer.newLine();
+                }
 
-            writer.newLine();
-        } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+                writer.newLine();
+            } catch (IOException e) {
+                System.err.println("Error writing to the file: " + e.getMessage());
+            }
+        }
+        else {
+            throw new RuntimeException("File Path is null");
         }
     }
 
+    /**
+     * Returns an Array List to be printed to the final output report
+     *
+     * @param orders list of Orders where the report information can be retrieved from
+     * @param items list of items where the item information can be retrieved
+     * @return an array list to be outputted to the report.txt file
+     */
     public static ArrayList<String> generateReport(OrderList orders, ItemList items) {
         ArrayList<String> reportDetails = new ArrayList<>();
 
