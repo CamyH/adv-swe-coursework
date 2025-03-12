@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class Demo {
 
-    private static ItemList menu;
-    private static OrderList orders;
+    //private static ItemList menu;
+    //private static OrderList orders;
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static GUI gui;
@@ -29,15 +29,15 @@ public class Demo {
      */
     public Demo() {
         // Initialise empty Item List and Order List
-        menu = new ItemList();
-        orders = new OrderList();
+        //menu = new ItemList();
+        //orders = new OrderList();
     }
 
     /**
      * Runs the Console Code
      */
     public void showConsole() {
-        console =  new Console(menu,orders);
+        console =  new Console();
         console.run();
     }
 
@@ -45,7 +45,7 @@ public class Demo {
      * Starts the GUI
      */
     public void showGUI() {
-        gui = new GUI(menu,orders);
+        gui = new GUI();
     }
 
     /**
@@ -59,15 +59,15 @@ public class Demo {
         //itemReader = new ItemFileReader("/files/menu.txt");
         itemReader = new ItemFileReader("menu.txt");
         try {
-            menu = itemReader.readFile();
+            itemReader.readFile();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         //orderReader = new OrderFileReadWrite("/files/orders.txt", menu);
-        orderReader = new OrderFileReadWrite("orders.txt", menu);
+        orderReader = new OrderFileReadWrite("orders.txt");
         try {
-            orders = orderReader.readFile();
+            orderReader.readFile();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -84,8 +84,7 @@ public class Demo {
         gui.closeGUI();
         //GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("/files/report.txt");
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
-        ArrayList<String> report = GenerateReportFileWriter.generateReport(orders, menu);
-        generateReportFileWriter.writeToFile(report);
+        generateReportFileWriter.writeToFile();
 
         System.exit(0);
     }
@@ -95,7 +94,7 @@ public class Demo {
      */
     static void demoWriteOrders(){
         try {
-            orderReader.writeToFile(orders);
+            orderReader.writeToFile();
         }
         catch (IOException e) {
             throw new RuntimeException(e);

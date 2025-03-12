@@ -17,17 +17,17 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * Constructor
      * @param fileName the file to operate on
      */
-    public OrderFileReadWrite(String fileName, ItemList menu) {
-        super(fileName, menu);
+    public OrderFileReadWrite(String fileName) {
+        super(fileName);
     }
 
     /**
      * Write to a given file
-     * @param orders all order information to be added to the end of the file
      */
     @Override
-    public void writeToFile(OrderList orders) throws IOException {
+    public void writeToFile() throws IOException {
         if (filePath != null) {
+            OrderList orders = OrderList.getInstance();
             String[] ordersToWrite = orders.getOrdersToString(false);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 // Write the orders to the order file
@@ -51,8 +51,8 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
      * @return an Array Deque of type order
      */
     @Override
-    protected OrderList ingestFileContents(StringBuilder fileContents) {
-        OrderList orderList = new OrderList();
+    protected void ingestFileContents(StringBuilder fileContents) {
+        OrderList orderList = OrderList.getInstance();
 
         try {
             // We only really care about the InvalidOrderException
@@ -77,8 +77,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
         } catch (IllegalArgumentException e) {
             System.err.println("Skipping : " + e.getMessage());
         }
-
-        return orderList;
     }
 
     /**

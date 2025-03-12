@@ -53,16 +53,13 @@ public class GUI extends JFrame {
 
     /**
      * Sets up the GUI
-     *
-     * @param itemList takes an item List object
-     * @param orderList takes an order List object
      */
-    public GUI(ItemList itemList, OrderList orderList) {
+    public GUI() {
         
-        orders = orderList;
-        menu = itemList;
+        orders = OrderList.getInstance();
+        menu = ItemList.getInstance();
         try {
-            curOrder = new Order(menu);
+            curOrder = new Order();
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
         }
@@ -192,7 +189,7 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(GUI.this,"Can't submit an empty order");
         }
         try {
-            curOrder = new Order(menu);
+            curOrder = new Order();
             updateUI();
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
@@ -205,7 +202,7 @@ public class GUI extends JFrame {
     public void cancelOrder() {
         JOptionPane.showMessageDialog(GUI.this, "Order Cancelled");
         try {
-            curOrder = new Order(menu);
+            curOrder = new Order();
             updateUI();
         } catch (InvalidOrderException ex) {
             throw new RuntimeException(ex);
