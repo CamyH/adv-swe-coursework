@@ -202,4 +202,8 @@ public class OrderList implements EntityList<Order, UUID> {
     public static OrderList getInstance() {
         return instance;
     }
+
+    public static void resetInstance() {
+        instance = new OrderList();
+    }
 }
