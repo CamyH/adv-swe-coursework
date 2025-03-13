@@ -48,7 +48,7 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
-        if (menu == null) {
+        if (menu.getItemCount() == 0) {
             throw new InvalidOrderException("Menu cannot be null.");
         }
         discountsMap = Discount.createDiscounts();
