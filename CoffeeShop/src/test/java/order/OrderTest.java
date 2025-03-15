@@ -30,7 +30,7 @@ public class OrderTest {
         itemList = SetupItemFile.generateItemList();
 
         try {
-            order = new Order(itemList);
+            order = new Order();
         } catch (InvalidOrderException e) {
             System.out.println(e.getMessage());
         }
@@ -191,9 +191,10 @@ public class OrderTest {
      */
     @Test
     public void testOrderWithNoMenu() {
+        ItemList.resetInstance();
         // Create an order with a null menu and expect an exception
         assertThrows(InvalidOrderException.class, () -> {
-            new Order(null);  // Should throw InvalidOrderException
+            new Order();  // Should throw InvalidOrderException
         }, "Creating an order with a null menu should throw InvalidOrderException.");
     }
 

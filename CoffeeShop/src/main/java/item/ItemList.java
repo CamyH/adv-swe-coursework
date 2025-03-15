@@ -2,11 +2,14 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
+import order.OrderList;
 
 import java.util.*;
 
 
 /**
+ * Singleton class
+ *
  * Class represents a list of all avaible items that can be ordered
  *
  * Contains a hashmap of all the items
@@ -18,10 +21,13 @@ public class ItemList implements EntityList<Item, String> {
     /** Hashmap data structure to hold item information */
     private Map<String, Item> items;
 
+    /** ItemList instance to be used by other classes */
+    private static ItemList instance = new ItemList();
+
     /**
      * Initialises the hashmap to contain the items
      */
-    public ItemList() {
+    private ItemList() {
         items = new LinkedHashMap<String, Item>();
     };
 
@@ -138,5 +144,30 @@ public class ItemList implements EntityList<Item, String> {
         }
 
         return menuDetailsString;
+    }
+
+    /**
+     * Method to check if ItemList has been populated
+     *
+     * @return the number of items in the ItemList
+     */
+    public int getItemCount() {
+        return items.size();
+    }
+
+    /**
+     * Getter method to return an instance of ItemList
+     *
+     * @return an instance of ItemList
+     */
+    public static ItemList getInstance() {
+        return instance;
+    }
+
+    /**
+     * Test to resest the ItemList singleton instance
+     */
+    public static void resetInstance() {
+        instance = new ItemList();
     }
 }

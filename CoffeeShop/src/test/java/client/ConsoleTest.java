@@ -19,9 +19,9 @@ public class ConsoleTest {
     private static Console console;
     @BeforeEach
     void setup(){
-        itemList = new ItemList();
-        orderList = new OrderList();
-        console = new Console(itemList, orderList);
+        itemList = ItemList.getInstance();
+        orderList = OrderList.getInstance();
+        console = new Console();
     }
 
     @Test

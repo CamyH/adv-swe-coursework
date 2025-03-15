@@ -64,7 +64,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
      * @throws IOException for general IO exceptions
      */
     @Override
-    public T readFile() throws FileNotFoundException {
+    public void readFile() throws FileNotFoundException {
         StringBuilder fileContents = new StringBuilder();
 
         if (filePath != null) {
@@ -82,23 +82,22 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
             throw new FileNotFoundException("File Path is null");
         }
 
-        return ingestFileContents(fileContents);
+        ingestFileContents(fileContents);
     }
 
     /**
      * Write to a given file
      *
-     * @param list all information to be written to the file
      */
     @Override
-    public abstract void writeToFile(R list) throws IOException;
+    public abstract void writeToFile() throws IOException;
 
     /**
      * Handle file content and assign to appropriate lists
      * @param fileContents the content of the file to ingest
      * @return the ingested file contents of the correct type
      */
-    protected abstract T ingestFileContents(StringBuilder fileContents);
+    protected abstract void ingestFileContents(StringBuilder fileContents);
 
     /**
      * Closes this resource, relinquishing any underlying resources.

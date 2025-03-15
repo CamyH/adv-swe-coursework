@@ -6,6 +6,7 @@ import item.ItemList;
 import item.SetupItemFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 
 import java.util.HashMap;
 import java.util.Queue;
@@ -20,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderListTest {
     OrderList orderList;
+
+    OrderList newOrderList;
 
     ItemList itemList;
 
@@ -40,8 +43,9 @@ public class OrderListTest {
      */
     @Test
     void testAddOrder() {
+        orderList = OrderList.getInstance();
         try {
-            Order o = new Order(itemList);
+            Order o = new Order();
             assertThrows(InvalidOrderException.class, () -> {orderList.add(o);});
         }
         catch (InvalidOrderException e) {
@@ -54,12 +58,13 @@ public class OrderListTest {
      */
     @Test
     void testRemove() {
+        orderList = OrderList.getInstance();
         try {
-            Order o = new Order(itemList);
+            Order o = new Order();
             o.addItem("RL4");
             o.addItem("SCK8");
             o.addItem("FD3");
-            orderList.add(new Order(itemList));
+            orderList.add(new Order());
 
             Order o1 = orderList.getOrder(o.getOrderID());
 
@@ -78,6 +83,7 @@ public class OrderListTest {
      */
     @Test
     void testGetOrder() {
+        orderList = OrderList.getInstance();
         Order o1 = orderList.getOrder();
 
         assertNotNull(o1);
@@ -93,12 +99,13 @@ public class OrderListTest {
      */
     @Test
     void testGetOrderWithID() {
+        orderList = OrderList.getInstance();
         try {
-            Order o = new Order(itemList);
+            Order o = new Order();
             o.addItem("RL4");
             o.addItem("SCK8");
             o.addItem("FD3");
-            orderList.add(new Order(itemList));
+            orderList.add(new Order());
 
             Order o1 = orderList.getOrder(o.getOrderID());
 
@@ -116,6 +123,7 @@ public class OrderListTest {
      */
     @Test
     void testGetOrderList() {
+        orderList = OrderList.getInstance();
         Queue<Order> myList = orderList.getOrderList();
 
         assertNotNull(myList);
@@ -134,18 +142,18 @@ public class OrderListTest {
     void testGetCompletedOrdersToString() {
         String[] arr = new String[2];
 
-        OrderList newOrderList = new OrderList();
+        OrderList newOrderList = OrderList.getInstance();
 
         Order first, second;
 
         try {
-            first = new Order(itemList);
+            first = new Order();
             first.addItem("RL2");
             first.addItem("SD4");
             first.addItem("PSY5");
             newOrderList.add(first);
 
-            second = new Order(itemList);
+            second = new Order();
             second.addItem("RL1");
             second.addItem("HD4");
             second.addItem("SD7");
@@ -186,25 +194,29 @@ public class OrderListTest {
      */
     @Test
     void testGetUnCompletedOrdersToString() {
+        OrderList.resetInstance();
+        orderList = OrderList.getInstance();
         String[] arr = new String[2];
 
-        OrderList newOrderList = new OrderList();
+        //OrderList newOrderList = OrderList.getInstance();
 
         Order first, second;
 
+        System.out.println(orderList.getOrdersToString(false).length);
+
         try {
-            first = new Order(itemList);
+            first = new Order();
             first.addItem("RL2");
             first.addItem("SD4");
             first.addItem("PSY5");
-            newOrderList.add(first);
+            orderList.add(first);
 
-            second = new Order(itemList);
+            second = new Order();
             second.addItem("RL1");
             second.addItem("HD4");
             second.addItem("SD7");
             second.addItem("PSY1");
-            newOrderList.add(second);
+            orderList.add(second);
 
             String s1 = String.format("%s,%s,%s,%s",
                     first.getOrderID().toString(),
@@ -227,9 +239,11 @@ public class OrderListTest {
             System.out.println(e.getMessage());
         }
 
-        assertEquals(arr[0], newOrderList.getOrdersToString(false)[0]);
-        assertEquals(arr[1], newOrderList.getOrdersToString(false)[1]);
-        assertEquals(arr.length, newOrderList.getOrdersToString(false).length);
+        System.out.println(arr[0]);
+
+        assertEquals(arr[0], orderList.getOrdersToString(false)[0]);
+        assertEquals(arr[1], orderList.getOrdersToString(false)[1]);
+        assertEquals(arr.length, orderList.getOrdersToString(false).length);
 
     }
 
@@ -238,20 +252,22 @@ public class OrderListTest {
      */
     @Test
     void testCompletedOrderItemCount() {
+        OrderList.resetInstance();
+        orderList = OrderList.getInstance();
         HashMap<String, Double> myMap = new HashMap<>();
 
-        OrderList newOrderList = new OrderList();
+        OrderList newOrderList = OrderList.getInstance();
 
         Order first, second;
 
         try {
-            first = new Order(itemList);
+            first = new Order();
             first.addItem("RL1");
             first.addItem("RL1");
             first.addItem("PSY5");
             newOrderList.add(first);
 
-            second = new Order(itemList);
+            second = new Order();
             second.addItem("RL1");
             second.addItem("HD4");
             second.addItem("SD7");

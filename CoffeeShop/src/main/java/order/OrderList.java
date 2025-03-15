@@ -2,10 +2,13 @@ package order;
 
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
+import item.ItemList;
 
 import java.util.*;
 
 /**
+ * Singleton class
+ *
  * Class represents a list of current orders
  *
  * Contains a queue of different orders created by customers
@@ -21,10 +24,13 @@ public class OrderList implements EntityList<Order, UUID> {
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
 
+    /** Private instance of OrderList */
+    private static OrderList instance = new OrderList();
+
     /**
      * Initialises the queue to contain all the orders
      */
-    public OrderList() {
+    private OrderList() {
         inCompleteOrders = new ArrayDeque<Order>();
         completeOrders = new ArrayList<>();
     }
@@ -186,5 +192,21 @@ public class OrderList implements EntityList<Order, UUID> {
         }
 
         return orderIDsArr;
+    }
+
+    /**
+     * Getter method to return an instance of OrderList
+     *
+     * @return an instance of OrderList
+     */
+    public static OrderList getInstance() {
+        return instance;
+    }
+
+    /**
+     * Test to resest the OrderList singleton instance
+     */
+    public static void resetInstance() {
+        instance = new OrderList();
     }
 }

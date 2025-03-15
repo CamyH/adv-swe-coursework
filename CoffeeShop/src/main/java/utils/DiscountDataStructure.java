@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class DiscountDataStructure {
 
-    ArrayList<ArrayList<Object>> structure;
+    private ArrayList<ArrayList<Object>> structure;
 
     /**
      * Constructor to initialise the array list
