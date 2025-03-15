@@ -191,6 +191,7 @@ public class OrderTest {
      */
     @Test
     public void testOrderWithNoMenu() {
+        ItemList.resetInstance();
         // Create an order with a null menu and expect an exception
         assertThrows(InvalidOrderException.class, () -> {
             new Order();  // Should throw InvalidOrderException

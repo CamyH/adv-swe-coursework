@@ -203,6 +203,9 @@ public class OrderList implements EntityList<Order, UUID> {
         return instance;
     }
 
+    /**
+     * Test to resest the OrderList singleton instance
+     */
     public static void resetInstance() {
         instance = new OrderList();
     }
