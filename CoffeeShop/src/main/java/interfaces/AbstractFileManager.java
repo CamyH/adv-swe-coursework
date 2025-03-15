@@ -59,9 +59,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
     /**
      * Reads from a given file
-     *
-     * @return an instance of type T representing the file content
-     * @throws IOException for general IO exceptions
+     * @throws FileNotFoundException if the file does not exist
      */
     @Override
     public void readFile() throws FileNotFoundException {
