@@ -2,7 +2,6 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
-import order.OrderList;
 
 import java.util.*;
 
@@ -147,27 +146,11 @@ public class ItemList implements EntityList<Item, String> {
     }
 
     /**
-     * Method to check if ItemList has been populated
-     *
-     * @return the number of items in the ItemList
-     */
-    public int getItemCount() {
-        return items.size();
-    }
-
-    /**
      * Getter method to return an instance of ItemList
      *
      * @return an instance of ItemList
      */
     public static ItemList getInstance() {
         return instance;
-    }
-
-    /**
-     * Test to resest the ItemList singleton instance
-     */
-    public static void resetInstance() {
-        instance = new ItemList();
     }
 }
