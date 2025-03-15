@@ -124,6 +124,13 @@ public class ItemListTest {
             assertNotEquals(3.0, itemList.getCost("HD4"));
             assertNotEquals(2.5, itemList.getCost("SD6"));
             assertNotEquals(1.5, itemList.getCost("SCK2"));
+
+            /** Set Costs Back to Default */
+            itemList.setCost("RL1", 3.0);
+            itemList.setCost("FD3", 5.0);
+            itemList.setCost("HD4", 3.0);
+            itemList.setCost("SD6", 2.5);
+            itemList.setCost("SCK2", 1.5);
         }
         catch (InvalidItemIDException e) {
             System.out.println(e.getMessage());

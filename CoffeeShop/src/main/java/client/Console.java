@@ -26,13 +26,11 @@ public class Console {
     /**
      * starts up the console
      *
-     * @param itemList takes in itemList
-     * @param orderList takes in orderList
      */
-    public Console(ItemList itemList, OrderList orderList) {
+    public Console() {
 
-        menu = itemList;
-        orders = orderList;
+        menu = ItemList.getInstance();
+        orders = OrderList.getInstance();
         scanner = new Scanner(System.in);
     }
 
@@ -125,7 +123,7 @@ public class Console {
     void newOrder() {
         Order curOrder;
         try {
-            curOrder = new Order(menu);
+            curOrder = new Order();
             System.out.println("Enter the command 'addItem' to add an item to the order, then enter 'placeOrder' to place an order.");
             System.out.println("Enter 'cancel' to cancel the order or 'help' for a list of commands.");
             while (true) {

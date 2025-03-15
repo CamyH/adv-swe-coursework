@@ -17,13 +17,11 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
         super(fileName);
     }
 
-
     /**
      * Write to a given file
-     * @param report all order information to be used for reporting
      */
     @Override
-    public void writeToFile(Object report) {
+    public void writeToFile() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -33,8 +31,8 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
      * @return an ArrayList of type item
      */
     @Override
-    protected ItemList ingestFileContents(StringBuilder fileContents) {
-        ItemList itemList = new ItemList();
+    protected void ingestFileContents(StringBuilder fileContents) {
+        ItemList itemList = ItemList.getInstance();
 
         try {
             for (String line : fileContents.toString().split("\n")) {
@@ -52,7 +50,6 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
         } catch (InvalidItemIDException e) {
             System.err.println("Unable to add item, skipping " + e.getMessage());
         }
-        return itemList;
     }
 
     /**

@@ -41,19 +41,16 @@ public class Order {
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
     /** Constructor for creating an Order with only the menu */
-    public Order(ItemList menu) throws InvalidOrderException {
-
-        // Validate menu: Menu must not be null
-        if (menu == null) {
-            throw new InvalidOrderException("Menu cannot be null.");
-        }
-
+    public Order() throws InvalidOrderException {
         // Initialize fields
         this.customerID = UUID.randomUUID(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
-        this.menu = menu;
+        this.menu = ItemList.getInstance();
+        if (menu.getItemCount() == 0) {
+            throw new InvalidOrderException("Menu cannot be null.");
+        }
         discountsMap = Discount.createDiscounts();
 
         calculateTotalCost();

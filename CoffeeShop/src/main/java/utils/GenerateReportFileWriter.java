@@ -20,11 +20,10 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
 
     /**
      * Write to a given file
-     *
-     * @param report all information to be written to the file
      */
     @Override
-    public void writeToFile(ArrayList<String> report) {
+    public void writeToFile() {
+        ArrayList<String> report = generateReport();
         if (filePath != null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 // Write the orders to the order file
@@ -46,12 +45,13 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
     /**
      * Returns an Array List to be printed to the final output report
      *
-     * @param orders list of Orders where the report information can be retrieved from
-     * @param items list of items where the item information can be retrieved
      * @return an array list to be outputted to the report.txt file
      */
-    public static ArrayList<String> generateReport(OrderList orders, ItemList items) {
+    public static ArrayList<String> generateReport() {
         ArrayList<String> reportDetails = new ArrayList<>();
+
+        ItemList items = ItemList.getInstance();
+        OrderList orders = OrderList.getInstance();
 
         String[] IDs = items.getItemIDs();
         String[] orderStrings = orders.getOrdersToString(false);
@@ -100,7 +100,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
      * @return the ingested file contents of the correct type
      */
     @Override
-    protected Object ingestFileContents(StringBuilder fileContents) {
+    protected void ingestFileContents(StringBuilder fileContents) {
         throw new UnsupportedOperationException("Not Implemented.");
     }
 

@@ -40,7 +40,9 @@ public class ItemFileReaderTest {
         ItemFileReader fileReader = new ItemFileReader(itemFile);
 
         // Act
-        ItemList items = fileReader.readFile();
+        fileReader.readFile();
+
+        ItemList items = ItemList.getInstance();
 
         // Assert
         assertNotNull(items);
@@ -57,7 +59,9 @@ public class ItemFileReaderTest {
     @Test
     void testReadFileNotNull() {
         try (ItemFileReader itemFileReader = new ItemFileReader(itemFile.toString())) {
-            ItemList data = itemFileReader.readFile();
+            itemFileReader.readFile();
+
+            ItemList data = ItemList.getInstance();
 
             Assertions.assertNotNull(data);
         } catch (Exception e) {

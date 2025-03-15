@@ -16,7 +16,7 @@ public class SetupItemFile {
      */
     public static ItemList generateItemList() {
         try {
-            itemList = new ItemList();
+            itemList = ItemList.getInstance();
             itemList.add(new Item("RL1", ItemCategory.ROLL, 3.00, "BACON ROLL"));
             itemList.add(new Item("RL2", ItemCategory.ROLL, 3.50, "SAUSAGE ROLL"));
             itemList.add(new Item("RL3", ItemCategory.ROLL, 2.80, "EGG ROLL"));

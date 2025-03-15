@@ -2,6 +2,7 @@ package order;
 
 import item.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -41,10 +42,12 @@ public class OrderFileReadWriteTest {
     @Test
     void testReadFile() throws IOException {
         // Arrange
-        OrderFileReadWrite fileReader = new OrderFileReadWrite(tempFile, menu);
+        OrderFileReadWrite fileReader = new OrderFileReadWrite(tempFile);
 
         // Act
-        OrderList orders = fileReader.readFile();
+        fileReader.readFile();
+
+        OrderList orders = OrderList.getInstance();
 
         // Assert
         assertNotNull(orders);
@@ -58,12 +61,14 @@ public class OrderFileReadWriteTest {
     @Test
     void testWriteFile() throws IOException {
         // Arrange
-        OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile, menu);
+        OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile);
         OrderList orders = SetupOrderFile.generateOrderList();
 
         // Act
-        fileWriter.writeToFile(orders);
-        OrderList readOrders = fileWriter.readFile();
+        fileWriter.writeToFile();
+        fileWriter.readFile();
+
+        OrderList readOrders = OrderList.getInstance();
 
         // Assert
         assertFalse(tempFile.isEmpty(), "The file should exist");
