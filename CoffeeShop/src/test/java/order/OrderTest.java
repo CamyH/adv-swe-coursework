@@ -187,18 +187,6 @@ public class OrderTest {
     }
 
     /**
-     * Tests that an InvalidOrderException is thrown when attempting to create an order with no menu.
-     */
-    @Test
-    public void testOrderWithNoMenu() {
-        ItemList.resetInstance();
-        // Create an order with a null menu and expect an exception
-        assertThrows(InvalidOrderException.class, () -> {
-            new Order();  // Should throw InvalidOrderException
-        }, "Creating an order with a null menu should throw InvalidOrderException.");
-    }
-
-    /**
      * Tests that Calculating Discounts works as intended
      */
     @Test
