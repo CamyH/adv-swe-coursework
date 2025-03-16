@@ -38,14 +38,20 @@ public class DiscountDataStructure {
      * @param item2 Index that item2 appears in the list of items in the calling method
      */
     public void addEntry(Discount discount, int item1, int item2) {
-        for (int i=0; i<structure.size(); i++) {
-            if (discount.getValue() > ((Discount) structure.get(i).getFirst()).getValue()) {
-                /** Adds an entry in the format <Discount, Integer, Integer> */
-                structure.add(i, new ArrayList<>(Arrays.asList(discount, item1, item2)));
-                return;
+        int middle;
+        int high = structure.size();
+        int low = 0;
+
+        while (low < high) {
+            middle = (low + high) / 2;
+            if (discount.getValue() > ((Discount) structure.get(middle).getFirst()).getValue()) {
+                high = middle;
+            } else {
+                low = middle + 1;
             }
         }
-        structure.add(structure.size(), new ArrayList<>(Arrays.asList(discount, item1, item2)));
+
+        structure.add(low, new ArrayList<>(Arrays.asList(discount, item1, item2)));
     }
 
     /**

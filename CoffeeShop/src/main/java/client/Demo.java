@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 public class Demo {
 
-    //private static ItemList menu;
-    //private static OrderList orders;
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static GUI gui;
@@ -27,11 +25,7 @@ public class Demo {
     /**
      * Initialises and Empty ItemList and OrderList
      */
-    public Demo() {
-        // Initialise empty Item List and Order List
-        //menu = new ItemList();
-        //orders = new OrderList();
-    }
+    public Demo() {}
 
     /**
      * Runs the Console Code
@@ -55,8 +49,6 @@ public class Demo {
         // Create a new demo object
         Demo demo = new Demo();
 
-        //itemReader = new ItemFileReader("src/main/java/files/menu.txt");
-        //itemReader = new ItemFileReader("/files/menu.txt");
         itemReader = new ItemFileReader("menu.txt");
         try {
             itemReader.readFile();
@@ -64,7 +56,6 @@ public class Demo {
             throw new RuntimeException(e);
         }
 
-        //orderReader = new OrderFileReadWrite("/files/orders.txt", menu);
         orderReader = new OrderFileReadWrite("orders.txt");
         try {
             orderReader.readFile();
@@ -82,7 +73,6 @@ public class Demo {
     static void demoCloseGUI(){
         System.out.println("Goodbye.");
         gui.closeGUI();
-        //GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("/files/report.txt");
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
 

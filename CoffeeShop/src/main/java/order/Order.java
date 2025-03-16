@@ -2,9 +2,12 @@ package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemCategory;
+import item.ItemFileReader;
 import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
+
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -30,7 +33,7 @@ public class Order {
     private final ArrayList<String> orderDetails;
 
     /** Menu containing available items and their associated costs */
-    private final ItemList menu;
+    private ItemList menu;
 
     /** The total cost of the order before any discount is applied */
     private double totalCost;
@@ -48,9 +51,23 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
+
         if (menu.getItemCount() == 0) {
-            throw new InvalidOrderException("Menu cannot be null.");
+            ItemList.resetInstance();
+
+            try (ItemFileReader itemReader = new ItemFileReader("menu.txt")) {
+                itemReader.readFile();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            this.menu = ItemList.getInstance();
+
+            if (menu.getItemCount() == 0) {
+                throw new InvalidOrderException("Menu cannot be null.");
+            }
         }
+
         discountsMap = Discount.createDiscounts();
 
         calculateTotalCost();

@@ -48,7 +48,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     /**
      * Convert StringBuilder file content to a queue of Orders
      * @param fileContents the contents of the read from file
-     * @return an Array Deque of type order
      */
     @Override
     protected void ingestFileContents(StringBuilder fileContents) {
