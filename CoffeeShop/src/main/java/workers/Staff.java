@@ -91,7 +91,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @return Boolean representing whether the order completed was a success
      */
-    public abstract Boolean completeCurrentOrder();
+    public abstract boolean completeCurrentOrder();
 
     /**
      * Removes staff once they are done

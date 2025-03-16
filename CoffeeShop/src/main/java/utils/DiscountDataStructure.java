@@ -42,7 +42,7 @@ public class DiscountDataStructure {
         int high = structure.size();
         int low = 0;
 
-        while (high - low > 1) {
+        while (low < high) {
             middle = (low + high) / 2;
             if (discount.getValue() > ((Discount) structure.get(middle).getFirst()).getValue()) {
                 high = middle;

@@ -66,7 +66,6 @@ public class Order {
             if (menu.getItemCount() == 0) {
                 throw new InvalidOrderException("Menu cannot be null.");
             }
-
         }
 
         discountsMap = Discount.createDiscounts();

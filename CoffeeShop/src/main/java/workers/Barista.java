@@ -67,13 +67,12 @@ public class Barista extends Staff {
      * @return Boolean representing whether completion was a success
      */
     @Override
-    public synchronized Boolean completeCurrentOrder() {
-        if (currentOrder != null) {
-            orderList.completeOrder(currentOrder);
-            currentOrder = null;
-            return true;
-        }
-        return false;
+    public synchronized boolean completeCurrentOrder() {
+        if (currentOrder == null) return false;
+        
+        orderList.completeOrder(currentOrder);
+        currentOrder = null;
+        return true;
     }
 
     /**
@@ -84,10 +83,9 @@ public class Barista extends Staff {
      * @return ArrayList of Current Order Details
      */
     public ArrayList<String> getCurrentOrderDetails() {
-        if (currentOrder != null) {
-            return currentOrder.getDetails();
-        }
-        return null;
+        if (currentOrder == null) return null;
+        
+        return currentOrder.getDetails();
     }
 
     /**

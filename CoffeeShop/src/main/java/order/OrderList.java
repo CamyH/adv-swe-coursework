@@ -77,12 +77,11 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /**
      * Method to remove and return the first order in the queue
      *
+     * the queue or null if inCompleteOrders is empty
+     *
      * @return Order object to be processed by staff
      */
     public Order remove() {
-        if (inCompleteOrders.isEmpty()) {
-            return null;
-        }
         return inCompleteOrders.poll();
     }
 
