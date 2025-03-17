@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
+ * Singleton Class to ensure only one instance exists.
  * Represents an order placed by a customer.
  * Contains details about the items in the order, the customer, the timestamp, and the total cost.
  * The order may also have an associated discount.
@@ -43,8 +44,11 @@ public class Order {
 
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
-    /** Constructor for creating an Order with only the menu */
-    public Order() throws InvalidOrderException {
+    /** Static variable to hold the single instance of the Order class */
+    private static Order instance = null;
+
+    /** Private constructor for creating an Order with only the menu */
+    private Order() throws InvalidOrderException {
         // Initialize fields
         this.customerID = UUID.randomUUID(); // Generate a random UUID for customer ID
         this.orderID = UUID.randomUUID();  // Generate a unique orderID
@@ -75,10 +79,25 @@ public class Order {
     }
 
     /**
+     * Public static method to get the instance of the Order class.
+     * If the instance does not exist, it creates one.
+     *
+     * @return The single instance of the Order class.
+     * @throws InvalidOrderException If there is an error while creating the order.
+     */
+    public static Order getInstance() throws InvalidOrderException {
+        if (instance == null) {
+            instance = new Order();
+        }
+        return instance;
+    }
+
+    /**
      * Constructor for reading in Order File
      * @param orderID order ID string
      * @param customerID customer ID string
      * @param timestamp timestamp string
+     * @param orderDetails items within the order
      * @param menu items within the order
      * @throws InvalidOrderException if any params are incorrect
      */
