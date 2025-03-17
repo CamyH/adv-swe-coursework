@@ -114,7 +114,7 @@ public class Barista extends Staff {
 
             if (currentOrder != null) {
                 try {
-                    sleep((int) (2000.0 * getExperience()));
+                    sleep((int) (defaultDelay * getExperience()));
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }

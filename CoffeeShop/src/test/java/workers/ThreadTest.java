@@ -41,23 +41,23 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-//        a.start();
-//        b.start();
-//        c.start();
-//
-//        Thread.sleep(1000);
-//
-//        b.removeStaff();
-//
-//        orderList = SetupOrderFile.generateOrderList();
-//
-//        Thread.sleep(5000);
-//
-//        orderList = SetupOrderFile.generateOrderList();
-//
-//        Thread.sleep(10000);
-//
-//        a.removeStaff();
-//        c.removeStaff();
+        a.start();
+        b.start();
+        c.start();
+
+        Thread.sleep(1000);
+
+        b.removeStaff();
+
+        orderList = SetupOrderFile.generateOrderList();
+
+        Thread.sleep(5000);
+
+        orderList = SetupOrderFile.generateOrderList();
+
+        Thread.sleep(10000);
+
+        a.removeStaff();
+        c.removeStaff();
     }
 }
