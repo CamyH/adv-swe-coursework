@@ -31,7 +31,13 @@ public class SimulationUI extends JFrame {
     private JPanel SimSpdPanel;
 
     public SimulationUI() {
-
+        setContentPane(contentPanel);
+        setTitle("Coffee Shop Simulation");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800,300);
+        // Ensure the UI window is shown in the center of the screen
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public JComboBox getStaffRoleCombo() {
