@@ -14,8 +14,9 @@ import java.util.UUID;
  * @author Fraser Holman
  */
 public abstract class Staff extends Thread implements Observer {
-    /** Name of the staff member */
     private String name;
+
+    protected double defaultDelay = 2000.0;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
@@ -74,6 +75,15 @@ public abstract class Staff extends Thread implements Observer {
      */
     public void setExperience(double experience) {
         this.experience = experience;
+    }
+
+    /**
+     * Method to adjust the workers speed of operation. Used to adjust speed of simulation
+     *
+     * @param defaultDelay double representing the delay in completing orders
+     */
+    public void setDefaultDelay(double defaultDelay) {
+        this.defaultDelay = defaultDelay;
     }
 
     /**

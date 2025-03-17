@@ -33,13 +33,25 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /** Linked list to hold observer details */
     private List<Observer> registeredObservers = new LinkedList<Observer>();
 
+    /** Integer to check max queue size */
+    private int maxQueueSize;
+
     /**
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
+        this(50);
+    }
+
+    /**
+     * Constructor to set Maximum Queue Size
+     */
+    private OrderList(int maxQueueSize) {
         inCompleteOrders = new ArrayDeque<Order>();
         completeOrders = new ArrayList<>();
+        this.maxQueueSize = maxQueueSize;
     }
+
 
     /**
      * Adds an order to the queue of orders
@@ -49,11 +61,15 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      */
     @Override
     public Boolean add(Order order) throws InvalidOrderException {
-        notifyObservers();
-        if (order.getDetails().isEmpty()) {
-            throw new InvalidOrderException("Order details cannot be null");
+        if (inCompleteOrders.size() < maxQueueSize) {
+            notifyObservers();
+            if (order.getDetails().isEmpty()) {
+                throw new InvalidOrderException("Order details cannot be null");
+            }
+            return inCompleteOrders.offer(order);
         }
-        return inCompleteOrders.offer(order);
+
+        return false;
     }
 
     /**
