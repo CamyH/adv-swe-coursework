@@ -14,7 +14,6 @@ import java.util.UUID;
  * @author Fraser Holman
  */
 public abstract class Staff extends Thread implements Observer {
-    /** Name of the staff member */
     private String name;
 
     protected double defaultDelay = 2000.0;
