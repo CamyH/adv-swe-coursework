@@ -3,6 +3,7 @@ package order;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
+import interfaces.Singleton;
 import interfaces.Subject;
 
 import java.util.*;
@@ -20,7 +21,7 @@ import interfaces.Observer;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject {
+public class OrderList implements EntityList<Order, UUID>, Subject, Singleton {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 
@@ -66,19 +67,20 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      */
     @Override
     public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
+        if (inCompleteOrders.size() >= maxQueueSize) {
+            return false;
+        }
+
+        if (order.getDetails().isEmpty()) {
+            throw new InvalidOrderException("Order details cannot be null or empty");
+        }
+
         if (inCompleteOrders.contains(order) || completeOrders.contains(order)) {
             throw new DuplicateOrderException("Duplicate Order");
         }
 
-        if (inCompleteOrders.size() < maxQueueSize) {
-            notifyObservers();
-            if (order.getDetails().isEmpty()) {
-                throw new InvalidOrderException("Order cannot be Empty");
-            }
-            return inCompleteOrders.offer(order);
-        }
-
-        return false;
+        notifyObservers();
+        return inCompleteOrders.offer(order);
     }
 
     /**
@@ -88,15 +90,10 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param ID The ID used to find the order to be removed
      */
     @Override
-    public synchronized boolean remove(UUID ID) {
-        try {
-            completeOrders.add(this.getOrder(ID));
-            return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
-        }
-        catch (InvalidOrderException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
+    public synchronized boolean remove(UUID ID) throws InvalidOrderException {
+        completeOrders.add(this.getOrder(ID));
+
+        return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
     }
 
     /**
