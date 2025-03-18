@@ -42,7 +42,7 @@ public class Client {
         connectionsSingletonInstance.add(outputStream);
     }
     /**
-     * Sends an {@link Order} object to the server.
+     * Sends an {@link Order} object to the server
      * The order is serialized and sent using {@link ObjectOutputStream}.
      *
      * @param order the {@link Order} object to be sent
@@ -73,8 +73,8 @@ public class Client {
     }
 
     /**
-     * Receives a {@link Message} object from the server.
-     * The message is deserialized and printed to the console.
+     * Receives a {@link Message} object from the server
+     * The message is deserialized from the input stream and returned
      *
      * @throws IOException if an I/O error occurs while receiving the object
      * @throws ClassNotFoundException if the class of the received object cannot be found
@@ -85,8 +85,8 @@ public class Client {
     }
 
     /**
-     * Receives an {@link Order} object from the server.
-     * The order is deserialized from the input stream and returned.
+     * Receives an {@link Order} object from the server
+     * The order is deserialized from the input stream and returned
      *
      * @return the {@link Order} object received from the server
      * @throws IOException if an I/O error occurs while receiving the object, aka if it is null
@@ -132,13 +132,13 @@ public class Client {
     }
 
     /**
-     * Closes the client's I/O streams and attempts to close the socket.
+     * Closes the client's I/O streams and attempts to close the socket
      * This method closes both the {@link ObjectOutputStream} and
      * {@link ObjectInputStream} to release resources. It also attempts
      * to close the {@link Socket}, even if stream closures fail
      *
      * <p><b>Note:</b> If multiple errors occur during cleanup, the
-     * first encountered {@link IOException} is thrown.</p>
+     * first encountered {@link IOException} is thrown</p>
      *
      * @throws IOException if an I/O error occurs while closing the output or input stream
      */
