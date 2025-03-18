@@ -12,5 +12,5 @@ import exceptions.InvalidOrderException;
 public interface EntityList<T, R> {
     boolean add(T item) throws InvalidOrderException, DuplicateOrderException;
 
-    boolean remove(R ID);
+    boolean remove(R ID) throws InvalidOrderException;
 }

@@ -72,11 +72,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         new ArrayList<>(List.of(itemIds)),
                         menu));
             }
-        } catch (InvalidOrderException e) {
-            System.err.println("Skipping : " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.err.println("Skipping : " + e.getMessage());
-        } catch (DuplicateOrderException e) {
+        } catch (InvalidOrderException | IllegalArgumentException | DuplicateOrderException e) {
             System.err.println("Skipping : " + e.getMessage());
         }
     }
