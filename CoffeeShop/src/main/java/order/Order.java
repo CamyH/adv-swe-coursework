@@ -5,6 +5,8 @@ import item.ItemCategory;
 import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -16,7 +18,7 @@ import java.util.*;
  * @author Mohd Faiz
  */
 
-public class Order {
+public class Order implements Serializable {
     /** Unique identifier for the order */
     private final UUID orderID;
 
