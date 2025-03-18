@@ -23,7 +23,6 @@ public class Client {
     private final CopyOnWriteArraySet<ObjectOutputStream> connectionsSingletonInstance;
     private final Socket socket;
     private final ObjectInputStream inputStream;
-
     private final ObjectOutputStream outputStream;
 
     /**
