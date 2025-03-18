@@ -2,12 +2,16 @@ package order;
 
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
+import interfaces.Subject;
 
 import java.io.Serializable;
 import java.util.*;
 
+import interfaces.Observer;
+
+
 /**
- * Singleton class
+ * Singleton class and uses Observer Design Pattern (this class is the subject)
  *
  * Class represents a list of current orders
  *
@@ -16,6 +20,7 @@ import java.util.*;
  * @author Fraser Holman
  */
 
+public class OrderList implements EntityList<Order, UUID>, Subject {
 public class OrderList implements EntityList<Order, UUID>, Serializable {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
@@ -27,13 +32,28 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
     /** Private instance of OrderList */
     private static OrderList instance = new OrderList();
 
+    /** Linked list to hold observer details */
+    private List<Observer> registeredObservers = new LinkedList<Observer>();
+
+    /** Integer to check max queue size */
+    private int maxQueueSize;
+
     /**
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        inCompleteOrders = new ArrayDeque<>();
-        completeOrders = new ArrayList<>();
+        this(50);
     }
+
+    /**
+     * Constructor to set Maximum Queue Size
+     */
+    private OrderList(int maxQueueSize) {
+        inCompleteOrders = new ArrayDeque<Order>();
+        completeOrders = new ArrayList<>();
+        this.maxQueueSize = maxQueueSize;
+    }
+
 
     /**
      * Adds an order to the queue of orders
@@ -42,11 +62,22 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
      * @param order The order to be added to the queue
      */
     @Override
+    public Boolean add(Order order) throws InvalidOrderException {
+        if (inCompleteOrders.size() < maxQueueSize) {
+            notifyObservers();
+            if (order.getDetails().isEmpty()) {
+                throw new InvalidOrderException("Order details cannot be null");
+            }
+            return inCompleteOrders.offer(order);
+        }
     public boolean add(Order order) throws InvalidOrderException {
         if (order.getDetails().isEmpty()) {
             throw new InvalidOrderException("Order details cannot be null");
         }
         return inCompleteOrders.offer(order);
+    }
+
+        return false;
     }
 
     /**
@@ -65,6 +96,21 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Method to remove and return the first order in the queue
+     *
+     * the queue or null if inCompleteOrders is empty
+     *
+     * @return Order object to be processed by staff
+     */
+    public Order remove() {
+        return inCompleteOrders.poll();
+    }
+
+    public void completeOrder(Order order) {
+        completeOrders.add(order);
     }
 
     /**
@@ -95,7 +141,6 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
-        System.out.println("hello" + inCompleteOrders);
         return new LinkedList<>(inCompleteOrders);
     }
 
@@ -205,9 +250,35 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
     }
 
     /**
-     * Test to resest the OrderList singleton instance
+     * Reset the OrderList singleton instance
+     * Used by tests
      */
     public static void resetInstance() {
         instance = new OrderList();
+    }
+
+    /**
+     * Method used to register observers
+     *
+     * @param obs The observer to be added to the list of observers
+     */
+    public void registerObserver(Observer obs) {
+        registeredObservers.add(obs);
+    }
+
+    /**
+     * Method used to remove observers
+     *
+     * @param obs The observer to be removed from the list of observers
+     */
+    public void removeObserver(Observer obs) {
+        registeredObservers.remove(obs);
+    }
+
+    /**
+     * Method used to notify observers
+     */
+    public void notifyObservers() {
+        for(Observer obs : registeredObservers) obs.update();
     }
 }

@@ -165,7 +165,7 @@ public class ItemList implements EntityList<Item, String>, Serializable {
     }
 
     /**
-     * Test to resest the ItemList singleton instance
+     * Reset the ItemList singleton instance
      */
     public static void resetInstance() {
         instance = new ItemList();
