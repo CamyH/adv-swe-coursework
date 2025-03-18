@@ -1,11 +1,12 @@
-package Message;
+package message;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Represents a message with a specific type and sender
  */
-public record Message(String message, MessageType messageType, UUID customerId) {
+public record Message(UUID customerId, String message, MessageType messageType) implements Serializable {
 
     /**
      * Returns a string representation of the message, including message content,
@@ -17,7 +18,7 @@ public record Message(String message, MessageType messageType, UUID customerId) 
     public String toString() {
         return "Message{" +
                 "message='" + message + '\'' +
-                ", messageType=" + messageType +
-                ", customerId=" + customerId + '}';
+                ", customerId=" + customerId +
+                ", messageType=" + messageType + '}';
     }
 }
