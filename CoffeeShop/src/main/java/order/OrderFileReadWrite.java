@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.AbstractFileManager;
 import item.ItemList;
@@ -74,6 +75,8 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
         } catch (InvalidOrderException e) {
             System.err.println("Skipping : " + e.getMessage());
         } catch (IllegalArgumentException e) {
+            System.err.println("Skipping : " + e.getMessage());
+        } catch (DuplicateOrderException e) {
             System.err.println("Skipping : " + e.getMessage());
         }
     }
