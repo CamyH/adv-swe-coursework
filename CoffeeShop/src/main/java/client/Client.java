@@ -123,9 +123,7 @@ public class Client {
      * @throws IOException if an object is unable to be sent to a client
      */
     private synchronized <T extends Serializable> void broadcast(T listToSend) throws IOException {
-        if (listToSend == null) {
-            throw new IllegalArgumentException("List to send cannot be null");
-        }
+        if (listToSend == null) throw new IllegalArgumentException("List to send cannot be null");
 
         for (ObjectOutputStream outputStream : connectionsSingletonInstance) {
             outputStream.writeObject(listToSend);
