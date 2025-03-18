@@ -13,6 +13,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for logic within the Server Class
+ */
 public class ServerTest {
     private static Server server;
 
