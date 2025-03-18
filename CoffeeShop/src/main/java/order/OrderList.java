@@ -20,8 +20,7 @@ import interfaces.Observer;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject {
-public class OrderList implements EntityList<Order, UUID>, Serializable {
+public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 
@@ -62,7 +61,7 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
      * @param order The order to be added to the queue
      */
     @Override
-    public Boolean add(Order order) throws InvalidOrderException {
+    public boolean add(Order order) throws InvalidOrderException {
         if (inCompleteOrders.size() < maxQueueSize) {
             notifyObservers();
             if (order.getDetails().isEmpty()) {
@@ -70,12 +69,6 @@ public class OrderList implements EntityList<Order, UUID>, Serializable {
             }
             return inCompleteOrders.offer(order);
         }
-    public boolean add(Order order) throws InvalidOrderException {
-        if (order.getDetails().isEmpty()) {
-            throw new InvalidOrderException("Order details cannot be null");
-        }
-        return inCompleteOrders.offer(order);
-    }
 
         return false;
     }
