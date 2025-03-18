@@ -65,20 +65,17 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     public void readFile() throws FileNotFoundException {
         StringBuilder fileContents = new StringBuilder();
 
-        if (filePath != null) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    fileContents.append(line);
-                    fileContents.append(System.lineSeparator());
+        if (filePath == null) throw new FileNotFoundException("File Path is null");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileContents.append(line);
+                fileContents.append(System.lineSeparator());
                 }
             } catch (IOException e) {
                 System.out.println("Error reading file: " + e.getMessage());
             }
-        }
-        else {
-            throw new FileNotFoundException("File Path is null");
-        }
 
         ingestFileContents(fileContents);
     }
