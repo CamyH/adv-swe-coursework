@@ -121,6 +121,7 @@ public class Client {
      * @param listToSend the updated {@link OrderList} or {@link ItemList} to send
      * @param <T> Generic type that must be {@link Serializable} to allow for polymorphism
      * @throws IOException if an object is unable to be sent to a client
+     * @throws IllegalArgumentException if the list object is null
      */
     private synchronized <T extends Serializable> void broadcast(T listToSend) throws IOException {
         if (listToSend == null) throw new IllegalArgumentException("List to send cannot be null");
