@@ -37,6 +37,7 @@ public class Client {
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
         // Keep a record of the client's ObjectOutputStream
+        // this is used for broadcasting
         this.connectionsSingletonInstance = Server.getConnectionsSingletonInstance();
         connectionsSingletonInstance.add(outputStream);
     }
