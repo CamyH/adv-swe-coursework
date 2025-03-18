@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     protected final String fileName;
 
-    protected ItemList menu;
+    protected ItemList menu = ItemList.getInstance();
 
     protected File filePath;
 
