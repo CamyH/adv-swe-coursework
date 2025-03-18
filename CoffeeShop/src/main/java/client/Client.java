@@ -155,13 +155,13 @@ public class Client {
         try {
             outputStream.close();
         } catch (IOException e) {
-            exception = e; // Capture the first failure
+            exception = e;
         }
 
         try {
             inputStream.close();
         } catch (IOException e) {
-            if (exception == null) exception = e; // Prioritise the first exception
+            if (exception == null) exception = e;
         }
 
         try {
