@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.AbstractFileManager;
 
@@ -70,8 +71,8 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
 
                 if(!orderList.add(newOrder)) System.err.println("Order was not added");
             }
-        } catch (InvalidOrderException | DateTimeParseException | IllegalArgumentException e ) {
-            System.err.println("Skipping... : " + e.getMessage());
+        } catch (InvalidOrderException | IllegalArgumentException | DuplicateOrderException e) {
+            System.err.println("Skipping : " + e.getMessage());
         }
     }
 

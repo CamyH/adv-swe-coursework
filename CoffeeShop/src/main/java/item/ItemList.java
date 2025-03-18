@@ -60,7 +60,6 @@ public class ItemList implements EntityList<Item, String>, Serializable {
         return new LinkedHashMap<>(items); // Creates a copy
     }
 
-
     /**
      * Get method to return a specific items category
      *
