@@ -1,9 +1,13 @@
 package server;
 
-import client.ClientHandler;
+import item.Item;
+import item.ItemFileReader;
+import item.ItemList;
 import order.OrderFileReadWrite;
+import order.OrderList;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,23 +17,45 @@ import java.util.concurrent.*;
  * The Server that runs the Simulation
  */
 public class Server {
+    private static ExecutorService threadPool = null;
+    private static final CopyOnWriteArraySet<ObjectOutputStream> connectionsSingleton = new CopyOnWriteArraySet<>();
     private static final int port = 9876;
     /**
      * The host used by the server
      * Dev: localhost
      */
-    private static final String host = "localhost";
-    private static final int pool_size = 6;
+    private static String host = "localhost";
+    private static int pool_size = 6;
 
-    public static void main(String[] args) {
+    /**
+     * Constructor
+     */
+    public Server() {}
+
+    /**
+     * Constructor that allows for passing in
+     * a custom host and port
+     * @param host the new host to use
+     * @param port the new port to use
+     */
+    public Server(String host, int port) {
+        Server.host = host;
+        Server.pool_size = port;
+    }
+
+    /**
+     * Start a new server instance
+     */
+    public void start() {
         try (ServerSocket serverSocket = setupServer()) {
             System.out.println("Server started on " + host + ":" + port);
 
+            initialiseItemsFromFile();
             initialiseOrdersFromFile();
 
             // A Thread pool is used to handle multiple
             // client connections concurrently
-            ExecutorService threadPool = Executors.newFixedThreadPool(pool_size);
+            threadPool = Executors.newFixedThreadPool(pool_size);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -40,6 +66,8 @@ public class Server {
             }
         } catch (IOException e) {
             System.err.println("Could not start server: " + e.getMessage());
+            // Shut down threadPool
+            threadPool.shutdownNow();
         }
     }
 
@@ -47,7 +75,7 @@ public class Server {
      * Create a new Server on the specified port
      * @return the new instance of the server
      */
-    private static ServerSocket setupServer() {
+    protected static ServerSocket setupServer() {
         try {
             return new ServerSocket(port);
         } catch (IOException e) {
@@ -57,8 +85,9 @@ public class Server {
 
     /**
      * Read in the orders from the orders file
+     * Populate the {@link OrderList} instance
      */
-    private static void initialiseOrdersFromFile() {
+    protected void initialiseOrdersFromFile() {
         // Read in orders file and
         // populate orderList instance
         try (OrderFileReadWrite reader = new OrderFileReadWrite("orders.txt")) {
@@ -66,5 +95,30 @@ public class Server {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Read in {@link Item}s (menu) from the items file
+     * Populate the {@link ItemList} instance
+     */
+    protected void initialiseItemsFromFile() {
+        // Read in items file and
+        // populate itemList instance
+        try (ItemFileReader reader = new ItemFileReader("menu.txt")) {
+            reader.readFile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Initialise a new instance of connectionsSingleton if it
+     * is null. A lazy initialised singleton is used here
+     * as CopyOnWriteArrayList is expensive to create
+     * so we only want to do it when a client connects
+     * @return the current instance of connectionsSingleton
+     */
+    public static CopyOnWriteArraySet<ObjectOutputStream> getConnectionsSingletonInstance() {
+        return connectionsSingleton;
     }
 }
