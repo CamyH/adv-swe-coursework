@@ -9,7 +9,7 @@ import exceptions.InvalidOrderException;
  */
 
 public interface EntityList<T, R> {
-    Boolean add(T item) throws InvalidOrderException;
+    boolean add(T item) throws InvalidOrderException;
 
-    Boolean remove(R ID);
+    boolean remove(R ID);
 }
