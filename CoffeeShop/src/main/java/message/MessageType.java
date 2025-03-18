@@ -1,4 +1,4 @@
-package Message;
+package message;
 
 /**
  * Enum representing various types of messages related to order processing.
