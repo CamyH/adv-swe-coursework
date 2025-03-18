@@ -3,7 +3,6 @@ package order;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
-import interfaces.Singleton;
 import interfaces.Subject;
 
 import java.util.*;
@@ -21,7 +20,7 @@ import interfaces.Observer;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject, Singleton {
+public class OrderList implements EntityList<Order, UUID>, Subject {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 

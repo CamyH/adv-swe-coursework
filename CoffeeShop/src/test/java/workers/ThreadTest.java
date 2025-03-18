@@ -11,10 +11,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * JUnit tests for the Order class.
- * This class contains test cases that validate the functionality of the Order class including item addition, cost calculation, and exception handling
  *
- * @author Mohd Faiz
+ * @author Fraser Holman
  */
 
 public class ThreadTest {

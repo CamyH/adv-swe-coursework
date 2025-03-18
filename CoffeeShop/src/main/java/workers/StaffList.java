@@ -1,12 +1,11 @@
 package workers;
 
 import interfaces.EntityList;
-import interfaces.Singleton;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StaffList implements EntityList<Staff, UUID>, Singleton {
+public class StaffList implements EntityList<Staff, UUID> {
     // Hashmap of staff ID as the key, and Staff Object as the value
     private HashMap<UUID, Staff> staffList;
 
@@ -27,6 +26,9 @@ public class StaffList implements EntityList<Staff, UUID>, Singleton {
      * @return True is the key is unique, False otherwise
      */
     public boolean add(Staff staff) {
+        if (staff == null) {
+            return false;
+        }
         return staffList.putIfAbsent(staff.getID(), staff) == null;
     }
 
@@ -55,8 +57,8 @@ public class StaffList implements EntityList<Staff, UUID>, Singleton {
      *
      * @return String array containing all Staff IDs
      */
-    public String[] getStaffIDs() {
-        return staffList.keySet().toArray(new String[0]);
+    public UUID[] getStaffIDs() {
+        return staffList.keySet().toArray(new UUID[0]);
     }
 
     /**

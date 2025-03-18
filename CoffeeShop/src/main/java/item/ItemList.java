@@ -37,6 +37,9 @@ public class ItemList implements EntityList<Item, String> {
      */
     @Override
     public boolean add(Item item) {
+        if (item == null) {
+            return false;
+        }
         return items.putIfAbsent(item.getItemID(), item) == null;
     }
 
