@@ -1,6 +1,6 @@
-package client;
+package server;
 
-import order.OrderList;
+import client.Client;
 
 import java.net.Socket;
 
@@ -32,7 +32,12 @@ public class ClientHandler implements Runnable {
             // Create a new client to handle communication with the connected client
             Client client = new Client(clientSocket);
 
-            client.sendOrder(OrderList.getInstance().getOrder());
+            /* Example:
+            Order order = client.receiveOrder();
+            System.out.println("Received order: " + order.getOrderID());
+            OrderList orderList = OrderList.getInstance();
+            orderList.add(order);
+            System.out.println(orderList.getOrderList()); */
 
         } catch (Exception e) {
             System.err.println("Error while handling client: " + e.getMessage());
