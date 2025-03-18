@@ -47,8 +47,9 @@ public class Client {
      *
      * @param order the {@link Order} object to be sent
      * @throws IOException if an I/O error occurs while sending the object
+     * @throws NullPointerException if the order is null
      */
-    public synchronized void sendOrder(Order order) throws IOException, InvalidOrderException {
+    public synchronized void sendOrder(Order order) throws IOException {
         if (order == null) throw new NullPointerException("Order cannot be null");
 
         System.out.println("Sending order: " + order.getOrderID());
