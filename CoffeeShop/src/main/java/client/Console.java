@@ -2,6 +2,7 @@ package client;
 import java.util.Scanner;
 import java.util.UUID;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
@@ -252,12 +253,15 @@ public class Console {
      */
     private void placeOrder(Order curOrder) {
         try {
-            orders.add(curOrder);
-            Demo.demoWriteOrders();
-            System.out.println("Order placed successfully");
-        } catch (InvalidOrderException e) {
-            //System.out.println(e.getMessage());
-            System.out.println("Order cannot be empty, add an item or cancel the order");
+            if (orders.add(curOrder)) {
+                Demo.demoWriteOrders();
+                System.out.println("Order placed successfully");
+            }
+            else {
+                System.out.println("Order could not be placed - Please Try Again Later");
+            }
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
         }
     }
 

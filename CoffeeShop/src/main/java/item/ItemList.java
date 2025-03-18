@@ -2,7 +2,6 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
-import order.OrderList;
 
 import java.util.*;
 
@@ -37,7 +36,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param item The item ID to be added to the hashmap
      */
     @Override
-    public Boolean add(Item item) {
+    public boolean add(Item item) {
         return items.putIfAbsent(item.getItemID(), item) == null;
     }
 
@@ -47,7 +46,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param ID The item ID to be removed from the hashmap
      */
     @Override
-    public Boolean remove(String ID) {
+    public boolean remove(String ID) {
         return items.remove(ID) != null;
     }
 
@@ -59,7 +58,6 @@ public class ItemList implements EntityList<Item, String> {
     public LinkedHashMap<String, Item> getMenu() {
         return new LinkedHashMap<>(items); // Creates a copy
     }
-
 
     /**
      * Get method to return a specific items category
