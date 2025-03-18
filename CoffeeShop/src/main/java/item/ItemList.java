@@ -2,8 +2,8 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
-import order.OrderList;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -17,7 +17,7 @@ import java.util.*;
  * @author Fraser Holman
  */
 
-public class ItemList implements EntityList<Item, String> {
+public class ItemList implements EntityList<Item, String>, Serializable {
     /** Hashmap data structure to hold item information */
     private Map<String, Item> items;
 
@@ -37,7 +37,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param item The item ID to be added to the hashmap
      */
     @Override
-    public Boolean add(Item item) {
+    public boolean add(Item item) {
         return items.putIfAbsent(item.getItemID(), item) == null;
     }
 
@@ -47,7 +47,7 @@ public class ItemList implements EntityList<Item, String> {
      * @param ID The item ID to be removed from the hashmap
      */
     @Override
-    public Boolean remove(String ID) {
+    public boolean remove(String ID) {
         return items.remove(ID) != null;
     }
 
