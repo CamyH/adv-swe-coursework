@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
@@ -12,7 +13,7 @@ import item.SetupItemFile;
  */
 
 public class SetupOrderFile {
-    private static final OrderList orderList = OrderList.getInstance();
+    private static OrderList orderList = OrderList.getInstance();
     private static final ItemList itemList = SetupItemFile.generateItemList();
 
     /**
@@ -21,6 +22,8 @@ public class SetupOrderFile {
      */
     public static OrderList generateOrderList() {
         try {
+            OrderList.resetInstance();
+            orderList = OrderList.getInstance();
             Order first = new Order();
             first.addItem("RL2");
             first.addItem("SD4");
@@ -63,7 +66,7 @@ public class SetupOrderFile {
             o.addItem("PSY4");
             o.addItem("SCK6");
             orderList.add(o);
-        } catch (InvalidOrderException | InvalidItemIDException e) {
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
 

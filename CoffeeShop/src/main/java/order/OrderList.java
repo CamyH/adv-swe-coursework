@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 import interfaces.Subject;
@@ -34,24 +35,28 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     private List<Observer> registeredObservers = new LinkedList<Observer>();
 
     /** Integer to check max queue size */
-    private int maxQueueSize;
+    private int maxQueueSize = 50;
 
     /**
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        this(50);
+        inCompleteOrders = new ArrayDeque<Order>();
+        completeOrders = new ArrayList<>();
     }
 
     /**
-     * Constructor to set Maximum Queue Size
+     * Method to set the maximum queue size
+     *
+     * Only used in tests to set max queue size to a reset instance of OrderList
+     *
+     * This method can be used within operation but if the queue was initially a larger size it will still contain those extra orders
+     *
+     * @param maxQueueSize Sets the maximum size of the queue before customers can no longer order
      */
-    private OrderList(int maxQueueSize) {
-        inCompleteOrders = new ArrayDeque<Order>();
-        completeOrders = new ArrayList<>();
+    public void setMaxQueueSize(int maxQueueSize) {
         this.maxQueueSize = maxQueueSize;
     }
-
 
     /**
      * Adds an order to the queue of orders
@@ -60,16 +65,21 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param order The order to be added to the queue
      */
     @Override
-    public Boolean add(Order order) throws InvalidOrderException {
-        if (inCompleteOrders.size() < maxQueueSize) {
-            notifyObservers();
-            if (order.getDetails().isEmpty()) {
-                throw new InvalidOrderException("Order details cannot be null");
-            }
-            return inCompleteOrders.offer(order);
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
+        if (inCompleteOrders.size() >= maxQueueSize) {
+            return false;
         }
 
-        return false;
+        if (order.getDetails().isEmpty()) {
+            throw new InvalidOrderException("Order details cannot be null or empty");
+        }
+
+        if (inCompleteOrders.contains(order) || completeOrders.contains(order)) {
+            throw new DuplicateOrderException("Duplicate Order");
+        }
+
+        notifyObservers();
+        return inCompleteOrders.offer(order);
     }
 
     /**
@@ -79,15 +89,10 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param ID The ID used to find the order to be removed
      */
     @Override
-    public Boolean remove(UUID ID) {
-        try {
-            completeOrders.add(this.getOrder(ID));
-            return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
-        }
-        catch (InvalidOrderException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
+    public synchronized boolean remove(UUID ID) throws InvalidOrderException {
+        completeOrders.add(this.getOrder(ID));
+
+        return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
     }
 
     /**
@@ -97,7 +102,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      *
      * @return Order object to be processed by staff
      */
-    public Order remove() {
+    public synchronized Order remove() {
         return inCompleteOrders.poll();
     }
 

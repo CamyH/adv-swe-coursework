@@ -1,4 +1,5 @@
 package client;
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
@@ -182,11 +183,15 @@ public class GUI extends JFrame {
      */
     public void submitOrder(){
         try {
-            orders.add(curOrder);
-            Demo.demoWriteOrders();
-            JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
-        } catch (InvalidOrderException e) {
-            JOptionPane.showMessageDialog(GUI.this,"Can't submit an empty order");
+            if (orders.add(curOrder)) {
+                Demo.demoWriteOrders();
+                JOptionPane.showMessageDialog(GUI.this, "Order has been submitted");
+            }
+            else {
+                JOptionPane.showMessageDialog(GUI.this, "Order could not be placed - Please Try Again Later");
+            }
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            JOptionPane.showMessageDialog(GUI.this,e.getMessage());
         }
         try {
             curOrder = new Order();
