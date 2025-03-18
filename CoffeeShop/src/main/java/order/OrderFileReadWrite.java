@@ -2,10 +2,10 @@ package order;
 
 import exceptions.InvalidOrderException;
 import interfaces.AbstractFileManager;
-import item.ItemList;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
@@ -48,7 +48,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     /**
      * Convert StringBuilder file content to a queue of Orders
      * @param fileContents the contents of the read from file
-     * @return an Array Deque of type order
      */
     @Override
     protected void ingestFileContents(StringBuilder fileContents) {
@@ -63,19 +62,16 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                 String[] lineData = line.split(",");
                 String[] itemIds = lineData[3].split(";");
 
-                UUID.fromString(lineData[0]);
-                UUID.fromString(lineData[1]);
-
-                orderList.add(new Order(lineData[0],
+                Order newOrder = new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
                         new ArrayList<>(List.of(itemIds)),
-                        menu));
+                        menu);
+
+                if(!orderList.add(newOrder)) System.err.println("Order was not added");
             }
-        } catch (InvalidOrderException e) {
-            System.err.println("Skipping : " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.err.println("Skipping : " + e.getMessage());
+        } catch (InvalidOrderException | DateTimeParseException | IllegalArgumentException e ) {
+            System.err.println("Skipping... : " + e.getMessage());
         }
     }
 
