@@ -2,8 +2,8 @@ package order;
 
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
-import item.ItemList;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -16,7 +16,7 @@ import java.util.*;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID> {
+public class OrderList implements EntityList<Order, UUID>, Serializable {
     /** A queue to hold existing Order objects */
     private Queue<Order> inCompleteOrders;
 
@@ -31,7 +31,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        inCompleteOrders = new ArrayDeque<Order>();
+        inCompleteOrders = new ArrayDeque<>();
         completeOrders = new ArrayList<>();
     }
 
@@ -42,7 +42,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * @param order The order to be added to the queue
      */
     @Override
-    public Boolean add(Order order) throws InvalidOrderException {
+    public boolean add(Order order) throws InvalidOrderException {
         if (order.getDetails().isEmpty()) {
             throw new InvalidOrderException("Order details cannot be null");
         }
@@ -56,7 +56,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * @param ID The ID used to find the order to be removed
      */
     @Override
-    public Boolean remove(UUID ID) {
+    public boolean remove(UUID ID) {
         try {
             completeOrders.add(this.getOrder(ID));
             return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
@@ -95,6 +95,7 @@ public class OrderList implements EntityList<Order, UUID> {
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
+        System.out.println("hello" + inCompleteOrders);
         return new LinkedList<>(inCompleteOrders);
     }
 
