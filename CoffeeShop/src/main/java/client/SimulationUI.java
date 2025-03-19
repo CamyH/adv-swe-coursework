@@ -1,9 +1,12 @@
 package client;
 
-import javax.swing.*;
-import java.awt.*;
+import interfaces.Observer;
 
-public class SimulationUI extends JFrame {
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.awt.event.ActionListener;
+
+public class SimulationUI extends JFrame implements Observer {
 
     private JPanel contentPanel;
     private JTextArea OrderListArea;
@@ -12,9 +15,9 @@ public class SimulationUI extends JFrame {
     private JComboBox StaffExpCombo;
     private JTextField StaffNameField;
     private JButton StaffSubmitBtn;
-    private JSlider simSpdSlider;
-    private JTextField simSpdField;
-    private JLabel simSpdLabel;
+    private JSlider SimSpdSlider;
+    private JTextField SimSpdField;
+    private JLabel SimSpdLabel;
     private JComboBox SelectStaffCombo;
     private JButton RemoveStaffBtn;
     private JButton ViewDetailsBtn;
@@ -30,7 +33,11 @@ public class SimulationUI extends JFrame {
     private JLabel StaffExpLabel;
     private JPanel SimSpdPanel;
 
-    public SimulationUI() {
+    private SimUIModel simModel;
+
+    public SimulationUI(SimUIModel model) {
+        simModel = model;
+
         setContentPane(contentPanel);
         setTitle("Coffee Shop Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,50 +45,38 @@ public class SimulationUI extends JFrame {
         // Ensure the UI window is shown in the center of the screen
         setLocationRelativeTo(null);
         setVisible(true);
+        SimSpdSlider.setValue(2000);
     }
 
-    public JComboBox getStaffRoleCombo() {
-        return StaffRoleCombo;
+    public String getStaffName() {
+        return StaffNameField.getText();
     }
 
-    public JComboBox getStaffExpCombo() {
-        return StaffExpCombo;
+    public String getStaffRole() {
+        return StaffRoleCombo.getSelectedItem().toString();
     }
 
-    public JTextField getStaffNameField() {
-        return StaffNameField;
+    public String getStaffExp() {
+        return StaffExpCombo.getSelectedItem().toString();
     }
 
-    public JTextArea getOrderListArea() {
-        return OrderListArea;
+    public String getSelectedStaff() {
+        return SelectStaffCombo.getSelectedItem().toString();
     }
 
-    public JTextArea getOnlineOrderArea() {
-        return OnlineOrderArea;
+    public int getSimSpd() {
+        return SimSpdSlider.getValue();
     }
 
-    public JButton getStaffSubmitBtn() {
-        return StaffSubmitBtn;
+    public void addSetListener(ActionListener al, ChangeListener cl) {
+        RemoveStaffBtn.addActionListener(al);
+        StaffSubmitBtn.addActionListener(al);
+        ViewDetailsBtn.addActionListener(al);
+        SimSpdSlider.addChangeListener(cl);
     }
 
-    public JSlider getSimSpdSlider() {
-        return simSpdSlider;
-    }
+    public void update() {
 
-    public JTextField getSimSpdField() {
-        return simSpdField;
-    }
-
-    public JComboBox getSelectStaffCombo() {
-        return SelectStaffCombo;
-    }
-
-    public JButton getRemoveStaffBtn() {
-        return RemoveStaffBtn;
-    }
-
-    public JButton getViewDetailsBtn() {
-        return ViewDetailsBtn;
     }
 }
 
