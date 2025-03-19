@@ -7,7 +7,6 @@ import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -115,7 +114,7 @@ public class Order {
      * @param itemID The ID of the item to add to the order
      * @throws InvalidItemIDException if the item ID is invalid
      */
-    public void addItem(String itemID) throws InvalidItemIDException{
+    public boolean addItem(String itemID) throws InvalidItemIDException{
         if (!menu.itemExists(itemID)) {
             throw new InvalidItemIDException("Invalid Item ID: " + itemID);
         }
@@ -124,6 +123,7 @@ public class Order {
             calculateTotalCost();  // Recalculate the total cost after adding an item
             calculateDiscountedCost();
         }
+        return false;
     }
 
     /**

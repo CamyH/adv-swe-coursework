@@ -12,11 +12,8 @@ import interfaces.Observer;
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
- *
  * Class represents a list of current orders
- *
  * Contains a queue of different orders created by customers
- *
  * @author Fraser Holman
  */
 
@@ -40,18 +37,15 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /**
      * Initialises the queue to contain all the orders
      */
-    private OrderList() {
+    public OrderList() {
         inCompleteOrders = new ArrayDeque<Order>();
         completeOrders = new ArrayList<>();
     }
 
     /**
      * Method to set the maximum queue size
-     *
      * Only used in tests to set max queue size to a reset instance of OrderList
-     *
      * This method can be used within operation but if the queue was initially a larger size it will still contain those extra orders
-     *
      * @param maxQueueSize Sets the maximum size of the queue before customers can no longer order
      */
     public void setMaxQueueSize(int maxQueueSize) {
@@ -61,7 +55,6 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /**
      * Adds an order to the queue of orders
      * Eg will be used when a new Order has been placed
-     *
      * @param order The order to be added to the queue
      */
     @Override
@@ -97,9 +90,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
 
     /**
      * Method to remove and return the first order in the queue
-     *
      * the queue or null if inCompleteOrders is empty
-     *
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
@@ -119,7 +110,6 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
 
     /**
      * Get method to return an Order object from queue
-     *
      * @param orderID The UUID of the order to be retrieved
      * @return An Order Object
      */
@@ -134,7 +124,6 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
 
     /**
      * Get method to return the entire queue of Order Objects
-     *
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
