@@ -1,13 +1,11 @@
 package client;
 import item.ItemFileReader;
-import item.ItemList;
 import order.OrderFileReadWrite;
-import order.OrderList;
+import server.Server;
 import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Demo initialises the CoffeeShop program

@@ -1,6 +1,5 @@
 package client;
 
-import exceptions.InvalidOrderException;
 import item.ItemList;
 import order.Order;
 import message.Message;
