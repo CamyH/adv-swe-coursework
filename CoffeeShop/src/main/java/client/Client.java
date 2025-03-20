@@ -59,20 +59,6 @@ public class Client {
     }
 
     /**
-     * Sends a {@link Message} object to the server.
-     * The message is serialized and sent using {@link ObjectOutputStream}.
-     *
-     * @param message the {@link Message} object to be sent
-     * @throws IOException if an I/O error occurs while sending the object
-     */
-    public synchronized void sendMessage(Message message) throws IOException {
-        if (message == null) throw new NullPointerException("Message cannot be null");
-
-        outputStream.writeObject(message);
-        outputStream.flush();
-    }
-
-    /**
      * Receives a {@link Message} object from the server
      * The message is deserialized from the input stream and returned
      *
@@ -82,19 +68,6 @@ public class Client {
     public synchronized Message receiveMessage() throws IOException, ClassNotFoundException {
         return Optional.ofNullable((Message) inputStream.readObject())
                .orElseThrow(() -> new IOException("Message received is NULL"));
-    }
-
-    /**
-     * Receives an {@link Order} object from the server
-     * The order is deserialized from the input stream and returned
-     *
-     * @return the {@link Order} object received from the server
-     * @throws IOException if an I/O error occurs while receiving the object, aka if it is null
-     * @throws ClassNotFoundException if the class of the received object cannot be found
-     */
-    public synchronized Order receiveOrder() throws IOException, ClassNotFoundException, InvalidOrderException {
-        return Optional.ofNullable((Order) inputStream.readObject())
-               .orElseThrow(() -> new InvalidOrderException("Order received is NULL"));
     }
 
     /**
