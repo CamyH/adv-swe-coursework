@@ -1,11 +1,5 @@
 package server;
 
-import item.Item;
-import item.ItemFileReader;
-import item.ItemList;
-import order.OrderFileReadWrite;
-import order.OrderList;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.UncheckedIOException;
@@ -50,9 +44,6 @@ public class Server {
         try (ServerSocket serverSocket = setupServer()) {
             System.out.println("Server started on " + host + ":" + port);
 
-            initialiseItemsFromFile();
-            initialiseOrdersFromFile();
-
             // A Thread pool is used to handle multiple
             // client connections concurrently
             threadPool = Executors.newFixedThreadPool(pool_size);
@@ -80,34 +71,6 @@ public class Server {
             return new ServerSocket(port);
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to setup server", e);
-        }
-    }
-
-    /**
-     * Read in the orders from the orders file
-     * Populate the {@link OrderList} instance
-     */
-    protected void initialiseOrdersFromFile() {
-        // Read in orders file and
-        // populate orderList instance
-        try (OrderFileReadWrite reader = new OrderFileReadWrite("orders.txt")) {
-            reader.readFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Read in {@link Item}s (menu) from the items file
-     * Populate the {@link ItemList} instance
-     */
-    protected void initialiseItemsFromFile() {
-        // Read in items file and
-        // populate itemList instance
-        try (ItemFileReader reader = new ItemFileReader("menu.txt")) {
-            reader.readFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
