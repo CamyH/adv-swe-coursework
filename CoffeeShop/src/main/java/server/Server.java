@@ -18,8 +18,8 @@ public class Server {
      * The host used by the server
      * Dev: localhost
      */
-    private static String host = "localhost";
-    private static int pool_size = 6;
+    private String host = "localhost";
+    private int pool_size = 6;
 
     /**
      * Constructor
@@ -33,8 +33,8 @@ public class Server {
      * @param port the new port to use
      */
     public Server(String host, int port) {
-        Server.host = host;
-        Server.pool_size = port;
+        this.host = host;
+        this.pool_size = port;
     }
 
     /**
