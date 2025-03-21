@@ -1,27 +1,23 @@
 package client;
 
-import client.controller.CustomerController;
-import client.view.CustomerView;
-import exceptions.InvalidOrderException;
 import order.OrderList;
+import client.controller.OrderController;
+import client.view.OrderView;
 
-/**
- * GUI Class - Initializes the application and connects the MVC components.
- */
 public class GUI {
-    private static CustomerView view;
+    private static OrderView orderView;
 
-    public static void main(String[] args) throws InvalidOrderException {
-        view = new CustomerView();
-        OrderList orders = new OrderList();
-        CustomerController controller = new CustomerController(view, orders);
-
-        view.setVisible(true);
+    public static void main(String[] args) {
+        OrderList orderList = OrderList.getInstance();
+        orderView = new OrderView(null);
+        OrderController orderController = new OrderController(orderList, orderView);
+        orderView.setController(orderController);
+        orderList.registerObserver(orderView);
     }
 
     public static void closeGUI() {
-        if (view != null) {
-            view.dispose();
+        if (orderView != null) {
+            orderView.dispose();
         }
     }
 }

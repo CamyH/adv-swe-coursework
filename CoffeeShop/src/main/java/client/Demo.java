@@ -7,10 +7,9 @@ import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
- * Demo initialises the CoffeeShop program
+ * Demo initializes the CoffeeShop program
  * Contains the main method
  * @author Caelan Mackenzie
  */
@@ -23,7 +22,7 @@ public class Demo {
     private static Console console;
 
     /**
-     * Initialises and Empty ItemList and OrderList
+     * Initializes an Empty ItemList and OrderList
      */
     public Demo() {}
 
@@ -31,7 +30,7 @@ public class Demo {
      * Runs the Console Code
      */
     public void showConsole() {
-        console =  new Console();
+        console = new Console();
         console.run();
     }
 
@@ -49,18 +48,20 @@ public class Demo {
         // Create a new demo object
         Demo demo = new Demo();
 
-        itemReader = new ItemFileReader("menu.txt");
         try {
+            itemReader = new ItemFileReader("menu.txt");
             itemReader.readFile();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error: menu.txt file not found.");
+            return;
         }
 
-        orderReader = new OrderFileReadWrite("orders.txt");
         try {
+            orderReader = new OrderFileReadWrite("orders.txt");
             orderReader.readFile();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error: orders.txt file not found.");
+            return;
         }
 
         demo.showGUI();
@@ -70,9 +71,11 @@ public class Demo {
     /**
      * Closes the GUI
      */
-    static void demoCloseGUI(){
+    static void demoCloseGUI() {
         System.out.println("Goodbye.");
-        gui.closeGUI();
+        if (gui != null) {
+            gui.closeGUI();
+        }
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
 
@@ -82,12 +85,13 @@ public class Demo {
     /**
      * Writes to order txt file
      */
-    static void demoWriteOrders(){
+    static void demoWriteOrders() {
         try {
-            orderReader.writeToFile();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+            if (orderReader != null) {
+                orderReader.writeToFile();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to orders.txt: " + e.getMessage());
         }
     }
 }
