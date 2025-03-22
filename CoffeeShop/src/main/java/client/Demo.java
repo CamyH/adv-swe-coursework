@@ -1,13 +1,10 @@
 package client;
 import item.ItemFileReader;
-import item.ItemList;
 import order.OrderFileReadWrite;
-import order.OrderList;
 import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Demo initialises the CoffeeShop program
@@ -79,6 +76,7 @@ public class Demo {
     static void demoCloseGUI(){
         System.out.println("Goodbye.");
         gui.closeGUI();
+        simController.close();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
 

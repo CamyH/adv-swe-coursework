@@ -157,6 +157,11 @@ public class SimulationUI extends JFrame implements Observer {
     public void showPopup(String message) {
         JOptionPane.showMessageDialog(SimulationUI.this, message);
     }
+
+    public void close() {
+        // close the window
+        SimulationUI.this.dispose();
+    }
 }
 
 

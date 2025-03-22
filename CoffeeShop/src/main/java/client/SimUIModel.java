@@ -1,6 +1,5 @@
 package client;
 
-import exceptions.InvalidItemIDException;
 import exceptions.StaffNullorderException;
 import interfaces.Observer;
 import interfaces.Subject;
@@ -32,7 +31,7 @@ public class SimUIModel implements Subject {
     private Integer simSpd = 2000;
 
         public SimUIModel() {
-            this.orderList = OrderList.getInstance();;
+            this.orderList = OrderList.getInstance();
             this.menu = ItemList.getInstance();
             roles = new ArrayList<>();
 
@@ -140,6 +139,7 @@ public class SimUIModel implements Subject {
     }
 
     public void removeStaff(UUID ID) {
+        staffList.get(ID).removeStaff();
         staffList.remove(ID);
     }
 

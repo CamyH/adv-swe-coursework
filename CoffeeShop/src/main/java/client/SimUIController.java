@@ -3,11 +3,8 @@ package client;
 import exceptions.StaffNullorderException;
 import interfaces.Observer;
 import order.OrderList;
-import workers.Staff;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -111,8 +108,7 @@ public class SimUIController implements Observer {
         }
     }
 
-    public static void main(final String[] args) {
-        SimUIController controller = new SimUIController();
+    public void close() {
+        simView.close();
     }
-
 }
