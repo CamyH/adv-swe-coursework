@@ -79,7 +79,7 @@ public class SimulationUI extends JFrame implements Observer {
         return StaffExpCombo.getSelectedItem().toString();
     }
 
-    public UUID getCurStaff() {
+    public UUID getCurStaff() throws NullPointerException {
         String[] curStaffParts = SelectStaffCombo.getSelectedItem().toString().split(",", 2);
         return UUID.fromString(curStaffParts[1]);
     }

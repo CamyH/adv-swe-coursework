@@ -40,11 +40,13 @@ public class SimUIController implements Observer {
     private void viewStaffDetails() {
         StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
         try {
-
             staffDetailsPopup.setDetails(simModel.getStaffDetails(simView.getCurStaff()));
         } catch (StaffNullorderException e) {
             staffDetailsPopup.exit();
             simView.showPopup(e.getMessage());
+        } catch (NullPointerException e) {
+            staffDetailsPopup.exit();
+            simView.showPopup("No Staff Found");
         }
 
         simModel.notifyObservers();
@@ -63,9 +65,13 @@ public class SimUIController implements Observer {
     }
 
     private void removeStaff() {
-        simModel.removeStaff(simView.getCurStaff());
-        simModel.notifyObservers();
-        simView.showPopup("Removed Selected Staff");
+        try {
+            simModel.removeStaff(simView.getCurStaff());
+            simModel.notifyObservers();
+            simView.showPopup("Removed Selected Staff");
+        } catch (NullPointerException e) {
+            simView.showPopup("No Staff to Remove");
+        }
     }
 
     private void updateSimSpd() {

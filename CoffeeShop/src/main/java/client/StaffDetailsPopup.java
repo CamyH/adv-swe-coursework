@@ -7,11 +7,14 @@ public class StaffDetailsPopup extends JFrame {
 
     private JPanel contentPanel;
     private JTextArea detailsArea;
+    private JScrollPane detailsScrollPane;
 
     public StaffDetailsPopup() {
         // Ensure the UI window is shown in the center of the screen
         setLocationRelativeTo(null);
         setVisible(true);
+        setTitle("Server Details");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void setDetails(ArrayList<String> details) {
