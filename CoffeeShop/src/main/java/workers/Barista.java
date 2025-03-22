@@ -88,6 +88,10 @@ public class Barista extends Staff {
         return currentOrder.getDetails();
     }
 
+    public Order getCurrentOrder() {
+        return currentOrder;
+    }
+
     /**
      * Method used by the Subject (OrderList) to tell the Staff member that an order has been added
      */

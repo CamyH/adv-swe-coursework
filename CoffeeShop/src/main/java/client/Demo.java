@@ -21,6 +21,7 @@ public class Demo {
     private static ItemFileReader itemReader;
     private static GUI gui;
     private static Console console;
+    private static SimUIController simController;
 
     /**
      * Initialises and Empty ItemList and OrderList
@@ -40,6 +41,10 @@ public class Demo {
      */
     public void showGUI() {
         gui = new GUI();
+    }
+
+    public void showSimUI(){
+        simController = new SimUIController();
     }
 
     /**
@@ -64,6 +69,7 @@ public class Demo {
         }
 
         demo.showGUI();
+        demo.showSimUI();
         demo.showConsole();
     }
 
