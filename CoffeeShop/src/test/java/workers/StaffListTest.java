@@ -1,5 +1,6 @@
 package workers;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,13 @@ public class StaffListTest {
         a = StaffFactory.getStaff("barista", "Bob", 1);
         b = StaffFactory.getStaff("barista", "Bill", 0.2);
         c = StaffFactory.getStaff("barista", "Fraser", 0.6);
+    }
+
+    @AfterEach
+    void tearDown() {
+        a.removeStaff();
+        b.removeStaff();
+        c.removeStaff();
     }
 
     /**

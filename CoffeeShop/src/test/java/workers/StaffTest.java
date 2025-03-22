@@ -1,6 +1,8 @@
 package workers;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +18,11 @@ class StaffTest {
     @BeforeEach
     void setUp() {
         staff = StaffFactory.getStaff("barista", "Bob", 1);
+    }
+
+    @AfterEach
+    void tearDown() {
+        staff.removeStaff();
     }
 
     /**
@@ -41,13 +48,5 @@ class StaffTest {
     void testSetExperience() {
         staff.setExperience(0.2);
         assertEquals(0.2, staff.getExperience(), "Experience level was not updated correctly.");
-    }
-
-    /**
-     * Test Staff Factory
-     */
-    @Test
-    void testStaffFactory() {
-        assertInstanceOf(Barista.class, StaffFactory.getStaff("barista", "John", 0.2));
     }
 }

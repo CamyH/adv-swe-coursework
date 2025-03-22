@@ -41,6 +41,8 @@ public class Order {
     /** The total discounted cost of the order */
     private double discountedCost;
 
+    boolean onlineStatus;
+
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
     /** Constructor for creating an Order with only the menu */
@@ -51,6 +53,7 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
+        this.onlineStatus = false;
 
         if (menu.getItemCount() == 0) {
             ItemList.resetInstance();
@@ -261,5 +264,23 @@ public class Order {
      */
     public double getDiscountedCost() {
         return discountedCost;   //can modify later according to need
+    }
+
+    /**
+     * Method to change order to online status
+     *
+     * This implementation will probably be changed later but useful for me for initial testing
+     */
+    public void setOnlineStatus() {
+        onlineStatus = true;
+    }
+
+    /**
+     * Method to return online status of order
+     *
+     * @return boolean representing if the order was made online
+     */
+    public boolean getOnlineStatus() {
+        return onlineStatus;
     }
 }
