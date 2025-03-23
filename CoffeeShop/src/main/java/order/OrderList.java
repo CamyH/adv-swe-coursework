@@ -183,36 +183,69 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /**
      * Method used to return details of uncompleted orders as a string array
      *
+     * @param completed represents whether to return a string array of completed or incomplete orders
      * @return a String array with each entry formatted as below
      * (Order ID,Customer ID,Timestamp,Order Details Array [Item ID],Total Cost,Discounted Cost) e.g.
      */
-    public String[] getOrdersToString(Boolean completed) {
+    public String[] getOrdersToString(boolean completed) {
         Collection<Order> c = completeOrders;
 
         if (!completed) {
             c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
-        String[] uncompletedOrderString = new String[c.size()];
+        String[] orderString = new String[c.size()];
 
         int count = 0;
 
         for (Order o : c) {
-            String s = String.format("%s,%s,%s,%s",
+            String s = String.format("%s,%s,%s,%s,%b",
                 o.getOrderID().toString(),
                 o.getCustomerID(),
                 o.getTimestamp().toString(),
-                String.join(";", o.getDetails())
+                String.join(";", o.getDetails()),
+                o.getOnlineStatus()
             );
 
-            uncompletedOrderString[count] = s;
+            orderString[count] = s;
 
             count++;
         }
 
-        return uncompletedOrderString;
+        return orderString;
     }
 
+    /**
+     * Method used by the simulation GUI to get a summary of orders that need to be complete
+     *
+     * @param online whether to return online or in person orders
+     * @return a string array of orders to be displayed
+     */
+    public String[] getOrdersForDisplay(boolean online) {
+        Queue<Order> c = allOrders.getFirst();
+
+        if (online) {
+            c = allOrders.getLast();
+        }
+
+        String[] orderString = new String[c.size()];
+
+        int count = 0;
+
+        for (Order o : c) {
+            String s = String.format("%s,%s,%s",
+                    o.getOrderID().toString(),
+                    o.getTimestamp().toString(),
+                    String.join(";", o.getDetails())
+            );
+
+            orderString[count] = s;
+
+            count++;
+        }
+
+        return orderString;
+    }
 
     /**
      * Method to return a summary of the purchased items and quantity

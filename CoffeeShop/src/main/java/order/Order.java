@@ -89,13 +89,15 @@ public class Order {
                  String customerID,
                  LocalDateTime timestamp,
                  ArrayList<String> orderDetails,
-                 ItemList menu) throws InvalidOrderException {
+                 ItemList menu,
+                 boolean onlineStatus) throws InvalidOrderException {
 
         this.orderID = UUID.fromString(orderID);
         this.customerID = UUID.fromString(customerID);
 
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
+        this.onlineStatus = onlineStatus;
 
         if (menu == null) {
             throw new InvalidOrderException("Menu cannot be null.");
