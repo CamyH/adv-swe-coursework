@@ -87,7 +87,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
-            logger.logWarning("Duplicate order detected: " + order.getOrderID())
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
             throw new DuplicateOrderException("Duplicate Order");
         }
 
