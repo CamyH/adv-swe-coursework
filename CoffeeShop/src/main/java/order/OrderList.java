@@ -7,6 +7,7 @@ import interfaces.Subject;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import interfaces.Observer;
 
@@ -23,11 +24,13 @@ import interfaces.Observer;
 
 public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
     /** A queue to hold existing Order objects */
-    private Queue<Order> inCompleteOrders;
+    //private Queue<Order> inCompleteOrders;
 
     /** A queue to hold completed Order objects
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
+
+    private ArrayList<Queue<Order>> allOrders;
 
     /** Private instance of OrderList */
     private static OrderList instance = new OrderList();
@@ -42,7 +45,9 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        inCompleteOrders = new ArrayDeque<Order>();
+        allOrders = new ArrayList<>();
+        allOrders.add(new ArrayDeque<Order>());
+        allOrders.add(new ArrayDeque<Order>());
         completeOrders = new ArrayList<>();
     }
 
@@ -67,7 +72,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      */
     @Override
     public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
-        if (inCompleteOrders.size() >= maxQueueSize) {
+        if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
             return false;
         }
 
@@ -75,12 +80,15 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
             throw new InvalidOrderException("Order details cannot be null or empty");
         }
 
-        if (inCompleteOrders.contains(order) || completeOrders.contains(order)) {
+        if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
             throw new DuplicateOrderException("Duplicate Order");
         }
 
         notifyObservers();
-        return inCompleteOrders.offer(order);
+
+        if (order.getOnlineStatus()) return allOrders.getLast().offer(order);
+
+        return allOrders.getFirst().offer(order);
     }
 
     /**
@@ -93,18 +101,31 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     public synchronized boolean remove(UUID ID) throws InvalidOrderException {
         completeOrders.add(this.getOrder(ID));
 
-        return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
+        if (allOrders.getFirst().removeIf(order -> order.getOrderID().equals(ID))) return true;
+
+        return allOrders.getLast().removeIf(order -> order.getOrderID().equals(ID));
     }
 
     /**
-     * Method to remove and return the first order in the queue
+     * Method to remove and return the first order in the in person queue
      *
-     * the queue or null if inCompleteOrders is empty
+     * the queue or null if in person orders queue is empty
      *
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
-        return inCompleteOrders.poll();
+        return allOrders.getFirst().poll();
+    }
+
+    /**
+     * Method to remove and return the first order in the online queue
+     *
+     * the queue or null if online orders is empty
+     *
+     * @return Order object to be processed by staff
+     */
+    public synchronized Order removeOnline() {
+        return allOrders.getLast().poll();
     }
 
     public void completeOrder(Order order) {
@@ -114,8 +135,22 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     /**
      * Removes an order from the queue of orders for processing
      */
-    public Order getOrder() {
-        return inCompleteOrders.peek();
+    public Order getOrder(boolean online) {
+        if (online) return allOrders.getLast().peek();
+
+        return allOrders.getFirst().peek();
+    }
+
+    /**
+     * Method to return the number of orders in the orderlist queue
+     *
+     * @param online Checks whether the caller wants the size of the online or in person order queue
+     * @return an integer representing the size of the queue
+     */
+    public int getQueueSize(boolean online) {
+        if (online) return allOrders.getLast().size();
+
+        return allOrders.getFirst().size();
     }
 
     /**
@@ -125,7 +160,11 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return An Order Object
      */
     public Order getOrder(UUID orderID) throws InvalidOrderException {
-        for (Order o : inCompleteOrders) {
+        /**
+         * Combines the two queues from the array list into one stream
+         * Saves having to use nested for loops
+         */
+        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
             if (o.getOrderID().equals(orderID)) {
                 return o;
             }
@@ -139,7 +178,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
-        return new LinkedList<>(inCompleteOrders);
+        return new ArrayDeque<>(allOrders.stream().flatMap(Collection::stream).collect(Collectors.toCollection(ArrayDeque::new)));
     }
 
     /**
@@ -152,7 +191,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
         Collection<Order> c = completeOrders;
 
         if (!completed) {
-            c = inCompleteOrders;
+            c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
         String[] uncompletedOrderString = new String[c.size()];
@@ -188,7 +227,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : inCompleteOrders) {
+        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
@@ -217,7 +256,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
         Collection<Order> c = completeOrders;
 
         if (!completed) {
-            c = inCompleteOrders;
+            c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
         String[] orderIDsArr = new String[c.size()];
