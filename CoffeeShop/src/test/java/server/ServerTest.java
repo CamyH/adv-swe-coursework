@@ -1,7 +1,5 @@
 package server;
 
-import item.ItemList;
-import order.OrderList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +24,7 @@ public class ServerTest {
 
     @Test
     public void testGetConnectionSingletonInstanceIsNotNull() throws IOException {
-        CopyOnWriteArraySet<ObjectOutputStream> connectionsSingleton = Server.getConnectionsSingletonInstance();
+        CopyOnWriteArraySet<ObjectOutputStream> connectionsSingleton = Server.getActiveConnectionsInstance();
 
         assertNotNull(connectionsSingleton, "ConnectionsSingleton instance should not be null");
 
@@ -37,6 +35,6 @@ public class ServerTest {
 
         connectionsSingleton.add(mockOutputStream);
 
-        assertEquals(connectionsSingleton, Server.getConnectionsSingletonInstance());
+        assertEquals(connectionsSingleton, Server.getActiveConnectionsInstance());
     }
 }
