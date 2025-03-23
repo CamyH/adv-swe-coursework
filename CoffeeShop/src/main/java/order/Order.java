@@ -4,7 +4,6 @@ import exceptions.InvalidOrderException;
 import item.ItemCategory;
 import item.ItemFileReader;
 import item.ItemList;
-import logs.AppLogger;
 import utils.Discount;
 import utils.DiscountDataStructure;
 
@@ -64,9 +63,6 @@ public class Order {
 
             this.menu = ItemList.getInstance();
 
-            // Log Order Creation
-            AppLogger.logInfo("New order created with Order ID: " + orderID);
-
             if (menu.getItemCount() == 0) {
                 throw new InvalidOrderException("Menu cannot be null.");
             }
@@ -125,8 +121,6 @@ public class Order {
         }
 
         if (orderDetails.add(itemID)) {
-            // Log Item Added
-            AppLogger.logInfo("Item added to order: " + itemID + " for Order ID: " + orderID);
             calculateTotalCost();  // Recalculate the total cost after adding an item
             calculateDiscountedCost();
         }
@@ -140,8 +134,6 @@ public class Order {
      */
     public boolean removeItem(String itemID) {
         if (orderDetails.remove(itemID)) {
-            // Log Item Removed
-            AppLogger.logInfo("Item removed from order: " + itemID + " for Order ID: " + orderID);
             calculateTotalCost();
             calculateDiscountedCost();
             return true;
@@ -158,8 +150,6 @@ public class Order {
         if (orderDetails.isEmpty()) return false;
 
         orderDetails.removeLast();
-        // Log Last Item Removed
-        AppLogger.logInfo("Last item removed from order for Order ID: " + orderID);
 
         calculateTotalCost();
         calculateDiscountedCost();
