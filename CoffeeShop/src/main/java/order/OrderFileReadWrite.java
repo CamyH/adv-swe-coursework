@@ -75,7 +75,6 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         Boolean.parseBoolean(lineData[4])));
             }
         } catch (InvalidOrderException | IllegalArgumentException | DuplicateOrderException e) {
-            System.out.println("HERE");
             System.err.println("Skipping : " + e.getMessage());
         }
     }
