@@ -4,6 +4,7 @@ import order.Order;
 import order.OrderList;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 import logs.CoffeeShopLogger;
 
@@ -29,7 +30,17 @@ public class Barista extends Staff {
     private Order currentOrder;
 
     /** Tells if the staff member is currently active (ie not fired) */
-    boolean active = true;
+    private boolean active = true;
+
+    /** Whether the barista prioritises online or in person order
+     * 0-1 = the smaller the number the more it prioritises online orders
+     * 1 = prioritises neither as much as the other
+     * >1 = larger the positive integer the more in person orders are prioritised
+     * */
+    private double priority = 0;
+
+    /** List of existing Baristas */
+    private static List<Barista> baristaList = new ArrayList<>();
 
     /** Logger instance */
     private CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
@@ -44,6 +55,8 @@ public class Barista extends Staff {
         super(name, experience);
         orderList = OrderList.getInstance();
         orderList.registerObserver(this);
+        baristaList.add(this);
+        updatePriority();
     }
 
     /**
@@ -53,7 +66,12 @@ public class Barista extends Staff {
      */
     @Override
     public synchronized void getOrders() {
-        currentOrder = orderList.remove();
+        if (orderList.getQueueSize(false) * priority > orderList.getQueueSize(true)) {
+            currentOrder = orderList.remove();
+        }
+        else {
+            currentOrder = orderList.removeOnline();
+        }
 
         if (currentOrder == null) {
             try {
@@ -106,8 +124,42 @@ public class Barista extends Staff {
     public synchronized void removeStaff() {
         orderList.removeObserver(this);
         active = false;
+        baristaList.remove(this);
+        updatePriority();
         notifyAll(); // wakes up thread
         logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
+    }
+
+    /**
+     * Method will set the baristas priority between online and in person orders
+     *
+     * @param priority The priority to be set for the barista
+     */
+    public void setBaristaPriority(double priority) {
+        this.priority = priority;
+    }
+
+    /**
+     * Method to return barista's priority
+     *
+     * @return priority of the barista as a double
+     */
+    public double getBaristaPriority() {
+        return priority;
+    }
+
+    /**
+     * This will update all the baristas priorities whenever they are added or removed
+     */
+    private static void updatePriority() {
+        // starting the priority at 0.6 this means the baristas will always favour online orders over in person orders
+        double middlePriority = 0.8;
+        double tempPriority = Math.pow(middlePriority, baristaList.size());
+        double addition = baristaList.size() != 1 ? ( ( middlePriority - tempPriority ) * 2 ) / ( baristaList.size() - 1 ) : 0;
+        for (Barista barista : baristaList) {
+            barista.setBaristaPriority(tempPriority);
+            tempPriority += addition;
+        }
     }
 
     /**
@@ -120,7 +172,7 @@ public class Barista extends Staff {
 
             if (currentOrder != null) {
                 try {
-                    sleep((int) (defaultDelay * getExperience()));
+                    sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
                 } catch (InterruptedException e) {
                     logger.logSevere("InterruptedException in Barista.run: " + e.getMessage());
                 }

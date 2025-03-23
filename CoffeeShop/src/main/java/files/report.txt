@@ -1,12 +1,14 @@
 =======================
 Current Order Details
 -----------------------
-e9e4c642-2eb8-4fd7-820c-0cdf694c2526,10d30986-355f-4623-8af5-c977196f58e9,2025-03-18T12:28:08.562545600,PSY2
+f888c5f8-0e3d-42ef-83b9-20f19bb2f380,818e5eec-eb1b-46cf-b66f-fe1d1e4b243d,2025-03-23T15:55:12.183768100,SD1,false
+f77d7c49-741d-4e98-be1e-6c6fb5849d2e,f14dcd5e-08f7-458e-a5d7-02ff58c9616b,2025-03-23T16:00:42.928996800,RL2,false
+f37a8af6-b0a2-46ea-9abe-97ccf4bb7993,ff59a19a-007d-464c-a162-700d46b89831,2025-03-23T15:54:50.649015200,RL1;RL2;RL2,true
 -----------------------
 Number of Items Ordered
 -----------------------
-RL1 = 0
-RL2 = 0
+RL1 = 1
+RL2 = 3
 RL3 = 0
 RL4 = 0
 FD1 = 0
@@ -21,7 +23,7 @@ HD4 = 0
 HD5 = 0
 HD6 = 0
 HD7 = 0
-SD1 = 0
+SD1 = 1
 SD2 = 0
 SD3 = 0
 SD4 = 0
@@ -39,17 +41,17 @@ SCK6 = 0
 SCK7 = 0
 SCK8 = 0
 PSY1 = 0
-PSY2 = 1
+PSY2 = 0
 PSY3 = 0
 PSY4 = 0
 PSY5 = 0
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £2.80
-Total Income (Including Discounts) : £2.80
-Total Orders : 1
-Average Spend Per Order (Excluding Discounts) : £2.80
-Average Spend Per Order (Including Discounts) : £2.80
+Total Income (Excluding Discounts) : £15.00
+Total Income (Including Discounts) : £15.00
+Total Orders : 3
+Average Spend Per Order (Excluding Discounts) : £5.00
+Average Spend Per Order (Including Discounts) : £5.00
 =======================
 
