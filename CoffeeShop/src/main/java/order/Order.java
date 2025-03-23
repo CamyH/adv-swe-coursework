@@ -41,7 +41,7 @@ public class Order {
     /** The total discounted cost of the order */
     private double discountedCost;
 
-    boolean onlineStatus;
+    private boolean onlineStatus;
 
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 

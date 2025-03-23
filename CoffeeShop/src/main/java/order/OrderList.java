@@ -44,7 +44,6 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        //inCompleteOrders = new ArrayDeque<Order>();
         allOrders = new ArrayList<>();
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
