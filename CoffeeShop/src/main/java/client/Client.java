@@ -79,7 +79,7 @@ public class Client {
             Message response = client.receiveMessage();
             System.out.println("Server response: " + response);
 
-            return client;  // Returning the client to manage socket after the method
+            return client;
         } catch (IOException | ClassNotFoundException | InvalidOrderException e) {
             System.err.println("Error in client: " + e.getMessage());
         }
