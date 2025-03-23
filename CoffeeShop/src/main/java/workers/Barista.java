@@ -6,6 +6,7 @@ import order.OrderList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
+import logs.CoffeeShopLogger;
 
 /**
  * Class represents how a Barista functions in the Coffee Shop Simulation
@@ -41,8 +42,11 @@ public class Barista extends Staff {
     /** List of existing Baristas */
     private static List<Barista> baristaList = new ArrayList<>();
 
+    /** Logger instance */
+    private CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+
     /**
-     * COnstructor to instantiate a new staff member
+     * Constructor to instantiate a new staff member
      *
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
@@ -89,6 +93,7 @@ public class Barista extends Staff {
         if (currentOrder == null) return false;
         
         orderList.completeOrder(currentOrder);
+        logger.logInfo("Barista " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
         currentOrder = null;
         return true;
     }
@@ -122,6 +127,7 @@ public class Barista extends Staff {
         baristaList.remove(this);
         updatePriority();
         notifyAll(); // wakes up thread
+        logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
     }
 
     /**
@@ -168,7 +174,7 @@ public class Barista extends Staff {
                 try {
                     sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
+                    logger.logSevere("InterruptedException in Barista.run: " + e.getMessage());
                 }
 
                 System.out.println(getWorkerName() + " completed order " + currentOrder.getOrderID());
