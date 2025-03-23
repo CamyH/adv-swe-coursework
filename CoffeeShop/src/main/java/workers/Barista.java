@@ -75,7 +75,6 @@ public class Barista extends Staff {
         if (currentOrder == null) return false;
         
         orderList.completeOrder(currentOrder);
-        // Log info to show who completed which order
         logger.logInfo("Barista " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
         currentOrder = null;
         return true;
@@ -108,7 +107,6 @@ public class Barista extends Staff {
         orderList.removeObserver(this);
         active = false;
         notifyAll(); // wakes up thread
-        // Log info added
         logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
     }
 
@@ -124,7 +122,6 @@ public class Barista extends Staff {
                 try {
                     sleep((int) (defaultDelay * getExperience()));
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());  // Can I remove this line?
                     logger.logSevere("InterruptedException in Barista.run: " + e.getMessage());
                 }
 

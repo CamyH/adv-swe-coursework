@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.logging.*;
 
 /**
- * Logger class for whole coffee shop application.
+ * Logger class for the whole coffee shop application.
  *
  * @author Mohd Faiz
  */
@@ -16,28 +16,33 @@ public class CoffeeShopLogger {
 
     private CoffeeShopLogger() {
         try {
-            // Ensure the logs directory exists
-            File logsDir = new File("logs");
-            if (!logsDir.exists()) {
-                logsDir.mkdirs(); // Create the directory if it doesn't exist as not everyone will have this directory at the start of this application
+            // Remove the default ConsoleHandler to prevent logs from being printed to the console
+            Logger rootLogger = Logger.getLogger("");
+            Handler[] handlers = rootLogger.getHandlers();
+            for (Handler handler : handlers) {
+                if (handler instanceof ConsoleHandler) {
+                    rootLogger.removeHandler(handler); // Remove the ConsoleHandler
+                }
             }
 
-            FileHandler fileHandler = new FileHandler("logs/coffee_shop.log", true); // Append mode
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
+            // Create and configure the FileHandler
+            createFileHandler();
 
-            /**
-             * Keeping this for debugging purpose. Will remove this in the 2nd cycle when all loggers will be implemented
-             // Added a ConsoleHandler for debugging
-            ConsoleHandler consoleHandler = new ConsoleHandler();
-            consoleHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(consoleHandler);
-            */
-
-            logger.setLevel(Level.ALL); // Set log level as needed
+            // Set the log level
+            logger.setLevel(Level.ALL); // Log all levels (INFO, WARNING, SEVERE, etc.)
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Creates and configures the FileHandler for logging to a file.
+     */
+    private void createFileHandler() throws IOException {
+        // Create the FileHandler
+        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true); // Append mode
+        fileHandler.setFormatter(new SimpleFormatter()); // Use a simple text format for logs
+        logger.addHandler(fileHandler); // Add the FileHandler to the logger
     }
 
     public static CoffeeShopLogger getInstance() {

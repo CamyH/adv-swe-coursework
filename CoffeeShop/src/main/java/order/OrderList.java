@@ -72,25 +72,21 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     @Override
     public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
         if (inCompleteOrders.size() >= maxQueueSize) {
-            // Log Warning added
             logger.logWarning("Order queue is full. Cannot add new order.");
             return false;
         }
 
         if (order.getDetails().isEmpty()) {
-            // Log Severe added
             logger.logSevere("Invalid order: Order details cannot be null or empty");
             throw new InvalidOrderException("Order details cannot be null or empty");
         }
 
         if (inCompleteOrders.contains(order) || completeOrders.contains(order)) {
-            // Log Warning added
             logger.logWarning("Duplicate order detected: " + order.getOrderID());
             throw new DuplicateOrderException("Duplicate Order");
         }
 
         notifyObservers();
-        // Log info added
         logger.logInfo("Order added to queue: " + order.getOrderID());
         return inCompleteOrders.offer(order);
     }
@@ -105,7 +101,6 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     public synchronized boolean remove(UUID ID) throws InvalidOrderException {
         Order o = this.getOrder(ID);
         completeOrders.add(this.getOrder(ID));
-        // Log Info added
         logger.logInfo("Order processed and moved to completed orders: " + o.getOrderID());
         return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
     }
