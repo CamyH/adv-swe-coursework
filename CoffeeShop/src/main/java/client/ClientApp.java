@@ -17,16 +17,15 @@ public class ClientApp {
         try (Socket clientSocket = new Socket("localhost", 9876)) {
             System.out.println("Connected to server");
 
-            Client client = new Client(clientSocket);
-
+            Client client = Client.start();
             // Sending the test message to the server
             //client.sendMessage(new Message(UUID.randomUUID(), "Test Message", MessageType.ORDER_COMPLETED));
 
             // Sending test object
             //Order testOrder = OrderList.getInstance().getOrderList().peek();
-            initialiseItemsFromFile();
-            Order testOrder = new Order();
-            client.sendOrder(testOrder);
+            //initialiseItemsFromFile();
+            //Order testOrder = new Order();
+            //client.sendOrder(testOrder);
 
             // Receiving the response message
             Message response = client.receiveMessage();
@@ -34,8 +33,6 @@ public class ClientApp {
 
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error in client: " + e.getMessage());
-        } catch (InvalidOrderException e) {
-            throw new RuntimeException(e);
         }
     }
 
