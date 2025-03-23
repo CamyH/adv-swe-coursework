@@ -1,52 +1,44 @@
 package client;
+
 import item.ItemFileReader;
 import item.ItemList;
 import order.OrderFileReadWrite;
 import order.OrderList;
-import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
- * Demo initialises the CoffeeShop program
- * Contains the main method
+ * Refactored to support MVC by Akash
+ * Demo initializes the Coffee Shop program.
+ * Contains the main method.
  * @author Caelan Mackenzie
  */
-
 public class Demo {
 
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
-    private static GUI gui;
-    private static Console console;
+    private static View view;
+    private static Controller controller;
 
     /**
-     * Initialises and Empty ItemList and OrderList
+     * Initializes and Empty ItemList and OrderList
      */
     public Demo() {}
-
-    /**
-     * Runs the Console Code
-     */
-    public void showConsole() {
-        console =  new Console();
-        console.run();
-    }
 
     /**
      * Starts the GUI
      */
     public void showGUI() {
-        gui = new GUI();
+        view = new View();
+        OrderList orders = OrderList.getInstance();
+        ItemList menu = ItemList.getInstance();
+        controller = new Controller(view, orders, menu);
     }
 
     /**
      * Starts the whole system
      */
     public static void main(String[] args) {
-        // Create a new demo object
         Demo demo = new Demo();
 
         itemReader = new ItemFileReader("menu.txt");
@@ -64,29 +56,24 @@ public class Demo {
         }
 
         demo.showGUI();
-        demo.showConsole();
     }
 
     /**
      * Closes the GUI
      */
-    static void demoCloseGUI(){
+    static void demoCloseGUI() {
         System.out.println("Goodbye.");
-        gui.closeGUI();
-        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
-        generateReportFileWriter.writeToFile();
-
+        view.close();
         System.exit(0);
     }
 
     /**
      * Writes to order txt file
      */
-    static void demoWriteOrders(){
+    static void demoWriteOrders() {
         try {
             orderReader.writeToFile();
-        }
-        catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
