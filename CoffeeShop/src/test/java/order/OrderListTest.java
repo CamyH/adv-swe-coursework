@@ -36,7 +36,7 @@ public class OrderListTest {
     public void setUp() {
         itemList = SetupItemFile.generateItemList();
         orderList = SetupOrderFile.generateOrderList();
-        first = orderList.getOrder();
+        first = orderList.getOrder(false);
     }
 
     /**
@@ -85,7 +85,7 @@ public class OrderListTest {
     @Test
     void testGetOrder() {
         orderList = OrderList.getInstance();
-        Order o1 = orderList.getOrder();
+        Order o1 = orderList.getOrder(false);
 
         System.out.println(o1.getOrderID());
 
@@ -131,11 +131,11 @@ public class OrderListTest {
 
         assertNotNull(myList);
 
-        assertEquals(orderList.getOrder(), myList.peek());
+        assertEquals(orderList.getOrder(false), myList.peek());
 
         assertNotNull(myList.poll());
 
-        assertNotEquals(orderList.getOrder(), myList.peek());
+        assertNotEquals(orderList.getOrder(false), myList.peek());
     }
 
     /**
