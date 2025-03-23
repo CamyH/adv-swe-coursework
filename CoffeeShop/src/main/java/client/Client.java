@@ -1,5 +1,6 @@
 package client;
 
+import exceptions.InvalidOrderException;
 import item.ItemList;
 import order.Order;
 import message.Message;
@@ -21,6 +22,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class Client {
     private final CopyOnWriteArraySet<ObjectOutputStream> connectionsSingletonInstance;
     private final Socket socket;
+    private static String host = "localhost";
+    private static int port = 9876;
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
 
@@ -28,7 +31,8 @@ public class Client {
      * Constructor for initialising a client
      * Initialises the output/input streams for sending/receiving
      * objects
-     * @param socket the server's socket
+     * @param socket the client's socket
+     * @throws IOException if creation of a stream fails
      */
     public Client(Socket socket) throws IOException {
         this.socket = socket;
@@ -40,6 +44,48 @@ public class Client {
         this.connectionsSingletonInstance = Server.getConnectionsSingletonInstance();
         connectionsSingletonInstance.add(outputStream);
     }
+
+    /**
+     * Constructor for initialising a client with a custom host and port
+     * @param socket the client's socket
+     * @param host the custom host to use
+     * @param port the custom port to use
+     * @throws IOException if creation of a stream fails
+     */
+    public Client(Socket socket, String host, int port) throws IOException {
+        this.socket = socket;
+        Client.host = host;
+        Client.port = port;
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.flush();
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
+        // Keep a record of the client's ObjectOutputStream
+        // this is used for broadcasting
+        this.connectionsSingletonInstance = Server.getConnectionsSingletonInstance();
+        connectionsSingletonInstance.add(outputStream);
+    }
+
+    public static Client start() {
+        try {
+            Socket clientSocket = new Socket(host, port);
+            System.out.println("Connected to server");
+
+            Client client = new Client(clientSocket);
+
+            // Test for now
+            Order testOrder = new Order();
+            client.sendOrder(testOrder);
+
+            Message response = client.receiveMessage();
+            System.out.println("Server response: " + response);
+
+            return client;  // Returning the client to manage socket after the method
+        } catch (IOException | ClassNotFoundException | InvalidOrderException e) {
+            System.err.println("Error in client: " + e.getMessage());
+        }
+        return null;
+    }
+
     /**
      * Sends an {@link Order} object to the server
      * The order is serialized and sent using {@link ObjectOutputStream}.
