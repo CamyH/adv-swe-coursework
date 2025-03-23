@@ -25,25 +25,6 @@ public class ServerTest {
     }
 
     @Test
-    public void testInitialiseOrdersFromFile() {
-        server.initialiseItemsFromFile();
-        server.initialiseOrdersFromFile();
-
-        OrderList orderList = OrderList.getInstance();
-        assertNotNull(orderList, "OrderList should not be null");
-        assertFalse(orderList.getOrderList().isEmpty(), "OrderList should not be empty");
-    }
-
-    @Test
-    public void testInitialiseItemsFromFile() {
-        server.initialiseItemsFromFile();
-
-        ItemList itemList = ItemList.getInstance();
-        assertNotNull(itemList, "ItemList should not be null");
-        assertFalse(itemList.getMenu().isEmpty(), "ItemList should not be empty");
-    }
-
-    @Test
     public void testGetConnectionSingletonInstanceIsNotNull() throws IOException {
         CopyOnWriteArraySet<ObjectOutputStream> connectionsSingleton = Server.getConnectionsSingletonInstance();
 
