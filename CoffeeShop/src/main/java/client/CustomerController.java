@@ -16,9 +16,9 @@ import java.awt.event.ActionListener;
  * Handles user interactions and updates the Model and View.
  * @author Caelan Mackenzie
  */
-public class Controller implements ActionListener {
+public class CustomerController implements ActionListener {
 
-    private final View view;
+    private final CustomerView view;
     private final OrderList orders;
     private final ItemList menu;
     private Order currentOrder;
@@ -27,13 +27,11 @@ public class Controller implements ActionListener {
      * Initializes the Controller
      *
      * @param view The View (GUI)
-     * @param orders The OrderList (Model)
-     * @param menu The ItemList (Model)
      */
-    public Controller(View view, OrderList orders, ItemList menu) {
+    public CustomerController(CustomerView view) {
         this.view = view;
-        this.orders = orders;
-        this.menu = menu;
+        orders = OrderList.getInstance();
+        menu = ItemList.getInstance();
 
         // Initialize the current order
         try {
@@ -72,6 +70,7 @@ public class Controller implements ActionListener {
         } else if (e.getSource() == view.getRemoveItemButton()) {
             removeItem();
         } else if (e.getSource() == view.getExitButton()) {
+            JOptionPane.showMessageDialog(view, "Good Bye!");
             exit();
         }
     }

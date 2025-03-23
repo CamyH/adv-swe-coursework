@@ -4,6 +4,7 @@ import item.ItemFileReader;
 import item.ItemList;
 import order.OrderFileReadWrite;
 import order.OrderList;
+import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
 
@@ -17,22 +18,29 @@ public class Demo {
 
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
-    private static View view;
-    private static Controller controller;
+    private static CustomerView view;
+    private static CustomerController customerController;
 
     /**
-     * Initializes and Empty ItemList and OrderList
+     * Initialises and Empty ItemList and OrderList
      */
     public Demo() {}
+    /**
+     * Runs the Console Code
+     */
+    public void showConsole() {
+        Console console = new Console();
+        console.run();
+    }
 
     /**
      * Starts the GUI
      */
     public void showGUI() {
-        view = new View();
+        view = new CustomerView();
         OrderList orders = OrderList.getInstance();
         ItemList menu = ItemList.getInstance();
-        controller = new Controller(view, orders, menu);
+        customerController = new CustomerController(view);
     }
 
     /**
@@ -56,6 +64,7 @@ public class Demo {
         }
 
         demo.showGUI();
+        demo.showConsole();
     }
 
     /**
@@ -63,7 +72,10 @@ public class Demo {
      */
     static void demoCloseGUI() {
         System.out.println("Goodbye.");
-        view.close();
+        view.closeGUI();
+
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
+        generateReportFileWriter.writeToFile();
         System.exit(0);
     }
 

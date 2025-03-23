@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 
 /**
@@ -8,7 +9,7 @@ import java.awt.*;
  * Represents the user interface for the Coffee Shop application.
  * @author Caelan Mackenzie
  */
-public class View extends JFrame {
+public class CustomerView extends JFrame {
 
     // UI components
     private JPanel contentPanel;
@@ -35,10 +36,10 @@ public class View extends JFrame {
     private JButton removeLastItemButton;
     private JButton removeItemButton;
 
-    /**
+    /**s
      * Sets up the View (GUI)
      */
-    public View() {
+    public CustomerView() {
         // UI parameters
         setContentPane(contentPanel);
         setTitle("Coffee Shop App");
@@ -94,7 +95,7 @@ public class View extends JFrame {
     /**
      * Closes the View (GUI)
      */
-    public void close() {
+    public void closeGUI() {
         dispose();
     }
 

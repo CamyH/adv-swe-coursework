@@ -1,6 +1,6 @@
 package interfaces;
 
-import client.View;
+import client.CustomerView;
 import item.ItemList;
 
 import java.io.*;
@@ -28,7 +28,7 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
         String jarDirPath = "";
         try {
-            jarDirPath = new File(View.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            jarDirPath = new File(CustomerView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
         } catch (URISyntaxException e) {
             System.err.println(e.getMessage());
         }
