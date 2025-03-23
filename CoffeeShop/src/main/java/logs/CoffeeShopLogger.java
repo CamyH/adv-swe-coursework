@@ -13,24 +13,26 @@ public class CoffeeShopLogger {
 
     private static final Logger logger = Logger.getLogger(CoffeeShopLogger.class.getName());
     private static CoffeeShopLogger instance = new CoffeeShopLogger();
-    private static final String LOG_FILE_PATH = "D:/coffee_shop.log"; // using to give absolute path to write the logs in directory
 
     private CoffeeShopLogger() {
         try {
             // Ensure the logs directory exists
             File logsDir = new File("logs");
             if (!logsDir.exists()) {
-                logsDir.mkdirs(); // Create the directory if it doesn't exist
+                logsDir.mkdirs(); // Create the directory if it doesn't exist as not everyone will have this directory at the start of this application
             }
 
-            FileHandler fileHandler = new FileHandler(LOG_FILE_PATH, true); // Append mode
+            FileHandler fileHandler = new FileHandler("logs/coffee_shop.log", true); // Append mode
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
 
-            // Added a ConsoleHandler for debugging
+            /**
+             * Keeping this for debugging purpose. Will remove this in the 2nd cycle when all loggers will be implemented
+             // Added a ConsoleHandler for debugging
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(consoleHandler);
+            */
 
             logger.setLevel(Level.ALL); // Set log level as needed
         } catch (IOException e) {
