@@ -166,18 +166,20 @@ public class OrderListTest {
             newOrderList.remove(first.getOrderID());
             newOrderList.remove(second.getOrderID());
 
-            String s1 = String.format("%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5"
+                    "RL2;SD4;PSY5",
+                    "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1"
+                    "RL1;HD4;SD7;PSY1",
+                    "false"
             );
 
             arr[0] = s1;
@@ -221,18 +223,20 @@ public class OrderListTest {
             second.addItem("PSY1");
             orderList.add(second);
 
-            String s1 = String.format("%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5"
+                    "RL2;SD4;PSY5",
+                    "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1"
+                    "RL1;HD4;SD7;PSY1",
+                    "false"
             );
 
             arr[0] = s1;
