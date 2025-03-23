@@ -155,6 +155,7 @@ public class Order {
         if (orderDetails.isEmpty()) return false;
 
         orderDetails.removeLast();
+
         calculateTotalCost();
         calculateDiscountedCost();
 

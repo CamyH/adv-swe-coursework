@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import interfaces.Observer;
 
+import logs.CoffeeShopLogger;
+
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
@@ -39,6 +41,9 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
 
     /** Integer to check max queue size */
     private int maxQueueSize = 50;
+
+    /** Logger instance */
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Initialises the queue to contain all the orders
@@ -70,21 +75,26 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param order The order to be added to the queue
      */
     @Override
-    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
         if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
+            logger.logWarning("Order queue is full. Cannot add new order.");
             return false;
         }
 
         if (order.getDetails().isEmpty()) {
+            logger.logSevere("Invalid order: Order details cannot be null or empty");
             throw new InvalidOrderException("Order details cannot be null or empty");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
             throw new DuplicateOrderException("Duplicate Order");
         }
 
         notifyObservers();
 
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+      
         if (order.getOnlineStatus()) return allOrders.getLast().offer(order);
 
         return allOrders.getFirst().offer(order);
@@ -99,6 +109,8 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     @Override
     public synchronized boolean remove(UUID ID) throws InvalidOrderException {
         completeOrders.add(this.getOrder(ID));
+        
+        logger.logInfo("Order processed and moved to completed orders: " + ID);
 
         if (allOrders.getFirst().removeIf(order -> order.getOrderID().equals(ID))) return true;
 
@@ -129,6 +141,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
 
     public void completeOrder(Order order) {
         completeOrders.add(order);
+        logger.logInfo("Order completed: " + order.getOrderID());
     }
 
     /**
@@ -168,6 +181,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
                 return o;
             }
         }
+        logger.logWarning("Invalid order ID: " + orderID);
         throw new InvalidOrderException(orderID + " is not a valid order ID");
     }
 
