@@ -20,7 +20,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Used to connect to the server
  */
 public class Client {
-    private final CopyOnWriteArraySet<ObjectOutputStream> connectionsSingletonInstance;
     private final Socket socket;
     private static String host = "localhost";
     private static int port = 9876;
@@ -39,10 +38,7 @@ public class Client {
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
-        // Keep a record of the client's ObjectOutputStream
-        // this is used for broadcasting
-        this.connectionsSingletonInstance = Server.getConnectionsSingletonInstance();
-        connectionsSingletonInstance.add(outputStream);
+        Server.addClient(outputStream);
     }
 
     /**
@@ -59,13 +55,10 @@ public class Client {
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
-        // Keep a record of the client's ObjectOutputStream
-        // this is used for broadcasting
-        this.connectionsSingletonInstance = Server.getConnectionsSingletonInstance();
-        connectionsSingletonInstance.add(outputStream);
+        Server.addClient(outputStream);
     }
 
-    public static Client start() {
+    public Client start() {
         try {
             Socket clientSocket = new Socket(host, port);
             System.out.println("Connected to server");
@@ -116,40 +109,6 @@ public class Client {
     }
 
     /**
-     * Broadcast OrderList to all connected clients
-     * @throws IOException if OrderList is unable to be sent
-     * to a client
-     */
-    public synchronized void updateClientOrderList() throws IOException {
-        broadcast(OrderList.getInstance());
-    }
-
-    /**
-     * Broadcast ItemList to all connected clients
-     * @throws IOException if ItemList is unable to be sent
-     * to a client
-     */
-    public synchronized void updateClientItemList() throws IOException {
-        broadcast(ItemList.getInstance());
-    }
-
-    /**
-     * Broadcast OrderList or ItemList to a
-     * collection of clients
-     * @param listToSend the updated {@link OrderList} or {@link ItemList} to send
-     * @param <T> Generic type that must be {@link Serializable} to allow for polymorphism
-     * @throws IOException if an object is unable to be sent to a client
-     * @throws IllegalArgumentException if the list object is null
-     */
-    private synchronized <T extends Serializable> void broadcast(T listToSend) throws IOException {
-        if (listToSend == null) throw new IllegalArgumentException("List to send cannot be null");
-
-        for (ObjectOutputStream outputStream : connectionsSingletonInstance) {
-            outputStream.writeObject(listToSend);
-        }
-    }
-
-    /**
      * Closes the client's I/O streams and attempts to close the socket
      * This method closes both the {@link ObjectOutputStream} and
      * {@link ObjectInputStream} to release resources. It also attempts
@@ -168,7 +127,7 @@ public class Client {
         IOException exception = null;
 
         // Remove the connection from the list
-        connectionsSingletonInstance.remove(outputStream);
+        Server.removeClient(outputStream);
 
         try {
             outputStream.close();

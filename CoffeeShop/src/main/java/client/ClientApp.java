@@ -17,7 +17,8 @@ public class ClientApp {
         try (Socket clientSocket = new Socket("localhost", 9876)) {
             System.out.println("Connected to server");
 
-            Client client = Client.start();
+            Client client = new Client(clientSocket);
+            client.start();
             // Sending the test message to the server
             //client.sendMessage(new Message(UUID.randomUUID(), "Test Message", MessageType.ORDER_COMPLETED));
 

@@ -1,7 +1,12 @@
 package server;
 
+import client.Client;
+import item.ItemList;
+import order.OrderList;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,8 +16,8 @@ import java.util.concurrent.*;
  * The Server that runs the Simulation
  */
 public class Server {
+    private static final CopyOnWriteArraySet<ObjectOutputStream> activeConnectionsInstance = new CopyOnWriteArraySet<>();
     private static ExecutorService threadPool = null;
-    private static final CopyOnWriteArraySet<ObjectOutputStream> connectionsSingleton = new CopyOnWriteArraySet<>();
     private static final int port = 9876;
     /**
      * The host used by the server
@@ -81,7 +86,78 @@ public class Server {
      * so we only want to do it when a client connects
      * @return the current instance of connectionsSingleton
      */
-    public static CopyOnWriteArraySet<ObjectOutputStream> getConnectionsSingletonInstance() {
-        return connectionsSingleton;
+    public static CopyOnWriteArraySet<ObjectOutputStream> getActiveConnectionsInstance() {
+        return activeConnectionsInstance;
+    }
+
+    /**
+     * Adds a client connection to the activeConnections instance
+     *
+     * @param clientOutputStream the ObjectOutputStream of the client to add
+     * @throws IllegalArgumentException if the clientOutputStream is null
+     */
+    public static synchronized void addClient(ObjectOutputStream clientOutputStream) {
+        if (clientOutputStream == null) {
+            throw new IllegalArgumentException("Client output stream cannot be null");
+        }
+
+        if (!activeConnectionsInstance.add(clientOutputStream))
+            System.err.println("Client cannot be added");
+
+        System.out.println("Client added. Total clients: " + activeConnectionsInstance.size());
+    }
+
+    /**
+     * Removes a client connection from the activeConnections instance
+     *
+     * @param clientOutputStream the ObjectOutputStream of the client to remove
+     * @throws IllegalArgumentException if the clientOutputStream is null
+     */
+    public static synchronized void removeClient(ObjectOutputStream clientOutputStream) {
+        if (clientOutputStream == null) {
+            throw new IllegalArgumentException("Client output stream cannot be null");
+        }
+
+        if (!activeConnectionsInstance.remove(clientOutputStream)) {
+            System.err.println("Client not found in active connections.");
+        }
+
+        System.out.println("Total clients: " + activeConnectionsInstance.size());
+    }
+
+    /**
+     * Broadcast OrderList or ItemList to a
+     * collection of clients
+     * @param listToSend the updated {@link OrderList} or {@link ItemList} to send
+     * @param <T> Generic type that must be {@link Serializable} to allow for polymorphism
+     * @throws IOException if an object is unable to be sent to a client
+     * @throws IllegalArgumentException if the list object is null
+     */
+    private synchronized <T extends Serializable> void broadcast(T listToSend) throws IOException {
+        if (listToSend == null) throw new IllegalArgumentException("List to send cannot be null");
+
+        CopyOnWriteArraySet<ObjectOutputStream> activeConnections = Server.getActiveConnectionsInstance();
+
+        for (ObjectOutputStream outputStream : activeConnections) {
+            outputStream.writeObject(listToSend);
+        }
+    }
+
+        /**
+     * Broadcast OrderList to all connected clients
+     * @throws IOException if OrderList is unable to be sent
+     * to a client
+     */
+    public synchronized void updateClientOrderList() throws IOException {
+        broadcast(OrderList.getInstance());
+    }
+
+    /**
+     * Broadcast ItemList to all connected clients
+     * @throws IOException if ItemList is unable to be sent
+     * to a client
+     */
+    public synchronized void updateClientItemList() throws IOException {
+        broadcast(ItemList.getInstance());
     }
 }
