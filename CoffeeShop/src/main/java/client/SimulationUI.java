@@ -107,7 +107,7 @@ public class SimulationUI extends JFrame implements Observer {
 
     private void setRoles(ArrayList<String> roles) {
         StaffRoleCombo.removeAllItems();
-        if (!(roles == null)){
+        if (roles != null){
             for (String role : roles) {
                 StaffRoleCombo.addItem(role);
             }
