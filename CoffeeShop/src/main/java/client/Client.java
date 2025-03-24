@@ -1,19 +1,16 @@
 package client;
 
 import exceptions.InvalidOrderException;
-import item.ItemList;
+import logs.CoffeeShopLogger;
 import order.Order;
 import message.Message;
-import order.OrderList;
 import server.Server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * The Client Class
@@ -25,6 +22,7 @@ public class Client {
     private static int port = 9876;
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Constructor for initialising a client
@@ -61,7 +59,7 @@ public class Client {
     public Client start() {
         try {
             Socket clientSocket = new Socket(host, port);
-            System.out.println("Connected to server");
+
 
             Client client = new Client(clientSocket);
 
@@ -70,11 +68,11 @@ public class Client {
             client.sendOrder(testOrder);
 
             Message response = client.receiveMessage();
-            System.out.println("Server response: " + response);
+            logger.logInfo("Server response: " + response);
 
             return client;
         } catch (IOException | ClassNotFoundException | InvalidOrderException e) {
-            System.err.println("Error in client: " + e.getMessage());
+            logger.logSevere("Error in client: " + e.getMessage());
         }
         return null;
     }
@@ -90,7 +88,7 @@ public class Client {
     public synchronized void sendOrder(Order order) throws IOException {
         if (order == null) throw new NullPointerException("Order cannot be null");
 
-        System.out.println("Sending order: " + order.getOrderID());
+        logger.logInfo("Sending order: " + order.getOrderID());
 
         outputStream.writeObject(order);
         outputStream.flush();
@@ -144,7 +142,7 @@ public class Client {
         try {
             socket.close();
         } catch (IOException e) {
-            System.err.println("Failed to close socket: " + e.getMessage());
+            logger.logSevere("Failed to close socket: " + e.getMessage());
         }
 
         if (exception != null) throw exception;

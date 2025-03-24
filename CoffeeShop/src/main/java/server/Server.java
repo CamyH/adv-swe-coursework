@@ -2,6 +2,7 @@ package server;
 
 import client.Client;
 import item.ItemList;
+import logs.CoffeeShopLogger;
 import order.OrderList;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class Server {
     private static final CopyOnWriteArraySet<ObjectOutputStream> activeConnectionsInstance = new CopyOnWriteArraySet<>();
     private static ExecutorService threadPool = null;
     private static final int port = 9876;
+    private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+
     /**
      * The host used by the server
      * Dev: localhost
@@ -47,7 +50,7 @@ public class Server {
      */
     public void start() {
         try (ServerSocket serverSocket = setupServer()) {
-            System.out.println("Server started on " + host + ":" + port);
+            logger.logInfo("Server started on " + host + ":" + port);
 
             // A Thread pool is used to handle multiple
             // client connections concurrently
@@ -55,13 +58,13 @@ public class Server {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
+                logger.logInfo("Client connected: " + clientSocket.getInetAddress());
 
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 threadPool.submit(clientHandler);
             }
         } catch (IOException e) {
-            System.err.println("Could not start server: " + e.getMessage());
+            logger.logSevere("Could not start server: " + e.getMessage());
             // Shut down threadPool
             threadPool.shutdownNow();
         }
@@ -102,9 +105,9 @@ public class Server {
         }
 
         if (!activeConnectionsInstance.add(clientOutputStream))
-            System.err.println("Client cannot be added");
+            logger.logSevere("Client cannot be added");
 
-        System.out.println("Client added. Total clients: " + activeConnectionsInstance.size());
+        logger.logInfo("Client added. Total clients: " + activeConnectionsInstance.size());
     }
 
     /**
@@ -119,10 +122,10 @@ public class Server {
         }
 
         if (!activeConnectionsInstance.remove(clientOutputStream)) {
-            System.err.println("Client not found in active connections.");
+            logger.logSevere("Client not found in active connections.");
         }
 
-        System.out.println("Total clients: " + activeConnectionsInstance.size());
+        logger.logInfo("Total clients: " + activeConnectionsInstance.size());
     }
 
     /**
@@ -139,6 +142,7 @@ public class Server {
         CopyOnWriteArraySet<ObjectOutputStream> activeConnections = Server.getActiveConnectionsInstance();
 
         for (ObjectOutputStream outputStream : activeConnections) {
+            logger.logInfo("Broadcasting " + listToSend.getClass().getName());
             outputStream.writeObject(listToSend);
         }
     }

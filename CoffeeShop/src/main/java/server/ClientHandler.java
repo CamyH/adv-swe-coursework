@@ -2,6 +2,7 @@ package server;
 
 import client.Client;
 import exceptions.InvalidOrderException;
+import logs.CoffeeShopLogger;
 import message.Message;
 import order.Order;
 
@@ -20,6 +21,7 @@ public class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Constructor to initialise the client handler
@@ -53,7 +55,7 @@ public class ClientHandler implements Runnable {
             System.out.println(orderList.getOrderList()); */
 
         } catch (Exception e) {
-            System.err.println("Error while handling client: " + e.getMessage());
+            logger.logSevere("Error while handling client: " + e.getMessage());
         }
     }
 
