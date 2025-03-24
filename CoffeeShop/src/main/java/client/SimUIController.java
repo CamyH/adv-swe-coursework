@@ -79,7 +79,6 @@ public class SimUIController implements Observer {
 
     private void updateOrders() {
         // get the order list and send it to the view
-        // placeholder
         ArrayList<String> list = simModel.getOrderList();
     }
 
