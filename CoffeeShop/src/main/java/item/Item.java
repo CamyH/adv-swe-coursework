@@ -21,6 +21,9 @@ public class Item implements Serializable {
     // Description of the item
     private final String description;
 
+    // Added daily special flag
+    private boolean isDailySpecial;
+
     /**
      * Constructor to initialize an Item object with given values.
      *
@@ -53,6 +56,7 @@ public class Item implements Serializable {
         this.category = category;
         this.cost = cost;
         this.description = description;
+        this.isDailySpecial = false;  // Initialised as false
     }
 
     /**
@@ -98,5 +102,16 @@ public class Item implements Serializable {
      */
     public double getCost() {
         return cost;
+    }
+
+    /**
+     * Daily Special method
+     */
+    public boolean isDailySpecial() {
+        return isDailySpecial;
+    }
+
+    public void setDailySpecial(boolean isDailySpecial) {
+        this.isDailySpecial = isDailySpecial;
     }
 }
