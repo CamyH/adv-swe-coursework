@@ -172,4 +172,13 @@ public class ItemList implements EntityList<Item, String>, Serializable {
     public static void resetInstance() {
         instance = new ItemList();
     }
+
+    /**
+     * Gets the full Item object by ID
+     * @param itemID The ID of the item to retrieve
+     * @return The Item object or null if not found
+     */
+    public Item getItem(String itemID) {
+        return items.get(itemID);
+    }
 }

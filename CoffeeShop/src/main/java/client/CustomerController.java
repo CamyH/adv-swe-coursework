@@ -3,6 +3,7 @@ package client;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
@@ -10,6 +11,7 @@ import order.OrderList;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 /**
  * Controller Class (Refactored for MVC by Akash)
@@ -36,6 +38,11 @@ public class CustomerController implements ActionListener {
         // Initialize the current order
         try {
             currentOrder = new Order();
+            // Initialize and display daily special
+            Item dailySpecial = findDailySpecial();
+            if (dailySpecial != null) {
+                view.setDailySpecial(dailySpecial.getDescription());
+            }
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
         }
@@ -163,5 +170,16 @@ public class CustomerController implements ActionListener {
             orderDetails.append(entry).append("\n");
         }
         view.updateUI(orderDetails.toString(), currentOrder.getTotalCost(), currentOrder.getDiscountedCost());
+    }
+
+    private Item findDailySpecial() {
+        // Get the values collection from the map which is iterable
+        Collection<Item> items = menu.getMenu().values();
+        for (Item item : items) {
+            if (item.isDailySpecial()) {
+                return item;
+            }
+        }
+        return null;
     }
 }

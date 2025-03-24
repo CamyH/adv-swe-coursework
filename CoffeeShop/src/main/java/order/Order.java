@@ -1,6 +1,7 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemCategory;
 import item.ItemFileReader;
 import item.ItemList;
@@ -101,10 +102,7 @@ public class Order {
         this.orderDetails = orderDetails;
         this.onlineStatus = onlineStatus;
 
-        if (menu == null) {
-            throw new InvalidOrderException("Menu cannot be null.");
-        }
-        if (menu.getMenu().isEmpty()) {
+        if (menu == null || menu.getMenu().isEmpty()) {
             throw new InvalidOrderException("Menu cannot be null.");
         }
         this.menu = menu;
@@ -181,6 +179,15 @@ public class Order {
      */
     private void calculateDiscountedCost() {
         discountedCost = totalCost;
+
+        // Apply daily special discount first
+        for (String itemID : orderDetails) {
+            Item item = menu.getItem(itemID);
+            if (item != null && item.isDailySpecial()) {
+                discountedCost -= item.getCost() * (Discount.DAILY_SPECIAL.getValue() / 100.0);
+            }
+        }
+        // Apply other discounts
 
         ArrayList<String> myOrderDetails = new ArrayList<>(orderDetails);
 

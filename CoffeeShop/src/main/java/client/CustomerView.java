@@ -35,6 +35,7 @@ public class CustomerView extends JFrame {
     private JButton exitButton;
     private JButton removeLastItemButton;
     private JButton removeItemButton;
+    private JLabel dailySpecialLabel;  // New field for daily special
 
     /**s
      * Sets up the View (GUI)
@@ -44,9 +45,15 @@ public class CustomerView extends JFrame {
         setContentPane(contentPanel);
         setTitle("Coffee Shop App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 300);
+        setSize(800, 400);  // Increased height to accommodate daily special
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
+
+        // Initialize daily special label
+        dailySpecialLabel = new JLabel("Today's Special: Loading...", SwingConstants.CENTER);
+        dailySpecialLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        dailySpecialLabel.setForeground(new Color(200, 0, 0));  // Dark red
+        contentPanel.add(dailySpecialLabel, BorderLayout.NORTH);
 
         // Disable editing for certain fields
         totalCostField.setEnabled(false);
@@ -91,6 +98,11 @@ public class CustomerView extends JFrame {
             displayMenuField.append(entry + "\n");
         }
     }
+
+    public void setDailySpecial(String specialItem) {
+        dailySpecialLabel.setText("TODAY'S SPECIAL: " + specialItem + " (30% OFF!)");
+    }
+
 
     /**
      * Closes the View (GUI)
