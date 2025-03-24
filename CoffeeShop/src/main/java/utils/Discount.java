@@ -16,7 +16,8 @@ public enum Discount {
     DISCOUNT0(0),
     DISCOUNT10(10),
     DISCOUNT25(25),
-    DISCOUNT50(50);
+    DISCOUNT50(50),
+    DAILY_SPECIAL(30);  // Added daily special discount
 
     private final int discount;
 
