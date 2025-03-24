@@ -7,6 +7,7 @@ package exceptions; // Package declaration
  */
 public class InvalidItemIDException extends Exception{
     private final String msg;
+
     /**
      * Constructs an InvalidItemIDException with a specified detail message.
      *

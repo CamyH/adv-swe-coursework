@@ -2,6 +2,7 @@ package client;
 import java.util.Scanner;
 import java.util.UUID;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
@@ -43,29 +44,29 @@ public class Console {
 
         while (true){
             System.out.println("Enter your command:");
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim().toLowerCase();
             switch (command) {
-                case "viewMenu": {
+                case "viewmenu": {
                     viewMenu();
                     break;
                 }
-                case "addToMenu": {
+                case "addtomenu": {
                     addToMenu();
                     break;
                 }
-                case "removeFromMenu": {
+                case "removefrommenu": {
                     removeFromMenu();
                     break;
                 }
-                case "newOrder": {
+                case "neworder": {
                     newOrder();
                     break;
                 }
-                case "viewOrderList": {
+                case "vieworderlist": {
                     viewOrderList();
                     break;
                 }
-                case "viewOrderDetails": {
+                case "vieworderdetails": {
                     viewOrderDetails();
                     break;
                 }
@@ -73,7 +74,7 @@ public class Console {
                     System.out.println("viewMenu, newOrder, viewOrderList, viewOrderDetails, addToMenu, removeFromMenu, help, quit");
                     break;
                 }
-                case "cmdDescriptions": {
+                case "cmddescriptions": {
                     printCmdDescriptions();
                     break;
                 }
@@ -129,25 +130,25 @@ public class Console {
             while (true) {
 
                 System.out.println("Enter your command:");
-                String command = scanner.nextLine();
+                String command = scanner.nextLine().trim().toLowerCase();
                 switch (command) {
-                    case "addItem": {
+                    case "additem": {
                         addItem(curOrder);
                         break;
                     }
-                    case "removeLastItem": {
+                    case "removelastitem": {
                         removeLastItem(curOrder);
                         break;
                     }
-                    case "removeItem": {
+                    case "removeitem": {
                         removeItem(curOrder);
                         break;
                     }
-                    case "previewOrder": {
+                    case "previeworder": {
                         previewOrder(curOrder);
                         break;
                     }
-                    case "placeOrder": {
+                    case "placeorder": {
                         placeOrder(curOrder);
                         return;
                     }
@@ -252,12 +253,42 @@ public class Console {
      */
     private void placeOrder(Order curOrder) {
         try {
-            orders.add(curOrder);
-            Demo.demoWriteOrders();
-            System.out.println("Order placed successfully");
-        } catch (InvalidOrderException e) {
-            //System.out.println(e.getMessage());
-            System.out.println("Order cannot be empty, add an item or cancel the order");
+            if (orders.add(curOrder)) {
+                checkIfOnline(curOrder);
+                Demo.demoWriteOrders();
+                System.out.println("Order placed successfully");
+            }
+            else {
+                System.out.println("Order could not be placed - Please Try Again Later");
+            }
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    void checkIfOnline(Order curOrder) {
+        while (true) {
+            System.out.println("Is this an online order? (y/n)");
+            String command = scanner.nextLine().trim().toLowerCase();
+
+            switch (command) {
+                case "y": {
+                    try {
+                        orders.getOrder(curOrder.getOrderID()).setOnlineStatus();
+                        curOrder.setOnlineStatus();
+                    }
+                    catch (InvalidOrderException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    return;
+                }
+                case "n": {
+                    return;
+                }
+                default: {
+                    System.out.println("Not a valid command (y/n)");
+                }
+            }
         }
     }
 

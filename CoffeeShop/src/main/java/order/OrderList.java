@@ -1,12 +1,17 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 import interfaces.Subject;
 
+import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import interfaces.Observer;
+
+import logs.CoffeeShopLogger;
 
 
 /**
@@ -19,13 +24,15 @@ import interfaces.Observer;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject {
+public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
     /** A queue to hold existing Order objects */
-    private Queue<Order> inCompleteOrders;
+    //private Queue<Order> inCompleteOrders;
 
     /** A queue to hold completed Order objects
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
+
+    private ArrayList<Queue<Order>> allOrders;
 
     /** Private instance of OrderList */
     private static OrderList instance = new OrderList();
@@ -33,12 +40,33 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
     /** Linked list to hold observer details */
     private List<Observer> registeredObservers = new LinkedList<Observer>();
 
+    /** Integer to check max queue size */
+    private int maxQueueSize = 50;
+
+    /** Logger instance */
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+
     /**
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
-        inCompleteOrders = new ArrayDeque<Order>();
+        allOrders = new ArrayList<>();
+        allOrders.add(new ArrayDeque<Order>());
+        allOrders.add(new ArrayDeque<Order>());
         completeOrders = new ArrayList<>();
+    }
+
+    /**
+     * Method to set the maximum queue size
+     *
+     * Only used in tests to set max queue size to a reset instance of OrderList
+     *
+     * This method can be used within operation but if the queue was initially a larger size it will still contain those extra orders
+     *
+     * @param maxQueueSize Sets the maximum size of the queue before customers can no longer order
+     */
+    public void setMaxQueueSize(int maxQueueSize) {
+        this.maxQueueSize = maxQueueSize;
     }
 
     /**
@@ -48,12 +76,29 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param order The order to be added to the queue
      */
     @Override
-    public Boolean add(Order order) throws InvalidOrderException {
-        notifyObservers();
-        if (order.getDetails().isEmpty()) {
-            throw new InvalidOrderException("Order details cannot be null");
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
+        if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
+            logger.logWarning("Order queue is full. Cannot add new order.");
+            return false;
         }
-        return inCompleteOrders.offer(order);
+
+        if (order.getDetails().isEmpty()) {
+            logger.logSevere("Invalid order: Order details cannot be null or empty");
+            throw new InvalidOrderException("Order details cannot be null or empty");
+        }
+
+        if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
+            throw new DuplicateOrderException("Duplicate Order");
+        }
+
+        notifyObservers();
+
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+      
+        if (order.getOnlineStatus()) return allOrders.getLast().offer(order);
+
+        return allOrders.getFirst().offer(order);
     }
 
     /**
@@ -63,37 +108,62 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @param ID The ID used to find the order to be removed
      */
     @Override
-    public Boolean remove(UUID ID) {
-        try {
-            completeOrders.add(this.getOrder(ID));
-            return inCompleteOrders.removeIf(order -> order.getOrderID().equals(ID));
-        }
-        catch (InvalidOrderException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
+    public synchronized boolean remove(UUID ID) throws InvalidOrderException {
+        completeOrders.add(this.getOrder(ID));
+        
+        logger.logInfo("Order processed and moved to completed orders: " + ID);
+
+        if (allOrders.getFirst().removeIf(order -> order.getOrderID().equals(ID))) return true;
+
+        return allOrders.getLast().removeIf(order -> order.getOrderID().equals(ID));
     }
 
     /**
-     * Method to remove and return the first order in the queue
+     * Method to remove and return the first order in the in person queue
      *
-     * the queue or null if inCompleteOrders is empty
+     * the queue or null if in person orders queue is empty
      *
      * @return Order object to be processed by staff
      */
-    public Order remove() {
-        return inCompleteOrders.poll();
+    public synchronized Order remove() {
+        return allOrders.getFirst().poll();
+    }
+
+    /**
+     * Method to remove and return the first order in the online queue
+     *
+     * the queue or null if online orders is empty
+     *
+     * @return Order object to be processed by staff
+     */
+    public synchronized Order removeOnline() {
+        return allOrders.getLast().poll();
     }
 
     public void completeOrder(Order order) {
         completeOrders.add(order);
+        logger.logInfo("Order completed: " + order.getOrderID());
     }
 
     /**
      * Removes an order from the queue of orders for processing
      */
-    public Order getOrder() {
-        return inCompleteOrders.peek();
+    public Order getOrder(boolean online) {
+        if (online) return allOrders.getLast().peek();
+
+        return allOrders.getFirst().peek();
+    }
+
+    /**
+     * Method to return the number of orders in the orderlist queue
+     *
+     * @param online Checks whether the caller wants the size of the online or in person order queue
+     * @return an integer representing the size of the queue
+     */
+    public int getQueueSize(boolean online) {
+        if (online) return allOrders.getLast().size();
+
+        return allOrders.getFirst().size();
     }
 
     /**
@@ -103,11 +173,16 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @return An Order Object
      */
     public Order getOrder(UUID orderID) throws InvalidOrderException {
-        for (Order o : inCompleteOrders) {
+        /**
+         * Combines the two queues from the array list into one stream
+         * Saves having to use nested for loops
+         */
+        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
             if (o.getOrderID().equals(orderID)) {
                 return o;
             }
         }
+        logger.logWarning("Invalid order ID: " + orderID);
         throw new InvalidOrderException(orderID + " is not a valid order ID");
     }
 
@@ -117,42 +192,75 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
      * @return The queue of orders
      */
     public Queue<Order> getOrderList() {
-        return new LinkedList<>(inCompleteOrders);
+        return new ArrayDeque<>(allOrders.stream().flatMap(Collection::stream).collect(Collectors.toCollection(ArrayDeque::new)));
     }
 
     /**
      * Method used to return details of uncompleted orders as a string array
      *
+     * @param completed represents whether to return a string array of completed or incomplete orders
      * @return a String array with each entry formatted as below
      * (Order ID,Customer ID,Timestamp,Order Details Array [Item ID],Total Cost,Discounted Cost) e.g.
      */
-    public String[] getOrdersToString(Boolean completed) {
+    public String[] getOrdersToString(boolean completed) {
         Collection<Order> c = completeOrders;
 
         if (!completed) {
-            c = inCompleteOrders;
+            c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
-        String[] uncompletedOrderString = new String[c.size()];
+        String[] orderString = new String[c.size()];
 
         int count = 0;
 
         for (Order o : c) {
-            String s = String.format("%s,%s,%s,%s",
+            String s = String.format("%s,%s,%s,%s,%b",
                 o.getOrderID().toString(),
                 o.getCustomerID(),
                 o.getTimestamp().toString(),
-                String.join(";", o.getDetails())
+                String.join(";", o.getDetails()),
+                o.getOnlineStatus()
             );
 
-            uncompletedOrderString[count] = s;
+            orderString[count] = s;
 
             count++;
         }
 
-        return uncompletedOrderString;
+        return orderString;
     }
 
+    /**
+     * Method used by the simulation GUI to get a summary of orders that need to be complete
+     *
+     * @param online whether to return online or in person orders
+     * @return a string array of orders to be displayed
+     */
+    public String[] getOrdersForDisplay(boolean online) {
+        Queue<Order> c = allOrders.getFirst();
+
+        if (online) {
+            c = allOrders.getLast();
+        }
+
+        String[] orderString = new String[c.size()];
+
+        int count = 0;
+
+        for (Order o : c) {
+            String s = String.format("%s,%s,%s",
+                    o.getOrderID().toString(),
+                    o.getTimestamp().toString(),
+                    String.join(";", o.getDetails())
+            );
+
+            orderString[count] = s;
+
+            count++;
+        }
+
+        return orderString;
+    }
 
     /**
      * Method to return a summary of the purchased items and quantity
@@ -166,7 +274,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : inCompleteOrders) {
+        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
@@ -195,7 +303,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject {
         Collection<Order> c = completeOrders;
 
         if (!completed) {
-            c = inCompleteOrders;
+            c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
         String[] orderIDsArr = new String[c.size()];

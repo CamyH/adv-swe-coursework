@@ -1,5 +1,6 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
@@ -35,7 +36,7 @@ public class OrderListTest {
     public void setUp() {
         itemList = SetupItemFile.generateItemList();
         orderList = SetupOrderFile.generateOrderList();
-        first = orderList.getOrder();
+        first = orderList.getOrder(false);
     }
 
     /**
@@ -73,7 +74,7 @@ public class OrderListTest {
             assertTrue(orderList.remove(o1.getOrderID()));
 
             assertFalse(orderList.remove(o1.getOrderID()));
-        } catch (InvalidOrderException | InvalidItemIDException e) {
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -84,7 +85,9 @@ public class OrderListTest {
     @Test
     void testGetOrder() {
         orderList = OrderList.getInstance();
-        Order o1 = orderList.getOrder();
+        Order o1 = orderList.getOrder(false);
+
+        System.out.println(o1.getOrderID());
 
         assertNotNull(o1);
 
@@ -113,7 +116,7 @@ public class OrderListTest {
             assertEquals(o1.getTotalCost(), o.getTotalCost());
             assertEquals(o1.getCustomerID(), o.getCustomerID());
             assertEquals(o1.getDetails(), o.getDetails());
-        } catch (InvalidOrderException | InvalidItemIDException e) {
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -128,11 +131,11 @@ public class OrderListTest {
 
         assertNotNull(myList);
 
-        assertEquals(orderList.getOrder(), myList.peek());
+        assertEquals(orderList.getOrder(false), myList.peek());
 
         assertNotNull(myList.poll());
 
-        assertNotEquals(orderList.getOrder(), myList.peek());
+        assertNotEquals(orderList.getOrder(false), myList.peek());
     }
 
     /**
@@ -163,24 +166,26 @@ public class OrderListTest {
             newOrderList.remove(first.getOrderID());
             newOrderList.remove(second.getOrderID());
 
-            String s1 = String.format("%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5"
+                    "RL2;SD4;PSY5",
+                    "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1"
+                    "RL1;HD4;SD7;PSY1",
+                    "false"
             );
 
             arr[0] = s1;
             arr[1] = s2;
         }
-        catch (InvalidOrderException | InvalidItemIDException e) {
+        catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
 
@@ -218,24 +223,26 @@ public class OrderListTest {
             second.addItem("PSY1");
             orderList.add(second);
 
-            String s1 = String.format("%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
                     first.getTimestamp().toString(),
-                    "RL2;SD4;PSY5"
+                    "RL2;SD4;PSY5",
+                    "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
                     second.getTimestamp().toString(),
-                    "RL1;HD4;SD7;PSY1"
+                    "RL1;HD4;SD7;PSY1",
+                    "false"
             );
 
             arr[0] = s1;
             arr[1] = s2;
         }
-        catch (InvalidOrderException | InvalidItemIDException e) {
+        catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
 
@@ -277,7 +284,7 @@ public class OrderListTest {
 //            newOrderList.remove(first.getOrderID());
 //            newOrderList.remove(second.getOrderID());
         }
-        catch (InvalidOrderException | InvalidItemIDException e) {
+        catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
         }
 
@@ -294,6 +301,63 @@ public class OrderListTest {
         HashMap<String, Double> itemCount = newOrderList.completedOrderItemCount();
 
         assertEquals(itemCount, myMap);
+    }
+
+    /**
+     * Tests what happens when the queue size is exceeded
+     */
+    @Test
+    void testMaxQueueSize() {
+        OrderList.resetInstance();
+        orderList = OrderList.getInstance();
+        orderList.setMaxQueueSize(2);
+
+        try {
+            Order o = new Order();
+            o.addItem("RL1");
+            o.addItem("RL1");
+            o.addItem("PSY5");
+
+            assertTrue(orderList.add(o));
+
+            o = new Order();
+            o.addItem("RL1");
+            o.addItem("RL1");
+            o.addItem("PSY5");
+
+            assertTrue(orderList.add(o));
+
+            o = new Order();
+            o.addItem("RL1");
+            o.addItem("RL1");
+            o.addItem("PSY5");
+
+            assertFalse(orderList.add(o));
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Tests adding a duplicate order
+     */
+    @Test
+    void testDuplicateOrders() {
+        OrderList.resetInstance();
+        orderList = OrderList.getInstance();
+
+        try {
+            Order o = new Order();
+            o.addItem("RL1");
+            o.addItem("RL1");
+            o.addItem("PSY5");
+
+            assertTrue(orderList.add(o));
+            assertThrows(DuplicateOrderException.class, () -> {orderList.add(o);});
+
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

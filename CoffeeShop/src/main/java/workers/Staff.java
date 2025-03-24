@@ -16,8 +16,9 @@ import java.util.UUID;
  * @author Fraser Holman
  */
 public abstract class Staff extends Thread implements Observer {
-    /** Name of the staff member */
     private String name;
+
+    protected double defaultDelay = 2000.0;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
@@ -79,6 +80,15 @@ public abstract class Staff extends Thread implements Observer {
     }
 
     /**
+     * Method to adjust the workers speed of operation. Used to adjust speed of simulation
+     *
+     * @param defaultDelay double representing the delay in completing orders
+     */
+    public void setDefaultDelay(double defaultDelay) {
+        this.defaultDelay = defaultDelay;
+    }
+
+    /**
      * Method to create the thread
      */
     public abstract void run();
@@ -105,4 +115,5 @@ public abstract class Staff extends Thread implements Observer {
     public abstract ArrayList<String> getCurrentOrderDetails();
 
     public abstract Order getCurrentOrder();
+
 }

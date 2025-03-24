@@ -1,11 +1,13 @@
 package order;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.AbstractFileManager;
 import item.ItemList;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
@@ -52,6 +54,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
     @Override
     protected void ingestFileContents(StringBuilder fileContents) {
         OrderList orderList = OrderList.getInstance();
+        menu = ItemList.getInstance();
 
         try {
             // We only really care about the InvalidOrderException
@@ -69,11 +72,10 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
                         new ArrayList<>(List.of(itemIds)),
-                        menu));
+                        menu,
+                        Boolean.parseBoolean(lineData[4])));
             }
-        } catch (InvalidOrderException e) {
-            System.err.println("Skipping : " + e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidOrderException | IllegalArgumentException | DuplicateOrderException e) {
             System.err.println("Skipping : " + e.getMessage());
         }
     }
