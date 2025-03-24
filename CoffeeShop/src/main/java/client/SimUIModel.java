@@ -143,9 +143,4 @@ public class SimUIModel implements Subject {
         staffList.remove(ID);
     }
 
-    /*
-    public StaffList getStaffList() {
-            return staffList;
-    }
-    */
 }
