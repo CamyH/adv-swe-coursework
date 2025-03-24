@@ -1,7 +1,9 @@
 package workers;
 
 import interfaces.Observer;
+import order.Order;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -110,6 +112,8 @@ public abstract class Staff extends Thread implements Observer {
      */
     public abstract void removeStaff();
 
+    public abstract ArrayList<String> getCurrentOrderDetails();
 
+    public abstract Order getCurrentOrder();
 
 }

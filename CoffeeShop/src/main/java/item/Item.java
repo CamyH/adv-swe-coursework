@@ -1,12 +1,14 @@
-package item; // Package declaration
+package item;
 
 import exceptions.InvalidItemIDException;
+
+import java.io.Serializable;
 
 /**
  * Defines an item object
  * @author Akash Poonia
  */
-public class Item {
+public class Item implements Serializable {
     // Unique identifier for the item
     private final String itemID;
 

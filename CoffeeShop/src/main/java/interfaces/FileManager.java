@@ -11,7 +11,6 @@ import java.io.IOException;
 public interface FileManager<T, R> extends AutoCloseable {
     /**
      * Reads from a given file
-     * @return an instance of type T representing the file content
      * @exception IOException for general IO exceptions
      */
     void readFile() throws IOException;
