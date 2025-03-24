@@ -5,6 +5,7 @@ import exceptions.InvalidOrderException;
 import interfaces.EntityList;
 import interfaces.Subject;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ import logs.CoffeeShopLogger;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject {
+public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
     /** A queue to hold existing Order objects */
     //private Queue<Order> inCompleteOrders;
 

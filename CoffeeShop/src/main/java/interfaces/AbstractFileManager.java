@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
     protected final String fileName;
 
-    protected ItemList menu;
+    protected ItemList menu = ItemList.getInstance();
 
     protected File filePath;
 
@@ -59,28 +59,23 @@ public abstract class AbstractFileManager<T, R> implements FileManager<T, R> {
 
     /**
      * Reads from a given file
-     *
-     * @return an instance of type T representing the file content
-     * @throws IOException for general IO exceptions
+     * @throws FileNotFoundException if the file does not exist
      */
     @Override
     public void readFile() throws FileNotFoundException {
         StringBuilder fileContents = new StringBuilder();
 
-        if (filePath != null) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    fileContents.append(line);
-                    fileContents.append(System.lineSeparator());
+        if (filePath == null) throw new FileNotFoundException("File Path is null");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileContents.append(line);
+                fileContents.append(System.lineSeparator());
                 }
             } catch (IOException e) {
                 System.out.println("Error reading file: " + e.getMessage());
             }
-        }
-        else {
-            throw new FileNotFoundException("File Path is null");
-        }
 
         ingestFileContents(fileContents);
     }

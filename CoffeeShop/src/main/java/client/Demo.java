@@ -1,12 +1,11 @@
 package client;
 
 import item.ItemFileReader;
-import item.ItemList;
 import order.OrderFileReadWrite;
-import order.OrderList;
 import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Refactored to support MVC by Akash
@@ -20,6 +19,8 @@ public class Demo {
     private static ItemFileReader itemReader;
     private static CustomerView view;
     private static CustomerController customerController;
+    private static Console console;
+    private static SimUIController simController;
 
     /**
      * Initialises and Empty ItemList and OrderList
@@ -39,6 +40,10 @@ public class Demo {
     public void showGUI() {
         view = new CustomerView();
         customerController = new CustomerController(view);
+    }
+
+    public void showSimUI(){
+        simController = new SimUIController();
     }
 
     /**
@@ -62,6 +67,7 @@ public class Demo {
         }
 
         demo.showGUI();
+        demo.showSimUI();
         demo.showConsole();
     }
 
@@ -71,7 +77,7 @@ public class Demo {
     static void demoCloseGUI() {
         System.out.println("Goodbye.");
         view.closeGUI();
-
+        simController.close();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
         System.exit(0);

@@ -7,6 +7,8 @@ import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
 
+import java.io.Serializable;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;

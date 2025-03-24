@@ -2,6 +2,7 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.AbstractFileManager;
+
 import java.io.*;
 
 /**
@@ -28,7 +29,6 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
     /**
      * Convert StringBuilder file content to a list of item objects
      * @param fileContents the contents of the read from file
-     * @return an ArrayList of type item
      */
     @Override
     protected void ingestFileContents(StringBuilder fileContents) {
@@ -38,7 +38,6 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
             for (String line : fileContents.toString().split("\n")) {
                 // Skip empty lines
                 if (line.trim().isEmpty()) continue;
-
                 String[] lineData = line.split(",");
                 Item newItem = new Item(lineData[0],
                         ItemCategory.valueOf(lineData[1]),
