@@ -3,6 +3,7 @@ package item;
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -16,7 +17,7 @@ import java.util.*;
  * @author Fraser Holman
  */
 
-public class ItemList implements EntityList<Item, String> {
+public class ItemList implements EntityList<Item, String>, Serializable {
     /** Hashmap data structure to hold item information */
     private Map<String, Item> items;
 
