@@ -25,8 +25,6 @@ public class SimUIModel implements Subject {
     private ArrayList<String> roles;
 
     private HashMap<UUID, Staff> staffList =  new HashMap<>();
-    // PLACEHOLDER
-    // private StaffList staffList;
 
     private Integer simSpd = 2000;
 
