@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Controller Class (Refactored for MVC by Akash
+ * Controller Class (Refactored for MVC by Akash)
  * Handles user interactions and updates the Model and View.
  * @author Caelan Mackenzie
  */
@@ -86,6 +86,13 @@ public class CustomerController implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
             }
+            if (!orders.add(currentOrder)) {
+                JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
+                return;
+            }
+
+            Demo.demoWriteOrders();
+            JOptionPane.showMessageDialog(view, "Order has been submitted");
         } catch (InvalidOrderException | DuplicateOrderException e) {
             JOptionPane.showMessageDialog(view, e.getMessage());
         }

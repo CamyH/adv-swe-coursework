@@ -38,8 +38,6 @@ public class Demo {
      */
     public void showGUI() {
         view = new CustomerView();
-        OrderList orders = OrderList.getInstance();
-        ItemList menu = ItemList.getInstance();
         customerController = new CustomerController(view);
     }
 
