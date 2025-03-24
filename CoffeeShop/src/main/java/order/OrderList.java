@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import interfaces.Observer;
 
+import logs.CoffeeShopLogger;
+
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
@@ -40,6 +42,9 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
 
     /** Integer to check max queue size */
     private int maxQueueSize = 50;
+
+    /** Logger instance */
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Initialises the queue to contain all the orders
@@ -71,21 +76,26 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @param order The order to be added to the queue
      */
     @Override
-    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
         if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
+            logger.logWarning("Order queue is full. Cannot add new order.");
             return false;
         }
 
         if (order.getDetails().isEmpty()) {
+            logger.logSevere("Invalid order: Order details cannot be null or empty");
             throw new InvalidOrderException("Order details cannot be null or empty");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
             throw new DuplicateOrderException("Duplicate Order");
         }
 
         notifyObservers();
 
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+      
         if (order.getOnlineStatus()) return allOrders.getLast().offer(order);
 
         return allOrders.getFirst().offer(order);
@@ -100,6 +110,8 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     @Override
     public synchronized boolean remove(UUID ID) throws InvalidOrderException {
         completeOrders.add(this.getOrder(ID));
+        
+        logger.logInfo("Order processed and moved to completed orders: " + ID);
 
         if (allOrders.getFirst().removeIf(order -> order.getOrderID().equals(ID))) return true;
 
@@ -130,6 +142,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
 
     public void completeOrder(Order order) {
         completeOrders.add(order);
+        logger.logInfo("Order completed: " + order.getOrderID());
     }
 
     /**
@@ -169,6 +182,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
                 return o;
             }
         }
+        logger.logWarning("Invalid order ID: " + orderID);
         throw new InvalidOrderException(orderID + " is not a valid order ID");
     }
 
@@ -184,36 +198,69 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     /**
      * Method used to return details of uncompleted orders as a string array
      *
+     * @param completed represents whether to return a string array of completed or incomplete orders
      * @return a String array with each entry formatted as below
      * (Order ID,Customer ID,Timestamp,Order Details Array [Item ID],Total Cost,Discounted Cost) e.g.
      */
-    public String[] getOrdersToString(Boolean completed) {
+    public String[] getOrdersToString(boolean completed) {
         Collection<Order> c = completeOrders;
 
         if (!completed) {
             c = allOrders.stream().flatMap(Collection::stream).toList();
         }
 
-        String[] uncompletedOrderString = new String[c.size()];
+        String[] orderString = new String[c.size()];
 
         int count = 0;
 
         for (Order o : c) {
-            String s = String.format("%s,%s,%s,%s",
+            String s = String.format("%s,%s,%s,%s,%b",
                 o.getOrderID().toString(),
                 o.getCustomerID(),
                 o.getTimestamp().toString(),
-                String.join(";", o.getDetails())
+                String.join(";", o.getDetails()),
+                o.getOnlineStatus()
             );
 
-            uncompletedOrderString[count] = s;
+            orderString[count] = s;
 
             count++;
         }
 
-        return uncompletedOrderString;
+        return orderString;
     }
 
+    /**
+     * Method used by the simulation GUI to get a summary of orders that need to be complete
+     *
+     * @param online whether to return online or in person orders
+     * @return a string array of orders to be displayed
+     */
+    public String[] getOrdersForDisplay(boolean online) {
+        Queue<Order> c = allOrders.getFirst();
+
+        if (online) {
+            c = allOrders.getLast();
+        }
+
+        String[] orderString = new String[c.size()];
+
+        int count = 0;
+
+        for (Order o : c) {
+            String s = String.format("%s,%s,%s",
+                    o.getOrderID().toString(),
+                    o.getTimestamp().toString(),
+                    String.join(";", o.getDetails())
+            );
+
+            orderString[count] = s;
+
+            count++;
+        }
+
+        return orderString;
+    }
 
     /**
      * Method to return a summary of the purchased items and quantity
