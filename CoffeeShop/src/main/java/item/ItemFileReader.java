@@ -4,6 +4,9 @@ import exceptions.InvalidItemIDException;
 import interfaces.AbstractFileManager;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Reads Item Data using JavaStream
@@ -33,6 +36,7 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
     @Override
     protected void ingestFileContents(StringBuilder fileContents) {
         ItemList itemList = ItemList.getInstance();
+        List<Item> tempItems = new ArrayList<>();  // Temporary list for daily special selection
 
         try {
             for (String line : fileContents.toString().split("\n")) {
@@ -44,7 +48,13 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
                         Double.parseDouble(lineData[2]),
                         lineData[3]);
 
+                tempItems.add(newItem);  // Added item to temporary list
                 itemList.add(newItem);
+            }
+            // Select daily special randomly
+            if (!tempItems.isEmpty()) {
+                Item dailySpecial = tempItems.get(new Random().nextInt(tempItems.size()));
+                dailySpecial.setDailySpecial(true);
             }
         } catch (InvalidItemIDException e) {
             System.err.println("Unable to add item, skipping " + e.getMessage());
@@ -69,7 +79,7 @@ public class ItemFileReader extends AbstractFileManager<ItemList, Object> {
      * resource as closed, prior to throwing the exception. The {@code
      * close} method is unlikely to be invoked more than once and so
      * this ensures that the resources are released in a timely manner.
-     * Furthermore it reduces problems that could arise when the resource
+     * Furthermore, it reduces problems that could arise when the resource
      * wraps, or is wrapped, by another resource.
      *
      * <p><em>Implementers of this interface are also strongly advised
