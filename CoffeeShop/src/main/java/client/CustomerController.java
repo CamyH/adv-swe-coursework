@@ -38,11 +38,13 @@ public class CustomerController implements ActionListener {
         // Initialize the current order
         try {
             currentOrder = new Order();
-            // Initialize and display daily special
-            Item dailySpecial = findDailySpecial();
-            if (dailySpecial != null) {
-                view.setDailySpecial(dailySpecial.getDescription());
-            }
+            // Initialize daily special after ensuring view is ready
+            SwingUtilities.invokeLater(() -> {
+                Item dailySpecial = findDailySpecial();
+                if (dailySpecial != null) {
+                    view.setDailySpecial(dailySpecial.getDescription());
+                }
+            });
         } catch (InvalidOrderException e) {
             throw new RuntimeException(e);
         }

@@ -43,6 +43,7 @@ public class CustomerView extends JFrame {
     public CustomerView() {
         // UI parameters
         setContentPane(contentPanel);
+
         setTitle("Coffee Shop App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 400);  // Increased height to accommodate daily special
@@ -53,7 +54,7 @@ public class CustomerView extends JFrame {
         dailySpecialLabel = new JLabel("Today's Special: Loading...", SwingConstants.CENTER);
         dailySpecialLabel.setFont(new Font("Arial", Font.BOLD, 16));
         dailySpecialLabel.setForeground(new Color(200, 0, 0));  // Dark red
-        contentPanel.add(dailySpecialLabel, BorderLayout.NORTH);
+//        contentPanel.add(dailySpecialLabel, BorderLayout.NORTH);
 
         // Disable editing for certain fields
         totalCostField.setEnabled(false);
@@ -73,6 +74,8 @@ public class CustomerView extends JFrame {
         totalCostField.setText("£0.00");
         discountedCostField.setText("£0.00");
         displayMenuField.append("Item ID, Name, Cost \n");
+
+
     }
 
     /**
