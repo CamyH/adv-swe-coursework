@@ -152,6 +152,8 @@ public class SimulationUI extends JFrame implements Observer {
 
         // Refresh the Staff list
         setStaffList(simModel.getStaffList());
+
+        // Refresh the Order lists
     }
 
     public void showPopup(String message) {
