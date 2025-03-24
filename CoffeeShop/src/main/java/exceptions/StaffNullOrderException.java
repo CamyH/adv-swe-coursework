@@ -5,14 +5,14 @@ package exceptions; // Package declaration
  *
  * @author Caelan Mackenzie
  */
-public class StaffNullorderException extends Exception{
+public class StaffNullOrderException extends Exception {
     private final String msg;
     /**
      * Constructs an StaffNullorderException with a specified detail message.
      *
      * @param msg The detail message.
      */
-    public StaffNullorderException(String msg) {
+    public StaffNullOrderException(String msg) {
         this.msg = msg;
     }
 

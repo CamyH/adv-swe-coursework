@@ -1,6 +1,6 @@
 package client;
 
-import exceptions.StaffNullorderException;
+import exceptions.StaffNullOrderException;
 import interfaces.Observer;
 import interfaces.Subject;
 import item.Item;
@@ -85,11 +85,11 @@ public class SimUIModel implements Subject {
      * @param ID The ID of the staff whose details we are collecting
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
-    public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullorderException {
+    public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
             Staff curStaff = staffList.get(ID);
 
             if (curStaff.getCurrentOrder() == null) {
-                throw new StaffNullorderException("Selected staff has no order");
+                throw new StaffNullOrderException("Selected staff has no order");
             }
 
             Order curOrder = curStaff.getCurrentOrder();
@@ -123,9 +123,9 @@ public class SimUIModel implements Subject {
             this.simSpd = Math.round(speed/ 100.0f) * 100;
     }
 
-    public void addStaff(String name, String role, int experience) throws StaffNullorderException{
+    public void addStaff(String name, String role, int experience) throws StaffNullOrderException {
         if (name.isEmpty()) {
-            throw new StaffNullorderException("Staff name is empty");
+            throw new StaffNullOrderException("Staff name is empty");
         }
 
         if (role.equals("Barista")) {

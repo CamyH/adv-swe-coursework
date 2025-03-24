@@ -1,6 +1,6 @@
 package client;
 
-import exceptions.StaffNullorderException;
+import exceptions.StaffNullOrderException;
 import interfaces.Observer;
 import order.OrderList;
 
@@ -38,7 +38,7 @@ public class SimUIController implements Observer {
         StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
         try {
             staffDetailsPopup.setDetails(simModel.getStaffDetails(simView.getCurStaff()));
-        } catch (StaffNullorderException e) {
+        } catch (StaffNullOrderException e) {
             staffDetailsPopup.exit();
             simView.showPopup(e.getMessage());
         } catch (NullPointerException e) {
@@ -56,7 +56,7 @@ public class SimUIController implements Observer {
             simView.clearCurStaff();
             simModel.notifyObservers();
             simView.showPopup("Added " + name + " to Staff List");
-        } catch (StaffNullorderException e) {
+        } catch (StaffNullOrderException e) {
             simView.showPopup(e.getMessage());
         }
     }
