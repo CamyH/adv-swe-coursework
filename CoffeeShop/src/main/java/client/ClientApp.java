@@ -1,9 +1,7 @@
 package client;
 
-import exceptions.InvalidOrderException;
 import item.ItemFileReader;
 import message.Message;
-import order.Order;
 
 import java.io.IOException;
 import java.net.Socket;

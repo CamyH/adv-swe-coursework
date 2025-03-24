@@ -1,6 +1,5 @@
 package server;
 
-import client.Client;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.OrderList;
