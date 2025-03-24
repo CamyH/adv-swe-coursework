@@ -80,17 +80,11 @@ public class CustomerController implements ActionListener {
      */
     private void submitOrder() {
         try {
-            if (orders.add(currentOrder)) {
-                Demo.demoWriteOrders();
-                JOptionPane.showMessageDialog(view, "Order has been submitted");
-            } else {
-                JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
-            }
+
             if (!orders.add(currentOrder)) {
                 JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
                 return;
             }
-
             Demo.demoWriteOrders();
             JOptionPane.showMessageDialog(view, "Order has been submitted");
         } catch (InvalidOrderException | DuplicateOrderException e) {
