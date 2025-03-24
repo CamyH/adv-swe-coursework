@@ -135,7 +135,6 @@ public class SimUIModel implements Subject {
             staffList.put(curStaff.getID(), curStaff);
             System.out.println(curStaff.getWorkerName());
         }
-        // staff.add(curStaff);
     }
 
     public void removeStaff(UUID ID) {
