@@ -80,7 +80,7 @@ public class SimUIModel extends Subject {
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
     public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
-            Staff curStaff = staffList.get(ID);
+            Staff curStaff = staffList.getStaff(ID);
 
 //            if (curStaff.getCurrentOrder() == null) {
 //                throw new StaffNullOrderException("Selected staff has no order");
