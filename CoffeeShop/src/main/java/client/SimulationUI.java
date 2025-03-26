@@ -5,6 +5,8 @@ import workers.Staff;
 import workers.StaffList;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -65,6 +67,8 @@ public class SimulationUI extends JFrame implements Observer {
             }
         });
 
+        //SimSpdSlider.addChangeListener(e -> SimUIController.getInstance().updateSimSpd());
+
         // Make all non-editable fields un-editable
         OrderListArea.setEnabled(false);
         OrderListArea.setDisabledTextColor(Color.BLACK);
@@ -82,6 +86,10 @@ public class SimulationUI extends JFrame implements Observer {
 
         // Initial update to populate fields
         update();
+    }
+
+    public void addSimSpdChangeListener(ChangeListener listener) {
+        SimSpdSlider.addChangeListener(listener);
     }
 
     public static SimulationUI getInstance() {

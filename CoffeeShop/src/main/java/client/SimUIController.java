@@ -28,6 +28,8 @@ public class SimUIController implements Observer {
         simView = SimulationUI.getInstance();
         simView.addSetListener(new SetListener());
 
+        simView.addSimSpdChangeListener(e -> updateSimSpd());
+
 //        try {
 //            simModel.addStaff("Manager", "Barista", 5);
 //        } catch (StaffNullNameException e) {
@@ -79,10 +81,10 @@ public class SimUIController implements Observer {
         }
     }
 
-    private void updateSimSpd() {
+    public void updateSimSpd() {
         simModel.setSimSpd(simView.getSimSliderValue());
         simModel.notifyObservers();
-        simView.showPopup("Updated Simulation Speed");
+        //simView.showPopup("Updated Simulation Speed");
     }
 
     public void updateOrders() {
