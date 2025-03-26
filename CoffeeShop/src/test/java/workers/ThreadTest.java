@@ -21,6 +21,9 @@ public class ThreadTest {
     Staff a;
     Staff b;
     Staff c;
+    Staff d;
+    Staff e;
+    Staff f;
 
     OrderList orderList;
 
@@ -78,9 +81,12 @@ public class ThreadTest {
             System.out.println(e.getMessage());
         }
 
-        a = StaffFactory.getStaff("waiter", "Bob", 1);
-        b = StaffFactory.getStaff("chef", "Bill", 2);
-        c = StaffFactory.getStaff("barista", "Fraser", 3);
+        a = StaffFactory.getStaff("waiter", "Waiter1", 1);
+        b = StaffFactory.getStaff("chef", "Chef1", 2);
+        c = StaffFactory.getStaff("barista", "Barista1", 3);
+        d = StaffFactory.getStaff("waiter", "Waiter2", 1);
+        e = StaffFactory.getStaff("chef", "Chef2", 2);
+        f = StaffFactory.getStaff("barista", "Barista2", 3);
     }
 
     @AfterEach
@@ -88,6 +94,9 @@ public class ThreadTest {
         a.removeStaff();
         b.removeStaff();
         c.removeStaff();
+        d.removeStaff();
+        e.removeStaff();
+        f.removeStaff();
     }
 
     /**
@@ -95,24 +104,27 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-//        a.start();
-//        b.start();
-//        c.start();
+        a.start();
+        b.start();
+        c.start();
+        d.start();
+        e.start();
+        f.start();
 
 
 
-        //b.removeStaff();
+        b.removeStaff();
 
-//        orderList = SetupOrderFile.generateOrderList();
+        orderList = SetupOrderFile.generateOrderList();
 
-//        Thread.sleep(20000);
+        Thread.sleep(20000);
 
-        //orderList = SetupOrderFile.generateOrderList();
+        orderList = SetupOrderFile.generateOrderList();
 
-        //Thread.sleep(20000);
+        Thread.sleep(20000);
 
-//        a.removeStaff();
-//        b.removeStaff();
-//        c.removeStaff();
+        a.removeStaff();
+        b.removeStaff();
+        c.removeStaff();
     }
 }

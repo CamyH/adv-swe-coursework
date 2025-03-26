@@ -39,6 +39,8 @@ public class Waiter extends Staff<Order> {
 
     private FoodList foodList;
 
+    StaffList staffList;
+
     /** Stores the current order this staff member is working on */
     private Order currentOrder;
 
@@ -76,6 +78,8 @@ public class Waiter extends Staff<Order> {
         orderList.registerObserver(this);
         waiterList.add(this);
         thisOrder = new ArrayList<>();
+        staffList = StaffList.getInstance();
+        staffList.add(this);
         updatePriority();
     }
 

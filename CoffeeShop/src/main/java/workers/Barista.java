@@ -29,6 +29,8 @@ public class Barista extends Staff<String> implements Observer {
 
     ItemList itemList;
 
+    StaffList staffList;
+
     Map.Entry<Waiter, String> currentItem;
 
     /** Tells if the staff member is currently active (ie not fired) */
@@ -49,6 +51,8 @@ public class Barista extends Staff<String> implements Observer {
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
         drinkList.registerObserver(this);
+        staffList = StaffList.getInstance();
+        staffList.add(this);
     }
 
     /**
@@ -152,7 +156,7 @@ public class Barista extends Staff<String> implements Observer {
                 }
 
                 try {
-                    System.out.println(getWorkerName() + " completed order " + itemList.getDescription(currentItem.getValue()));
+                    System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
                 }
                 catch (InvalidItemIDException e) {
                     System.out.println(e.getMessage());
