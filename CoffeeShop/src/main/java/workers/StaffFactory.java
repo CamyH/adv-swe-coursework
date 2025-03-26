@@ -16,7 +16,7 @@ public class StaffFactory {
      * @param experience The experience level of the staff member
      * @return Returns either a Staff Object or a null object
      */
-    public static Staff getStaff(String type, String name, double experience) {
+    public static Staff getStaff(String type, String name, int experience) {
         switch (type.toLowerCase()) {
             case "waiter":
                 return new Waiter(name, experience);

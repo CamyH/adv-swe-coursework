@@ -26,8 +26,8 @@ public class StaffListTest {
         staffList = StaffList.getInstance();
 
         a = StaffFactory.getStaff("barista", "Bob", 1);
-        b = StaffFactory.getStaff("barista", "Bill", 0.2);
-        c = StaffFactory.getStaff("barista", "Fraser", 0.6);
+        b = StaffFactory.getStaff("barista", "Bill", 2);
+        c = StaffFactory.getStaff("barista", "Fraser", 3);
     }
 
     @AfterEach

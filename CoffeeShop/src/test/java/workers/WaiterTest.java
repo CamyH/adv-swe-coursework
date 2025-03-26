@@ -37,13 +37,13 @@ class WaiterTest {
         assertEquals(Math.pow(0.8, 2), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 2) + ( ( 0.8 - Math.pow(0.8, 2) ) * 2 ) / ( 2 - 1 )), ((Waiter) a).getWaiterPriority());
 
-        Staff b = StaffFactory.getStaff("waiter", "Bill", 0.2);
+        Staff b = StaffFactory.getStaff("waiter", "Bill", 2);
 
         assertEquals(Math.pow(0.8, 3), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 3) + ( ( 0.8 - Math.pow(0.8, 3) ) * 2 ) / ( 3 - 1 )), ((Waiter) a).getWaiterPriority());
         assertEquals((((Waiter) a).getWaiterPriority() + ( ( 0.8 - Math.pow(0.8, 3) ) * 2 ) / ( 3 - 1 )), ((Waiter) b).getWaiterPriority());
 
-        Staff c = StaffFactory.getStaff("waiter", "Fraser", 0.6);
+        Staff c = StaffFactory.getStaff("waiter", "Fraser", 3);
 
         assertEquals(Math.pow(0.8, 4), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 4) + ( ( 0.8 - Math.pow(0.8, 4) ) * 2 ) / ( 4 - 1 )), ((Waiter) a).getWaiterPriority());
@@ -65,6 +65,6 @@ class WaiterTest {
      */
     @Test
     void testStaffFactory() {
-        assertInstanceOf(Waiter.class, StaffFactory.getStaff("waiter", "John", 0.2));
+        assertInstanceOf(Waiter.class, StaffFactory.getStaff("waiter", "John", 2));
     }
 }
