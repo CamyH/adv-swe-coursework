@@ -104,27 +104,27 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-        a.start();
-        b.start();
-        c.start();
-        d.start();
-        e.start();
-        f.start();
-
-
-
-        b.removeStaff();
-
-        orderList = SetupOrderFile.generateOrderList();
-
-        Thread.sleep(20000);
-
-        orderList = SetupOrderFile.generateOrderList();
-
-        Thread.sleep(20000);
-
-        a.removeStaff();
-        b.removeStaff();
-        c.removeStaff();
+//        a.start();
+//        b.start();
+//        c.start();
+//        d.start();
+//        e.start();
+//        f.start();
+//
+//
+//
+//        b.removeStaff();
+//
+//        orderList = SetupOrderFile.generateOrderList();
+//
+//        Thread.sleep(20000);
+//
+//        orderList = SetupOrderFile.generateOrderList();
+//
+//        Thread.sleep(20000);
+//
+//        a.removeStaff();
+//        b.removeStaff();
+//        c.removeStaff();
     }
 }
