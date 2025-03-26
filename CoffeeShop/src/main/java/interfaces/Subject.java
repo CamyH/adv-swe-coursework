@@ -4,32 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Subject Interface used to keep track of Observers
+ * Subject superclass used to keep track of Observers
  *
  * @author Fraser Holman
  */
 public abstract class Subject {
 
     private List<Observer> registeredObservers = new LinkedList<Observer>();
-
-//    /**
-//     * Adds registered observers
-//     *
-//     * @param obs The observer to be registered
-//     */
-//    void registerObserver(Observer obs);
-//
-//    /**
-//     * Removes registered observers
-//     *
-//     * @param obs The observer to be removed
-//     */
-//    void removeObserver(Observer obs);
-//
-//    /**
-//     * Notifies all observers of any updates
-//     */
-//    void notifyObservers();
 
     /**
      * Method used to register observers

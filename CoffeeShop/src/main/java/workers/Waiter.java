@@ -192,6 +192,9 @@ public class Waiter extends Staff<Order> {
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");
     }
 
+    /**
+     * Processing order method - waiter waits until all items have been made by chef's / barista's
+     */
     public synchronized void processingOrder() {
         while (thisOrder.size() != currentOrder.getDetails().size()) {
             try {
@@ -203,6 +206,11 @@ public class Waiter extends Staff<Order> {
         }
     }
 
+    /**
+     * Used by chefs/baristas to give back items to the desired waiter
+     *
+     * @param item ItemID of completed item
+     */
     public synchronized void addItem(String item) {
         thisOrder.add(item);
         notifyAll();

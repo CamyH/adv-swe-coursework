@@ -1,18 +1,30 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
-import item.Item;
+import interfaces.Observer;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.DrinkList;
-import order.Order;
-import order.OrderList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Barista extends Staff<String> {
+/**
+ * Class represents how a Barista functions in the Coffee Shop Simulation
+ *
+ * This class uses two design patterns:
+ * 1. Factory Design Pattern (with Staff and StaffFactory)
+ * 2. Observer Design Pattern (between this class and DrinkList)
+ *
+ * Tasks:
+ * 1. Check for Item by checking for items in DrinkList
+ * 2. Wait specified amount of time to complete Item
+ * 3. Add Item to waiters list for processing
+ *
+ * @author Fraser Holman
+ */
+public class Barista extends Staff<String> implements Observer {
     DrinkList drinkList;
 
     ItemList itemList;
@@ -25,6 +37,12 @@ public class Barista extends Staff<String> {
     /** Logger instance */
     private CoffeeShopLogger logger;
 
+    /**
+     * Constructor to set up barista
+     *
+     * @param name Name of Barista
+     * @param experience Experience level of barista
+     */
     public Barista(String name, double experience) {
         super(name, experience);
         drinkList = DrinkList.getInstance();
