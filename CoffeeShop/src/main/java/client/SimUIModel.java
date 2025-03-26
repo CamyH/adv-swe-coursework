@@ -32,7 +32,8 @@ public class SimUIModel extends Subject {
             // Populate roles
             roles.add("Waiter");
             roles.add("Barista");
-            Staff curStaff = new Barista("Manager", 5);
+            roles.add("Chef");
+            Staff curStaff = new Waiter("Manager", 5);
             staffList.add(curStaff);
         }
 
@@ -63,7 +64,7 @@ public class SimUIModel extends Subject {
      * @param ID The ID of the staff whose details we are collecting
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
-    public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
+    public String getStaffDetails(UUID ID) {
             return staffList.getStaff(ID).getCurrentOrderDetails();
     }
 

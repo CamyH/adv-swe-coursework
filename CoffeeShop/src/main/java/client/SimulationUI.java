@@ -81,8 +81,8 @@ public class SimulationUI extends JFrame implements Observer {
     }
 
     public UUID getCurStaff() throws NullPointerException {
-        String[] curStaffParts = SelectStaffCombo.getSelectedItem().toString().split(",", 2);
-        return UUID.fromString(curStaffParts[1]);
+        String[] curStaffParts = SelectStaffCombo.getSelectedItem().toString().split(", ", 3);
+        return UUID.fromString(curStaffParts[2]);
     }
 
     public int getSimSliderValue() {
@@ -121,7 +121,7 @@ public class SimulationUI extends JFrame implements Observer {
         // Should work with Stafflist
 
         staffList.getStaffList().forEach((uuid, curStaff) -> {
-            SelectStaffCombo.addItem((curStaff.getWorkerName()) + "," + uuid);
+            SelectStaffCombo.addItem((curStaff.getWorkerName()) + ", " + curStaff.getRole() + ", "+ uuid);
         });
     }
 
