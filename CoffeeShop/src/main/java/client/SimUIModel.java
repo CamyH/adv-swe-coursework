@@ -33,8 +33,7 @@ public class SimUIModel extends Subject {
             roles.add("Waiter");
             roles.add("Barista");
             roles.add("Chef");
-            Staff curStaff = new Waiter("Manager", 5);
-            staffList.add(curStaff);
+            new Waiter("Manager", 5);
         }
 
     // Getter methods
@@ -81,14 +80,11 @@ public class SimUIModel extends Subject {
         }
 
         if (role.equals("Waiter")) {
-            Waiter curStaff = new Waiter(name, experience);
-            staffList.add(curStaff);
+            new Waiter(name, experience);
         } else if (role.equals("Barista")) {
-            Barista curStaff = new Barista(name, experience);
-            staffList.add(curStaff);
+            new Barista(name, experience);
         } else if (role.equals("Chef")) {
-            Chef curStaff = new Chef(name, experience);
-            staffList.add(curStaff);
+            new Chef(name, experience);
         }
         notifyObservers();
 
