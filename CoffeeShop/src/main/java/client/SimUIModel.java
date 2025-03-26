@@ -9,6 +9,7 @@ import order.Order;
 import order.OrderList;
 import workers.Barista;
 import workers.Staff;
+import workers.StaffList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,31 +18,24 @@ import java.util.UUID;
 
 public class SimUIModel implements Subject {
 
-    private ArrayList<Observer> observers = new ArrayList<Observer>();
-
-    private OrderList orderList;
-    private ItemList menu;
-
-    private ArrayList<String> roles;
-
-    private HashMap<UUID, Staff> staffList =  new HashMap<>();
+    private final ArrayList<Observer> observers = new ArrayList<Observer>();
+    private final OrderList orderList;
+    private final ItemList menu;
+    private final ArrayList<String> roles;
+    private final StaffList staffList;
 
     private Integer simSpd = 2000;
 
         public SimUIModel() {
             this.orderList = OrderList.getInstance();
             this.menu = ItemList.getInstance();
+            this.staffList = StaffList.getInstance();
             roles = new ArrayList<>();
 
             // Populate roles
             roles.add("Barista");
-
-            // Populate staff list
-            for (int i = 1; i <= 5; i++) {
-                Staff curStaff = new Barista("Staffname" + i, i); {
-                }
-                staffList.put(UUID.randomUUID(),curStaff);
-            }
+            Staff curStaff = new Barista("Manager", 5);
+            staffList.add(curStaff);
         }
 
     public void registerObserver(Observer obs) {
@@ -76,7 +70,7 @@ public class SimUIModel implements Subject {
             return roles;
     }
 
-    public HashMap<UUID, Staff> getStaffList() {
+    public StaffList getStaffList() {
         return staffList;
     }
 
@@ -85,35 +79,32 @@ public class SimUIModel implements Subject {
      * @param ID The ID of the staff whose details we are collecting
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
-    public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
-            Staff curStaff = staffList.get(ID);
+    public ArrayList<String> getStaffDetails(UUID ID) {
+        if (ID == null) {
+            return(null);
+        }
+        Staff curStaff = staffList.getStaff(ID);
+        ArrayList<String> orderDetails = new ArrayList<>();
+        // Add the staff name to the list
+        orderDetails.add(curStaff.getWorkerName());
+        orderDetails.add(String.valueOf(curStaff.getExperience()));
 
-            if (curStaff.getCurrentOrder() == null) {
-                throw new StaffNullOrderException("Selected staff has no order");
-            }
-
+        if (curStaff.getCurrentOrder() != null) {
             Order curOrder = curStaff.getCurrentOrder();
-            String name = curStaff.getWorkerName();
-            ArrayList<String> orderDetails = new ArrayList<>();
-
-            // Add the staff name to the list
-            orderDetails.add(name);
-
             // Add the order's customer ID to the list
             orderDetails.add(String.valueOf(curOrder.getCustomerID()));
-
             // Add the item names to the list
             for (String itemID : curOrder.getDetails()) {
                 Item item = menu.getMenu().get(itemID);
                 if (item != null) {
                     orderDetails.add(item.getDescription());
                 }
+                // Add the total cost and discounted cost to the last two values in the list
+                orderDetails.add(String.valueOf(curOrder.getTotalCost()));
+                orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
             }
-
-            // Add the total cost and discounted cost to the last two values in the list
-            orderDetails.add(String.valueOf(curOrder.getTotalCost()));
-            orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
-            return orderDetails;
+        }
+        return orderDetails;
     }
 
 
@@ -127,16 +118,17 @@ public class SimUIModel implements Subject {
         if (name.isEmpty()) {
             throw new StaffNullOrderException("Staff name is empty");
         }
-
+        Staff curStaff;
         if (role.equals("Barista")) {
-            Barista curStaff = new Barista(name, experience);
-            staffList.put(curStaff.getID(), curStaff);
+            curStaff = new Barista(name, experience);
+            staffList.add(curStaff);
             System.out.println(curStaff.getWorkerName());
         }
+        notifyObservers();
+
     }
 
     public void removeStaff(UUID ID) {
-        staffList.get(ID).removeStaff();
         staffList.remove(ID);
     }
 

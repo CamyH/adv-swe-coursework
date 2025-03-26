@@ -51,7 +51,7 @@ public class Barista extends Staff {
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
      */
-    public Barista(String name, double experience) {
+    public Barista(String name, int experience) {
         super(name, experience);
         orderList = OrderList.getInstance();
         orderList.registerObserver(this);

@@ -46,7 +46,7 @@ class StaffTest {
      */
     @Test
     void testSetExperience() {
-        staff.setExperience(0.2);
-        assertEquals(0.2, staff.getExperience(), "Experience level was not updated correctly.");
+        staff.setExperience(2);
+        assertEquals(2, staff.getExperience(), "Experience level was not updated correctly.");
     }
 }

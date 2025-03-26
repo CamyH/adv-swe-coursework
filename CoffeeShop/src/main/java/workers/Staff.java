@@ -24,7 +24,7 @@ public abstract class Staff extends Thread implements Observer {
      * Value between 0 and 1 that will represent how quickly they can complete orders
      * value is between 0 and 1 - lower values are more experienced
      * */
-    private double experience;
+    private int experience;
 
     /** Staff members ID */
     private UUID ID;
@@ -35,7 +35,7 @@ public abstract class Staff extends Thread implements Observer {
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
      */
-    public Staff(String name, double experience) {
+    public Staff(String name, int experience) {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
@@ -57,7 +57,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @return Double representing the experience level of the worker
      */
-    public double getExperience() {
+    public int getExperience() {
         return experience;
     }
 
@@ -75,7 +75,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @param experience a Double representing the new experience level of the staff member
      */
-    public void setExperience(double experience) {
+    public void setExperience(int experience) {
         this.experience = experience;
     }
 
