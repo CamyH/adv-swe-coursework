@@ -142,6 +142,7 @@ public class Barista extends Staff<String> implements Observer {
     public synchronized void removeStaff() {
         drinkList.removeObserver(this);
         active = false;
+        staffList.remove(this.getID());
         notifyAll(); // wakes up thread
         logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
     }

@@ -200,6 +200,7 @@ public class Waiter extends Staff<Order> {
         orderList.removeObserver(this);
         active = false;
         waiterList.remove(this);
+        staffList.remove(this.getID());
         updatePriority();
         notifyAll(); // wakes up thread
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");

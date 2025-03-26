@@ -141,6 +141,7 @@ public class Chef extends Staff<String> implements Observer {
     public synchronized void removeStaff() {
         foodList.removeObserver(this);
         active = false;
+        staffList.remove(this.getID());
         notifyAll(); // wakes up thread
         logger.logInfo("Chef " + getWorkerName() + " removed from the simulation.");
     }
