@@ -230,16 +230,38 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @param online whether to return online or in person orders
      * @return a string array of orders to be displayed
      */
-    public String[] getOrdersForDisplay(boolean online) {
+    public String getOrdersForDisplay(boolean online) {
+//        Queue<Order> c = allOrders.getFirst();
+//
+//        if (online) {
+//            c = allOrders.getLast();
+//        }
+//
+//        String[] orderString = new String[c.size()];
+//
+//        int count = 0;
+//
+//        for (Order o : c) {
+//            String s = String.format("%s,%s,%s",
+//                    o.getOrderID().toString(),
+//                    o.getTimestamp().toString(),
+//                    String.join(";", o.getDetails())
+//            );
+//
+//            orderString[count] = s;
+//
+//            count++;
+//        }
+//
+//        return orderString;
+
         Queue<Order> c = allOrders.getFirst();
 
         if (online) {
             c = allOrders.getLast();
         }
 
-        String[] orderString = new String[c.size()];
-
-        int count = 0;
+        StringBuilder orderString = new StringBuilder();
 
         for (Order o : c) {
             String s = String.format("%s,%s,%s",
@@ -248,12 +270,15 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
                     String.join(";", o.getDetails())
             );
 
-            orderString[count] = s;
-
-            count++;
+            orderString.append(s).append("\n");
         }
 
-        return orderString;
+// Remove the last newline if needed
+        if (!c.isEmpty()) {
+            orderString.setLength(orderString.length() - 1);
+        }
+
+        return orderString.toString();
     }
 
     /**
