@@ -68,10 +68,10 @@ public class Waiter extends Staff<Order> {
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
      */
-    public Waiter(String name, double experience) {
+    public Waiter(String name, int experience) {
         super(name, experience);
         orderList = OrderList.getInstance();
-        foodList = foodList.getInstance();
+        foodList = FoodList.getInstance();
         drinkList = DrinkList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
@@ -144,27 +144,26 @@ public class Waiter extends Staff<Order> {
      * @return ArrayList of Current Order Details
      */
     @Override
-    public ArrayList<String> getCurrentOrderDetails() {
-        if (currentOrder == null) return null;
+    public String getCurrentOrderDetails() {
+        if (currentOrder == null) return "Staff is Currently Idle";
 
-        ArrayList<String> orderDetails = new ArrayList<>();
+        StringBuilder orderDetails = new StringBuilder();
 
-        orderDetails.add(this.getWorkerName());
-        orderDetails.add(String.valueOf(currentOrder.getCustomerID()));
+        orderDetails.append(this.getWorkerName()).append("\n");
+        orderDetails.append(currentOrder.getCustomerID()).append("\n");
 
         for (String itemID : currentOrder.getDetails()) {
             try {
-                orderDetails.add(itemList.getDescription(itemID));
-            }
-            catch (InvalidItemIDException e) {
+                orderDetails.append(itemList.getDescription(itemID)).append("\n");
+            } catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        orderDetails.add("Total Cost : £" + String.valueOf(currentOrder.getTotalCost()));
-        orderDetails.add("Discounted Cost : £" + String.valueOf(currentOrder.getDiscountedCost()));
-        
-        return orderDetails;
+        orderDetails.append("Total Cost : £").append(currentOrder.getTotalCost()).append("\n");
+        orderDetails.append("Discounted Cost : £").append(currentOrder.getDiscountedCost());
+
+        return orderDetails.toString();
     }
 
     /**

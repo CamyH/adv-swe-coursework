@@ -45,7 +45,7 @@ public class Chef extends Staff<String> implements Observer {
      * @param name Name of Chef
      * @param experience experience level of Chef
      */
-    public Chef(String name, double experience) {
+    public Chef(String name, int experience) {
         super(name, experience);
         foodList = FoodList.getInstance();
         itemList = ItemList.getInstance();
@@ -93,8 +93,8 @@ public class Chef extends Staff<String> implements Observer {
      * @return ArrayList of Current Order Details
      */
     @Override
-    public ArrayList<String> getCurrentOrderDetails() {
-        if (currentItem == null) return null;
+    public String getCurrentOrderDetails() {
+        if (currentItem == null) return "Staff is Currently Idle";
 
         String description;
         try {
@@ -104,12 +104,12 @@ public class Chef extends Staff<String> implements Observer {
             System.out.println(e.getMessage());
         }
 
-        return new ArrayList<>(List.of(
-            this.getWorkerName(),
-            currentItem.getValue(),
-            description,
-            currentItem.getKey().getWorkerName()
-            ));
+        return String.join("\n",
+                this.getWorkerName(),
+                currentItem.getValue(),
+                description,
+                currentItem.getKey().getWorkerName()
+        );
     }
 
     /**

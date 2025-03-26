@@ -112,7 +112,7 @@ public abstract class Staff<T> extends Thread implements Observer {
      */
     public abstract void removeStaff();
 
-    public abstract ArrayList<String> getCurrentOrderDetails();
+    public abstract String getCurrentOrderDetails();
 
     public abstract T getCurrentOrder();
 

@@ -103,8 +103,8 @@ public class Barista extends Staff<String> implements Observer {
      * @return ArrayList of Current Order Details
      */
     @Override
-    public ArrayList<String> getCurrentOrderDetails() {
-        if (currentItem == null) return null;
+    public String getCurrentOrderDetails() {
+        if (currentItem == null) return "Staff is Currently Idle";
 
         String description;
         try {
@@ -114,12 +114,12 @@ public class Barista extends Staff<String> implements Observer {
             System.out.println(e.getMessage());
         }
 
-        return new ArrayList<>(List.of(
+        return String.join("\n",
                 this.getWorkerName(),
                 currentItem.getValue(),
                 description,
                 currentItem.getKey().getWorkerName()
-        ));
+        );
     }
 
     /**
