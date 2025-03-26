@@ -104,7 +104,14 @@ public class Barista extends Staff<String> implements Observer {
      */
     @Override
     public String getCurrentOrderDetails() {
-        if (currentItem == null) return "Staff is Currently Idle";
+        if (currentItem == null) {
+            return String.join("\n",
+                    this.getWorkerName(),
+                    "Waiter",
+                    String.valueOf(this.getExperience()),
+                    "Staff is Currently Idle"
+            );
+        }
 
         String description;
         try {
@@ -116,10 +123,16 @@ public class Barista extends Staff<String> implements Observer {
 
         return String.join("\n",
                 this.getWorkerName(),
+                "Waiter",
+                String.valueOf(this.getExperience()),
                 currentItem.getValue(),
                 description,
                 currentItem.getKey().getWorkerName()
         );
+    }
+
+    public String getRole() {
+        return "Barista";
     }
 
     /**
