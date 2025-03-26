@@ -145,11 +145,17 @@ public class Waiter extends Staff<Order> {
      */
     @Override
     public String getCurrentOrderDetails() {
-        if (currentOrder == null) return "Staff is Currently Idle";
-
         StringBuilder orderDetails = new StringBuilder();
 
         orderDetails.append(this.getWorkerName()).append("\n");
+        orderDetails.append("Waiter").append("\n");
+        orderDetails.append(this.getExperience()).append("\n");
+
+        if (currentOrder == null) {
+            orderDetails.append("Staff is Currently Idle").append("\n");
+            return orderDetails.toString();
+        }
+
         orderDetails.append(currentOrder.getCustomerID()).append("\n");
 
         for (String itemID : currentOrder.getDetails()) {
@@ -164,6 +170,10 @@ public class Waiter extends Staff<Order> {
         orderDetails.append("Discounted Cost : £").append(currentOrder.getDiscountedCost());
 
         return orderDetails.toString();
+    }
+
+    public String getRole() {
+        return "Waiter";
     }
 
     /**
