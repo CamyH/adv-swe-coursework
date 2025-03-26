@@ -80,7 +80,7 @@ public class Waiter extends Staff<Order> {
         staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
-//        start();
+        start();
     }
 
     /**

@@ -53,7 +53,7 @@ public class Chef extends Staff<String> implements Observer {
         foodList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
-//        start();
+        start();
     }
 
     /**

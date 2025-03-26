@@ -53,7 +53,7 @@ public class Barista extends Staff<String> implements Observer {
         drinkList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
-//        start();
+        start();
     }
 
     /**

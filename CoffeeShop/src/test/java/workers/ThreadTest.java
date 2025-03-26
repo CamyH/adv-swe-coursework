@@ -108,12 +108,12 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-        a.start();
-        b.start();
-        c.start();
-        d.start();
-        e.start();
-        f.start();
+//        a.start();
+//        b.start();
+//        c.start();
+//        d.start();
+//        e.start();
+//        f.start();
 
 
 
