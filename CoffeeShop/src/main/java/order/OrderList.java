@@ -1,5 +1,6 @@
 package order;
 
+import client.SimUIController;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
@@ -40,7 +41,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     /** Logger instance */
     private final CoffeeShopLogger logger;
 
-    //private
+    private SimUIController controller;
 
     /**
      * Initialises the queue to contain all the orders
@@ -50,6 +51,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
         logger = CoffeeShopLogger.getInstance();
+        controller = SimUIController.getInstance();
         completeOrders = new ArrayList<>();
     }
 
@@ -90,6 +92,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         }
 
         notifyObservers();
+        controller.updateOrders();
 
         logger.logInfo("Order added to queue: " + order.getOrderID());
       
@@ -123,6 +126,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
+        controller.updateOrders();
         return allOrders.getFirst().poll();
     }
 
@@ -134,6 +138,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order removeOnline() {
+        controller.updateOrders();
         return allOrders.getLast().poll();
     }
 
