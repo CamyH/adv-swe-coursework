@@ -1,13 +1,12 @@
 package client;
 
-import exceptions.StaffNullOrderException;
+import exceptions.StaffNullNameException;
 import interfaces.Observer;
 import order.OrderList;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -18,21 +17,35 @@ public class SimUIController implements Observer {
 
     private SimUIModel simModel;
     private SimulationUI simView;
+    private static SimUIController instance;
 
     // The order list to display
     // Contains both in person and online orders
     private OrderList orders;
 
-    public SimUIController() {
+    private SimUIController() {
 
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");
-        simModel = new SimUIModel();
+        simModel = SimUIModel.getInstance();
         simModel.registerObserver(this);
-        simView = new SimulationUI(simModel);
+        simView = SimulationUI.getInstance();
         simView.addSetListener(new SetListener());
         orders = OrderList.getInstance();
 
+        try {
+            simModel.addStaff("Manager", "Barista", 5);
+        } catch (StaffNullNameException e) {
+            message(e.getMessage());
+        }
+
+    }
+
+    public static SimUIController getInstance() {
+        if (instance == null) {
+            instance = new SimUIController();
+        }
+        return instance;
     }
 
     private void viewStaffDetails() {
@@ -54,7 +67,7 @@ public class SimUIController implements Observer {
             simView.clearCurStaff();
             simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
             simView.showPopup("Added " + name + " to Staff List");
-        } catch (StaffNullOrderException e) {
+        } catch (StaffNullNameException e) {
             simView.showPopup(e.getMessage());
         }
     }
@@ -75,13 +88,17 @@ public class SimUIController implements Observer {
         simView.showPopup("Updated Simulation Speed");
     }
 
-    private void updateOrders() {
+    public void updateOrders() {
         // get the order list and send it to the view
-        ArrayList<String> list = simModel.getOrderList();
+        simView.setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void update() {
-        updateOrders();
+
+    }
+
+    public void message(String msg) {
+        simView.showPopup(msg);
     }
 
     public class SetListener implements ActionListener {

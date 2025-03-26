@@ -1,17 +1,12 @@
 package client;
 
-import exceptions.StaffNullOrderException;
-import interfaces.Observer;
+import exceptions.StaffNullNameException;
 import interfaces.Subject;
-import item.Item;
 import item.ItemList;
-import order.Order;
 import order.OrderList;
 import workers.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class SimUIModel extends Subject {
@@ -20,6 +15,8 @@ public class SimUIModel extends Subject {
     private final ItemList menu;
     private final ArrayList<String> roles;
     private final StaffList staffList;
+
+    private static SimUIModel instance;
 
     private Integer simSpd = 2000;
 
@@ -33,25 +30,28 @@ public class SimUIModel extends Subject {
             roles.add("Waiter");
             roles.add("Barista");
             roles.add("Chef");
-            new Waiter("Manager", 5);
+
         }
+
+    public static SimUIModel getInstance() {
+            if (instance == null) {
+            instance = new SimUIModel();
+            }
+            return instance;
+    }
 
     // Getter methods
 
     public int getSimSpd() {
-            return simSpd;
+        return simSpd;
     }
 
-    public ArrayList<String> getOrderList() {
-            ArrayList<String> list = new ArrayList<>(Arrays.asList(orderList.getOrdersToString(true)));
-            for (String line : list) {
-                System.out.println(line);
-            }
-            return list;
+    public String getOrderList(boolean online) {
+        return orderList.getOrdersForDisplay(online);
     }
 
     public ArrayList<String> getRoles() {
-            return roles;
+        return roles;
     }
 
     public StaffList getStaffList() {
@@ -74,17 +74,17 @@ public class SimUIModel extends Subject {
             this.simSpd = Math.round(speed/ 100.0f) * 100;
     }
 
-    public void addStaff(String name, String role, int experience) throws StaffNullOrderException {
+    public void addStaff(String name, String role, int experience) throws StaffNullNameException {
         if (name.isEmpty()) {
-            throw new StaffNullOrderException("Staff name is empty");
+            throw new StaffNullNameException("Staff name is empty");
         }
 
         if (role.equals("Waiter")) {
-            new Waiter(name, experience);
+            StaffFactory.getStaff("Waiter", name, experience);
         } else if (role.equals("Barista")) {
-            new Barista(name, experience);
+            StaffFactory.getStaff("Barista", name, experience);
         } else if (role.equals("Chef")) {
-            new Chef(name, experience);
+            StaffFactory.getStaff("Chef", name, experience);
         }
         notifyObservers();
 

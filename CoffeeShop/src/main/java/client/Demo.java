@@ -43,7 +43,7 @@ public class Demo {
     }
 
     public void showSimUI(){
-        simController = new SimUIController();
+        simController =  SimUIController.getInstance();
     }
 
     /**

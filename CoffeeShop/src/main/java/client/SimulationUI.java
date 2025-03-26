@@ -39,12 +39,13 @@ public class SimulationUI extends JFrame implements Observer {
     private JButton SimSpdBtn;
 
     private SimUIModel simModel;
+    private static SimulationUI instance;
 
-    public SimulationUI(SimUIModel model) {
-        model.registerObserver(this);
+    private SimulationUI() {
 
-        simModel = model;
 
+        simModel = SimUIModel.getInstance();
+        simModel.registerObserver(this);
         setContentPane(contentPanel);
         setTitle("Coffee Shop Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,6 +69,13 @@ public class SimulationUI extends JFrame implements Observer {
         update();
     }
 
+    public static SimulationUI getInstance() {
+        if (instance == null) {
+            instance = new SimulationUI();
+        }
+        return instance;
+    }
+
     public String getStaffName() {
         return StaffNameField.getText();
     }
@@ -89,13 +97,9 @@ public class SimulationUI extends JFrame implements Observer {
         return SimSpdSlider.getValue();
     }
 
-    public void setOrderLists(ArrayList<String> orders, ArrayList<String> onlineOrders) {
-        for (String order : orders) {
-            OrderListArea.append(order + "\n");
-        }
-        for (String onlineOrder : onlineOrders) {
-            OnlineOrderArea.append(onlineOrder + "\n");
-        }
+    public void setOrderLists(String orders, String onlineOrders) {
+        OrderListArea.append(orders + "\n");
+        OnlineOrderArea.append(onlineOrders + "\n");
     }
 
     private void setSimSpeed() {
