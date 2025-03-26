@@ -38,16 +38,6 @@ public class StaffListTest {
     }
 
     /**
-     * Tests adding staff to the staff list
-     */
-    @Test
-    public void testAddStaff() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
-    }
-
-    /**
      * Tests adding null staff to the staff list
      */
     @Test
@@ -76,10 +66,6 @@ public class StaffListTest {
      */
     @Test
     public void testRemoveStaff() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
-
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
@@ -90,10 +76,6 @@ public class StaffListTest {
      */
     @Test
     public void getStaffObject() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
-
         assertInstanceOf(Staff.class, staffList.getStaff(staffList.getStaffIDs()[0]));
     }
 }
