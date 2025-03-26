@@ -38,7 +38,9 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     private int maxQueueSize = 50;
 
     /** Logger instance */
-    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private final CoffeeShopLogger logger;
+
+    //private
 
     /**
      * Initialises the queue to contain all the orders
@@ -47,6 +49,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         allOrders = new ArrayList<>();
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
+        logger = CoffeeShopLogger.getInstance();
         completeOrders = new ArrayList<>();
     }
 
@@ -231,30 +234,6 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return a string array of orders to be displayed
      */
     public String getOrdersForDisplay(boolean online) {
-//        Queue<Order> c = allOrders.getFirst();
-//
-//        if (online) {
-//            c = allOrders.getLast();
-//        }
-//
-//        String[] orderString = new String[c.size()];
-//
-//        int count = 0;
-//
-//        for (Order o : c) {
-//            String s = String.format("%s,%s,%s",
-//                    o.getOrderID().toString(),
-//                    o.getTimestamp().toString(),
-//                    String.join(";", o.getDetails())
-//            );
-//
-//            orderString[count] = s;
-//
-//            count++;
-//        }
-//
-//        return orderString;
-
         Queue<Order> c = allOrders.getFirst();
 
         if (online) {
