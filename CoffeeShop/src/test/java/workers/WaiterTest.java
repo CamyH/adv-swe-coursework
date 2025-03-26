@@ -17,7 +17,7 @@ class WaiterTest {
 
     @BeforeEach
     void setUp() {
-        staff = StaffFactory.getStaff("waiter", "Bob", 1);
+        Staff staff = StaffFactory.getStaff("waiter", "Bob", 1);
     }
 
     @AfterEach

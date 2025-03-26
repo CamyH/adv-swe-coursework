@@ -53,6 +53,7 @@ public class Chef extends Staff<String> implements Observer {
         foodList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
+//        start();
     }
 
     /**
@@ -163,6 +164,7 @@ public class Chef extends Staff<String> implements Observer {
 
             if (currentItem != null) {
                 try {
+                    System.out.println("SLEEPING");
                     sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
                 } catch (InterruptedException e) {
                     logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());

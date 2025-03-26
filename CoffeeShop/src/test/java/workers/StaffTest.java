@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 /**
  * JUnit tests for Staff class and Staff Factory
  *
@@ -17,7 +19,15 @@ class StaffTest {
 
     @BeforeEach
     void setUp() {
-        staff = StaffFactory.getStaff("barista", "Bob", 1);
+        StaffFactory.getStaff("barista", "Bob", 1);
+
+        StaffList.resetInstance();
+        StaffList staffList = StaffList.getInstance();
+        Collection<Staff> all = staffList.getStaffList().values();
+
+        for (Staff staffs : all) {
+            staff = staffs;
+        }
     }
 
     @AfterEach

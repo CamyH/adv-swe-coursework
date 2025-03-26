@@ -34,7 +34,7 @@ public class SimUIController implements Observer {
             message(e.getMessage());
         }
 
-        updateOrders();
+        //updateOrders();
     }
 
     public static SimUIController getInstance() {

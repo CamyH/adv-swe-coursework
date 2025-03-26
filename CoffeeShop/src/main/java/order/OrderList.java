@@ -41,7 +41,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     /** Logger instance */
     private final CoffeeShopLogger logger;
 
-    private SimUIController controller;
+//    private SimUIController controller;
 
     /**
      * Initialises the queue to contain all the orders
@@ -51,7 +51,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
         logger = CoffeeShopLogger.getInstance();
-        controller = SimUIController.getInstance();
+//        controller = SimUIController.getInstance();
         completeOrders = new ArrayList<>();
     }
 
@@ -92,7 +92,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         }
 
         notifyObservers();
-        controller.updateOrders();
+//        controller.updateOrders();
 
         logger.logInfo("Order added to queue: " + order.getOrderID());
       
@@ -126,7 +126,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
-        controller.updateOrders();
+//        controller.updateOrders();
         return allOrders.getFirst().poll();
     }
 
@@ -138,7 +138,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order removeOnline() {
-        controller.updateOrders();
+//        controller.updateOrders();
         return allOrders.getLast().poll();
     }
 

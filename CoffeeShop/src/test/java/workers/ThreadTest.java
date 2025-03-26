@@ -10,6 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLOutput;
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -32,7 +35,8 @@ public class ThreadTest {
      */
     @BeforeEach
     public void setUp() {
-        orderList = SetupOrderFile.generateOrderList();
+//        orderList = SetupOrderFile.generateOrderList();
+        orderList = OrderList.getInstance();
 
         try {
             Order o = new Order();
@@ -57,25 +61,25 @@ public class ThreadTest {
             o.addItem("PSY2");
             o.setOnlineStatus();
             orderList.add(o);
-
-            o = new Order();
-            o.addItem("FD5");
-            o.addItem("RL1");
-            o.addItem("SCK4");
-            o.addItem("HD5");
-            o.addItem("SCK7");
-            o.setOnlineStatus();
-            orderList.add(o);
-
-            o = new Order();
-            o.addItem("RL1");
-            o.addItem("FD2");
-            o.addItem("HD6");
-            o.addItem("SD8");
-            o.addItem("PSY4");
-            o.addItem("SCK6");
-            o.setOnlineStatus();
-            orderList.add(o);
+//
+//            o = new Order();
+//            o.addItem("FD5");
+//            o.addItem("RL1");
+//            o.addItem("SCK4");
+//            o.addItem("HD5");
+//            o.addItem("SCK7");
+//            o.setOnlineStatus();
+//            orderList.add(o);
+//
+//            o = new Order();
+//            o.addItem("RL1");
+//            o.addItem("FD2");
+//            o.addItem("HD6");
+//            o.addItem("SD8");
+//            o.addItem("PSY4");
+//            o.addItem("SCK6");
+//            o.setOnlineStatus();
+//            orderList.add(o);
         }
         catch (InvalidItemIDException | DuplicateOrderException | InvalidOrderException e) {
             System.out.println(e.getMessage());
@@ -91,12 +95,12 @@ public class ThreadTest {
 
     @AfterEach
     void tearDown() {
-        a.removeStaff();
-        b.removeStaff();
-        c.removeStaff();
-        d.removeStaff();
-        e.removeStaff();
-        f.removeStaff();
+        StaffList staffList = StaffList.getInstance();
+        Collection<Staff> all = staffList.getStaffList().values();
+
+        for (Staff staff : all) {
+            staff.removeStaff();
+        }
     }
 
     /**
@@ -104,27 +108,35 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-//        a.start();
-//        b.start();
-//        c.start();
-//        d.start();
-//        e.start();
-//        f.start();
-//
-//
-//
+        a.start();
+        b.start();
+        c.start();
+        d.start();
+        e.start();
+        f.start();
+
+
+
 //        b.removeStaff();
-//
+
 //        orderList = SetupOrderFile.generateOrderList();
 //
-//        Thread.sleep(20000);
+        Thread.sleep(20000);
 //
 //        orderList = SetupOrderFile.generateOrderList();
-//
+
 //        Thread.sleep(20000);
-//
+
 //        a.removeStaff();
 //        b.removeStaff();
 //        c.removeStaff();
+
+//        StaffList staffList = StaffList.getInstance();
+//        Collection<Staff> all = staffList.getStaffList().values();
+//
+//        for (Staff staff : all) {
+//            System.out.println(staff.getWorkerName());
+//        }
+
     }
 }

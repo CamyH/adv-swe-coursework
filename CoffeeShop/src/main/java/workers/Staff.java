@@ -39,7 +39,6 @@ public abstract class Staff<T> extends Thread implements Observer {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
-        this.start();
     }
 
     /**
@@ -47,7 +46,7 @@ public abstract class Staff<T> extends Thread implements Observer {
      *
      * @return String representing workers name
      */
-    public String getWorkerName() {
+    public synchronized String getWorkerName() {
         return name;
     }
 

@@ -33,11 +33,11 @@ public class Waiter extends Staff<Order> {
     /** Stores the List of Orders */
     private OrderList orderList;
 
-    private ItemList itemList;
+    //private ItemList itemList;
 
-    private DrinkList drinkList;
+    //private DrinkList drinkList;
 
-    private FoodList foodList;
+    //private FoodList foodList;
 
     StaffList staffList;
 
@@ -71,16 +71,16 @@ public class Waiter extends Staff<Order> {
     public Waiter(String name, int experience) {
         super(name, experience);
         orderList = OrderList.getInstance();
-        foodList = FoodList.getInstance();
-        drinkList = DrinkList.getInstance();
-        itemList = ItemList.getInstance();
-        logger = CoffeeShopLogger.getInstance();
         orderList.registerObserver(this);
+        //foodList = FoodList.getInstance();
+        //drinkList = DrinkList.getInstance();
+        logger = CoffeeShopLogger.getInstance();
         waiterList.add(this);
         thisOrder = new ArrayList<>();
         staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
+//        start();
     }
 
     /**
@@ -107,12 +107,15 @@ public class Waiter extends Staff<Order> {
         }
         else {
             for (String s : currentOrder.getDetails()) {
+                ItemList itemList = ItemList.getInstance();
                 ItemCategory category = itemList.getCategory(s);
 
                 if (category == ItemCategory.ROLL || category == ItemCategory.FOOD || category == ItemCategory.PASTRY || category == ItemCategory.SNACK) {
+                    FoodList foodList = FoodList.getInstance();
                     foodList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
                 else if (category == ItemCategory.HOTDRINK || category == ItemCategory.SOFTDRINK) {
+                    DrinkList drinkList = DrinkList.getInstance();
                     drinkList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
             }
@@ -160,6 +163,7 @@ public class Waiter extends Staff<Order> {
 
         for (String itemID : currentOrder.getDetails()) {
             try {
+                ItemList itemList = ItemList.getInstance();
                 orderDetails.append(itemList.getDescription(itemID)).append("\n");
             } catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());

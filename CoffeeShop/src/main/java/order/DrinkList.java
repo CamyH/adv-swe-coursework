@@ -54,7 +54,10 @@ public class DrinkList extends Subject {
      * @return the class instance
      */
     public static DrinkList getInstance() {
-        if (instance == null) instance = new DrinkList();
+        if (instance == null) {
+            instance = new DrinkList();
+        }
+
         return instance;
     }
 
