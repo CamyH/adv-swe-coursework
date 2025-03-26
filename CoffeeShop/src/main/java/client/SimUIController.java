@@ -19,10 +19,6 @@ public class SimUIController implements Observer {
     private SimulationUI simView;
     private static SimUIController instance;
 
-    // The order list to display
-    // Contains both in person and online orders
-    private OrderList orders;
-
     private SimUIController() {
 
         System.out.println("SimUIController()");
@@ -31,7 +27,6 @@ public class SimUIController implements Observer {
         simModel.registerObserver(this);
         simView = SimulationUI.getInstance();
         simView.addSetListener(new SetListener());
-        orders = OrderList.getInstance();
 
         try {
             simModel.addStaff("Manager", "Barista", 5);
@@ -44,6 +39,7 @@ public class SimUIController implements Observer {
     public static SimUIController getInstance() {
         if (instance == null) {
             instance = new SimUIController();
+            System.out.println(instance.toString());
         }
         return instance;
     }

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class SimUIModel extends Subject {
 
-    private final OrderList orderList;
+    private OrderList orderList;
     private final ItemList menu;
     private final ArrayList<String> roles;
     private final StaffList staffList;
@@ -20,8 +20,7 @@ public class SimUIModel extends Subject {
 
     private Integer simSpd = 2000;
 
-        public SimUIModel() {
-            this.orderList = OrderList.getInstance();
+        private SimUIModel() {
             this.menu = ItemList.getInstance();
             this.staffList = StaffList.getInstance();
             roles = new ArrayList<>();
@@ -47,6 +46,7 @@ public class SimUIModel extends Subject {
     }
 
     public String getOrderList(boolean online) {
+        orderList = OrderList.getInstance();
         return orderList.getOrdersForDisplay(online);
     }
 
