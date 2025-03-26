@@ -15,7 +15,7 @@ import java.util.UUID;
  *
  * @author Fraser Holman
  */
-public abstract class Staff extends Thread implements Observer {
+public abstract class Staff<T> extends Thread implements Observer {
     private String name;
 
     protected double defaultDelay = 2000.0;
@@ -114,6 +114,6 @@ public abstract class Staff extends Thread implements Observer {
 
     public abstract ArrayList<String> getCurrentOrderDetails();
 
-    public abstract Order getCurrentOrder();
+    public abstract T getCurrentOrder();
 
 }

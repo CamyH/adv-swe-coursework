@@ -1,6 +1,7 @@
 package workers;
 
 import interfaces.EntityList;
+import item.ItemList;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -10,7 +11,7 @@ public class StaffList implements EntityList<Staff, UUID> {
     private HashMap<UUID, Staff> staffList;
 
     /** Initialise the instance of StaffList */
-    private static StaffList instance = new StaffList();
+    private static StaffList instance;
 
     /**
      * Private constructor as Object is a singleton
@@ -76,6 +77,7 @@ public class StaffList implements EntityList<Staff, UUID> {
      * @return an instance of StaffList
      */
     public static StaffList getInstance() {
+        if (instance == null) instance = new StaffList();
         return instance;
     }
 

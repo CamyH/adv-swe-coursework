@@ -3,17 +3,17 @@ package workers;
 import item.Item;
 import logs.CoffeeShopLogger;
 import order.DrinkList;
+import order.FoodList;
 import order.Order;
-import order.OrderList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Barista extends Staff<Item> {
-    DrinkList drinkList;
+public class Chef extends Staff<Item> {
+    FoodList foodList;
 
-    Map.Entry<Waiter, String> currentItem;
+    Map.Entry<Waiter, Item> currentItem;
 
     /** Tells if the staff member is currently active (ie not fired) */
     private boolean active = true;
@@ -21,21 +21,21 @@ public class Barista extends Staff<Item> {
     /** Logger instance */
     private CoffeeShopLogger logger;
 
-    public Barista(String name, double experience) {
+    public Chef(String name, double experience) {
         super(name, experience);
-        drinkList = DrinkList.getInstance();
+        foodList = FoodList.getInstance();
         logger = CoffeeShopLogger.getInstance();
-        drinkList.registerObserver(this);
+        foodList.registerObserver(this);
     }
 
     /**
-     * Method gets next drink in drink list
+     * Method gets next food item in food list
      *
-     * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
+     * If there is no food left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
     public synchronized void getOrders() {
-        currentItem = drinkList.remove();
+        currentItem = foodList.remove();
 
         if (currentItem == null) {
             try {
@@ -58,16 +58,6 @@ public class Barista extends Staff<Item> {
     }
 
     /**
-     * Method to return current order that is being processed
-     *
-     * @return the current order that is being processed
-     */
-    @Override
-    public Item getCurrentOrder() {
-        return currentItem.getValue();
-    }
-
-    /**
      * This method will be used to display current order details on the GUI
      *
      * Will return a list of items in the order. This can be further customised depending on what we want to show
@@ -82,25 +72,34 @@ public class Barista extends Staff<Item> {
     }
 
     /**
+     * Method to return current order that is being processed
+     *
+     * @return the current order that is being processed
+     */
+    public Item getCurrentOrder() {
+        return currentItem.getValue();
+    }
+
+    /**
      * Method used to remove staff member from the simulation
      */
     @Override
     public synchronized void removeStaff() {
-        drinkList.removeObserver(this);
+        foodList.removeObserver(this);
         active = false;
         notifyAll(); // wakes up thread
-        logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
+        logger.logInfo("Chef " + getWorkerName() + " removed from the simulation.");
     }
 
     /**
-     * Method used by the Subject (DrinkList) to tell the Staff member that an order has been added
+     * Method used by the Subject (FoodList) to tell the Staff member that an order has been added
      */
     public synchronized void update() {
         notifyAll();
     }
 
     /**
-     * This method is the Barista's thread
+     * This method is the Chef's thread
      */
     @Override
     public void run() {

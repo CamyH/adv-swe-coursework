@@ -1,29 +1,58 @@
 package interfaces;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Subject Interface used to keep track of Observers
  *
  * @author Fraser Holman
  */
-public interface Subject {
+public abstract class Subject {
+
+    private List<Observer> registeredObservers = new LinkedList<Observer>();
+
+//    /**
+//     * Adds registered observers
+//     *
+//     * @param obs The observer to be registered
+//     */
+//    void registerObserver(Observer obs);
+//
+//    /**
+//     * Removes registered observers
+//     *
+//     * @param obs The observer to be removed
+//     */
+//    void removeObserver(Observer obs);
+//
+//    /**
+//     * Notifies all observers of any updates
+//     */
+//    void notifyObservers();
 
     /**
-     * Adds registered observers
+     * Method used to register observers
      *
-     * @param obs The observer to be registered
+     * @param obs The observer to be added to the list of observers
      */
-    void registerObserver(Observer obs);
+    public void registerObserver(Observer obs) {
+        registeredObservers.add(obs);
+    }
 
     /**
-     * Removes registered observers
+     * Method used to remove observers
      *
-     * @param obs The observer to be removed
+     * @param obs The observer to be removed from the list of observers
      */
-    void removeObserver(Observer obs);
+    public void removeObserver(Observer obs) {
+        registeredObservers.remove(obs);
+    }
 
     /**
-     * Notifies all observers of any updates
+     * Method used to notify observers
      */
-    void notifyObservers();
-
+    public void notifyObservers() {
+        for(Observer obs : registeredObservers) obs.update();
+    }
 }

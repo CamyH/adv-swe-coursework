@@ -24,10 +24,7 @@ import logs.CoffeeShopLogger;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
-    /** A queue to hold existing Order objects */
-    //private Queue<Order> inCompleteOrders;
-
+public class OrderList extends Subject implements EntityList<Order, UUID>, Serializable {
     /** A queue to hold completed Order objects
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
@@ -35,10 +32,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     private ArrayList<Queue<Order>> allOrders;
 
     /** Private instance of OrderList */
-    private static OrderList instance = new OrderList();
-
-    /** Linked list to hold observer details */
-    private List<Observer> registeredObservers = new LinkedList<Observer>();
+    private static OrderList instance;
 
     /** Integer to check max queue size */
     private int maxQueueSize = 50;
@@ -330,6 +324,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return an instance of OrderList
      */
     public static OrderList getInstance() {
+        if (instance == null) instance = new OrderList();
         return instance;
     }
 
@@ -339,30 +334,5 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      */
     public static void resetInstance() {
         instance = new OrderList();
-    }
-
-    /**
-     * Method used to register observers
-     *
-     * @param obs The observer to be added to the list of observers
-     */
-    public void registerObserver(Observer obs) {
-        registeredObservers.add(obs);
-    }
-
-    /**
-     * Method used to remove observers
-     *
-     * @param obs The observer to be removed from the list of observers
-     */
-    public void removeObserver(Observer obs) {
-        registeredObservers.remove(obs);
-    }
-
-    /**
-     * Method used to notify observers
-     */
-    public void notifyObservers() {
-        for(Observer obs : registeredObservers) obs.update();
     }
 }

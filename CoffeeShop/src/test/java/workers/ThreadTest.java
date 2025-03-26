@@ -78,9 +78,9 @@ public class ThreadTest {
             System.out.println(e.getMessage());
         }
 
-        a = StaffFactory.getStaff("barista", "Bob", 1);
-        b = StaffFactory.getStaff("barista", "Bill", 0.2);
-        c = StaffFactory.getStaff("barista", "Fraser", 0.6);
+        a = StaffFactory.getStaff("waiter", "Bob", 1);
+        b = StaffFactory.getStaff("waiter", "Bill", 0.2);
+        c = StaffFactory.getStaff("waiter", "Fraser", 0.6);
     }
 
     @AfterEach
@@ -105,11 +105,11 @@ public class ThreadTest {
 //
 //        orderList = SetupOrderFile.generateOrderList();
 //
-//        Thread.sleep(5000);
-//
-//        orderList = SetupOrderFile.generateOrderList();
-//
 //        Thread.sleep(20000);
+//
+//        //orderList = SetupOrderFile.generateOrderList();
+//
+//        //Thread.sleep(20000);
 //
 //        a.removeStaff();
 //        b.removeStaff();

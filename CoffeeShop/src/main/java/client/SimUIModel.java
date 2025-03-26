@@ -7,7 +7,7 @@ import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
-import workers.Barista;
+import workers.Waiter;
 import workers.Staff;
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class SimUIModel implements Subject {
+public class SimUIModel extends Subject {
 
-    private ArrayList<Observer> observers = new ArrayList<Observer>();
+//    private ArrayList<Observer> observers = new ArrayList<Observer>();
 
     private OrderList orderList;
     private ItemList menu;
@@ -34,29 +34,29 @@ public class SimUIModel implements Subject {
             roles = new ArrayList<>();
 
             // Populate roles
-            roles.add("Barista");
+            roles.add("Waiter");
 
             // Populate staff list
             for (int i = 1; i <= 5; i++) {
-                Staff curStaff = new Barista("Staffname" + i, i); {
+                Staff curStaff = new Waiter("Staffname" + i, i); {
                 }
                 staffList.put(UUID.randomUUID(),curStaff);
             }
         }
 
-    public void registerObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    public void removeObserver(Observer obs) {
-        observers.remove(obs);
-    }
-
-    public void notifyObservers() {
-        for (Observer obs : observers) {
-            obs.update();
-        }
-    }
+//    public void registerObserver(Observer obs) {
+//        observers.add(obs);
+//    }
+//
+//    public void removeObserver(Observer obs) {
+//        observers.remove(obs);
+//    }
+//
+//    public void notifyObservers() {
+//        for (Observer obs : observers) {
+//            obs.update();
+//        }
+//    }
 
     // Getter methods
 
@@ -128,8 +128,8 @@ public class SimUIModel implements Subject {
             throw new StaffNullOrderException("Staff name is empty");
         }
 
-        if (role.equals("Barista")) {
-            Barista curStaff = new Barista(name, experience);
+        if (role.equals("Waiter")) {
+            Waiter curStaff = new Waiter(name, experience);
             staffList.put(curStaff.getID(), curStaff);
             System.out.println(curStaff.getWorkerName());
         }
