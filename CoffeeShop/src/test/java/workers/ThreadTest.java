@@ -79,8 +79,8 @@ public class ThreadTest {
         }
 
         a = StaffFactory.getStaff("waiter", "Bob", 1);
-        b = StaffFactory.getStaff("waiter", "Bill", 0.2);
-        c = StaffFactory.getStaff("waiter", "Fraser", 0.6);
+        b = StaffFactory.getStaff("chef", "Bill", 2);
+        c = StaffFactory.getStaff("barista", "Fraser", 3);
     }
 
     @AfterEach
@@ -98,19 +98,19 @@ public class ThreadTest {
 //        a.start();
 //        b.start();
 //        c.start();
-//
-//
-//
-//        //b.removeStaff();
-//
+
+
+
+        //b.removeStaff();
+
 //        orderList = SetupOrderFile.generateOrderList();
-//
+
 //        Thread.sleep(20000);
-//
-//        //orderList = SetupOrderFile.generateOrderList();
-//
-//        //Thread.sleep(20000);
-//
+
+        //orderList = SetupOrderFile.generateOrderList();
+
+        //Thread.sleep(20000);
+
 //        a.removeStaff();
 //        b.removeStaff();
 //        c.removeStaff();

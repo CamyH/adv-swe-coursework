@@ -10,18 +10,18 @@ import java.util.*;
 public class DrinkList extends Subject {
     private static DrinkList instance;
 
-    private Queue<Map.Entry<Waiter, Item>> drinkList;
+    private Queue<Map.Entry<Waiter, String>> drinkList;
 
     private DrinkList() {
-        drinkList = new ArrayDeque<Map.Entry<Waiter, Item>>();
+        drinkList = new ArrayDeque<Map.Entry<Waiter, String>>();
     }
 
-    public boolean add(Map.Entry<Waiter, Item> food) {
+    public boolean add(Map.Entry<Waiter, String> food) {
         notifyObservers();
         return drinkList.offer(food);
     }
 
-    public Map.Entry<Waiter, Item> remove() {
+    public Map.Entry<Waiter, String> remove() {
         return drinkList.poll();
     }
 

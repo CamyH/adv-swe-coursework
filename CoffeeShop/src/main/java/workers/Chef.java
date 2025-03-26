@@ -1,6 +1,8 @@
 package workers;
 
+import exceptions.InvalidItemIDException;
 import item.Item;
+import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.DrinkList;
 import order.FoodList;
@@ -10,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Chef extends Staff<Item> {
+public class Chef extends Staff<String> {
     FoodList foodList;
 
-    Map.Entry<Waiter, Item> currentItem;
+    ItemList itemList;
+
+    Map.Entry<Waiter, String> currentItem;
 
     /** Tells if the staff member is currently active (ie not fired) */
     private boolean active = true;
@@ -24,6 +28,7 @@ public class Chef extends Staff<Item> {
     public Chef(String name, double experience) {
         super(name, experience);
         foodList = FoodList.getInstance();
+        itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
         foodList.registerObserver(this);
     }
@@ -54,7 +59,8 @@ public class Chef extends Staff<Item> {
      */
     @Override
     public synchronized boolean completeCurrentOrder() {
-        return false;
+        currentItem.getKey().addItem(currentItem.getValue());
+        return true;
     }
 
     /**
@@ -68,7 +74,20 @@ public class Chef extends Staff<Item> {
     public ArrayList<String> getCurrentOrderDetails() {
         if (currentItem == null) return null;
 
-        return new ArrayList<>(List.of(currentItem.getValue().getDescription()));
+        String description;
+        try {
+            description = itemList.getDescription(currentItem.getValue());
+        } catch (InvalidItemIDException e) { // this will never happen
+            description = "ERROR";
+            System.out.println(e.getMessage());
+        }
+
+        return new ArrayList<>(List.of(
+            this.getWorkerName(),
+            currentItem.getValue(),
+            description,
+            currentItem.getKey().getWorkerName()
+            ));
     }
 
     /**
@@ -76,7 +95,7 @@ public class Chef extends Staff<Item> {
      *
      * @return the current order that is being processed
      */
-    public Item getCurrentOrder() {
+    public String getCurrentOrder() {
         return currentItem.getValue();
     }
 
@@ -104,6 +123,23 @@ public class Chef extends Staff<Item> {
     @Override
     public void run() {
         while (active) {
+            getOrders();
+
+            if (currentItem != null) {
+                try {
+                    sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
+                } catch (InterruptedException e) {
+                    logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
+                }
+
+                try {
+                    System.out.println(getWorkerName() + " completed order " + itemList.getDescription(currentItem.getValue()));
+                }
+                catch (InvalidItemIDException e) {
+                    System.out.println(e.getMessage());
+                }
+                completeCurrentOrder();
+            }
 
         }
     }

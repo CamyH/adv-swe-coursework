@@ -88,32 +88,32 @@ public class SimUIModel extends Subject {
     public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
             Staff curStaff = staffList.get(ID);
 
-            if (curStaff.getCurrentOrder() == null) {
-                throw new StaffNullOrderException("Selected staff has no order");
-            }
-
-            Order curOrder = curStaff.getCurrentOrder();
-            String name = curStaff.getWorkerName();
-            ArrayList<String> orderDetails = new ArrayList<>();
-
-            // Add the staff name to the list
-            orderDetails.add(name);
-
-            // Add the order's customer ID to the list
-            orderDetails.add(String.valueOf(curOrder.getCustomerID()));
-
-            // Add the item names to the list
-            for (String itemID : curOrder.getDetails()) {
-                Item item = menu.getMenu().get(itemID);
-                if (item != null) {
-                    orderDetails.add(item.getDescription());
-                }
-            }
-
-            // Add the total cost and discounted cost to the last two values in the list
-            orderDetails.add(String.valueOf(curOrder.getTotalCost()));
-            orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
-            return orderDetails;
+//            if (curStaff.getCurrentOrder() == null) {
+//                throw new StaffNullOrderException("Selected staff has no order");
+//            }
+//
+//            Order curOrder = curStaff.getCurrentOrder();
+//            String name = curStaff.getWorkerName();
+//            ArrayList<String> orderDetails = new ArrayList<>();
+//
+//            // Add the staff name to the list
+//            orderDetails.add(name);
+//
+//            // Add the order's customer ID to the list
+//            orderDetails.add(String.valueOf(curOrder.getCustomerID()));
+//
+//            // Add the item names to the list
+//            for (String itemID : curOrder.getDetails()) {
+//                Item item = menu.getMenu().get(itemID);
+//                if (item != null) {
+//                    orderDetails.add(item.getDescription());
+//                }
+//            }
+//
+//            // Add the total cost and discounted cost to the last two values in the list
+//            orderDetails.add(String.valueOf(curOrder.getTotalCost()));
+//            orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
+            return curStaff.getCurrentOrderDetails();
     }
 
 

@@ -1,5 +1,6 @@
 package workers;
 
+import exceptions.InvalidItemIDException;
 import item.ItemCategory;
 import item.ItemList;
 import order.DrinkList;
@@ -7,6 +8,7 @@ import order.FoodList;
 import order.Order;
 import order.OrderList;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +69,13 @@ public class Waiter extends Staff<Order> {
     public Waiter(String name, double experience) {
         super(name, experience);
         orderList = OrderList.getInstance();
+        foodList = foodList.getInstance();
+        drinkList = DrinkList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
         orderList.registerObserver(this);
         waiterList.add(this);
+        thisOrder = new ArrayList<>();
         updatePriority();
     }
 
@@ -97,16 +102,14 @@ public class Waiter extends Staff<Order> {
             }
         }
         else {
-            thisOrder = currentOrder.getDetails();
-
-            for (String s : thisOrder) {
+            for (String s : currentOrder.getDetails()) {
                 ItemCategory category = itemList.getCategory(s);
 
                 if (category == ItemCategory.ROLL || category == ItemCategory.FOOD || category == ItemCategory.PASTRY || category == ItemCategory.SNACK) {
-                    foodList.add(Map.Entry(this, itemList.ge));
+                    foodList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
                 else if (category == ItemCategory.HOTDRINK || category == ItemCategory.SOFTDRINK) {
-
+                    drinkList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
             }
         }
@@ -124,6 +127,8 @@ public class Waiter extends Staff<Order> {
         orderList.completeOrder(currentOrder);
         logger.logInfo("Waiter " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
         currentOrder = null;
+
+        thisOrder = new ArrayList<>();
         return true;
     }
 
@@ -137,8 +142,25 @@ public class Waiter extends Staff<Order> {
     @Override
     public ArrayList<String> getCurrentOrderDetails() {
         if (currentOrder == null) return null;
+
+        ArrayList<String> orderDetails = new ArrayList<>();
+
+        orderDetails.add(this.getWorkerName());
+        orderDetails.add(String.valueOf(currentOrder.getCustomerID()));
+
+        for (String itemID : currentOrder.getDetails()) {
+            try {
+                orderDetails.add(itemList.getDescription(itemID));
+            }
+            catch (InvalidItemIDException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        orderDetails.add("Total Cost : £" + String.valueOf(currentOrder.getTotalCost()));
+        orderDetails.add("Discounted Cost : £" + String.valueOf(currentOrder.getDiscountedCost()));
         
-        return currentOrder.getDetails();
+        return orderDetails;
     }
 
     /**
@@ -168,6 +190,22 @@ public class Waiter extends Staff<Order> {
         updatePriority();
         notifyAll(); // wakes up thread
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");
+    }
+
+    public synchronized void processingOrder() {
+        while (thisOrder.size() != currentOrder.getDetails().size()) {
+            try {
+                wait();
+            }
+            catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public synchronized void addItem(String item) {
+        thisOrder.add(item);
+        notifyAll();
     }
 
     /**
@@ -211,6 +249,8 @@ public class Waiter extends Staff<Order> {
             getOrders();
 
             if (currentOrder != null) {
+                processingOrder();
+
                 try {
                     sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
                 } catch (InterruptedException e) {
