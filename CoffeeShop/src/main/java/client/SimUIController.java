@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * The simulation UI controller
@@ -36,25 +37,22 @@ public class SimUIController implements Observer {
 
     private void viewStaffDetails() {
         StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
+        UUID curStaffID;
         try {
-            staffDetailsPopup.setDetails(simModel.getStaffDetails(simView.getCurStaff()));
-        } catch (StaffNullOrderException e) {
-            staffDetailsPopup.exit();
-            simView.showPopup(e.getMessage());
+            curStaffID = simView.getCurStaff();
+            staffDetailsPopup.setDetails(simModel.getStaffDetails(curStaffID));
         } catch (NullPointerException e) {
             staffDetailsPopup.exit();
             simView.showPopup("No Staff Found");
         }
 
-        simModel.notifyObservers();
     }
 
     private void addStaff() {
         try {
             String name = simView.getStaffName();
-            simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
             simView.clearCurStaff();
-            simModel.notifyObservers();
+            simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
             simView.showPopup("Added " + name + " to Staff List");
         } catch (StaffNullOrderException e) {
             simView.showPopup(e.getMessage());

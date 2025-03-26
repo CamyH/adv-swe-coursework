@@ -2,6 +2,7 @@ package client;
 
 import interfaces.Observer;
 import workers.Staff;
+import workers.StaffList;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -114,11 +115,12 @@ public class SimulationUI extends JFrame implements Observer {
         }
     }
 
-    private void setStaffList(HashMap<UUID, Staff> staffList) {
+    private void setStaffList(StaffList staffList) {
         SelectStaffCombo.removeAllItems();
 
         // Should work with Stafflist
-        staffList.forEach((uuid, curStaff) -> {
+
+        staffList.getStaffList().forEach((uuid, curStaff) -> {
             SelectStaffCombo.addItem((curStaff.getWorkerName()) + "," + uuid);
         });
     }
