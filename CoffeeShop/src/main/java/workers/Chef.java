@@ -97,7 +97,7 @@ public class Chef extends Staff<String> implements Observer {
         if (currentItem == null) {
             return String.join("\n",
                     this.getWorkerName(),
-                    "Waiter",
+                    "Chef",
                     String.valueOf(this.getExperience()),
                     "Staff is Currently Idle"
             );
@@ -113,7 +113,7 @@ public class Chef extends Staff<String> implements Observer {
 
         return String.join("\n",
                 this.getWorkerName(),
-                "Waiter",
+                "Chef",
                 String.valueOf(this.getExperience()),
                 currentItem.getValue(),
                 description,
