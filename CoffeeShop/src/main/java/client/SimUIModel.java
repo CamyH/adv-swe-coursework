@@ -7,9 +7,7 @@ import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
-import workers.Waiter;
-import workers.Staff;
-import workers.StaffList;
+import workers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,20 +35,6 @@ public class SimUIModel extends Subject {
             Staff curStaff = new Barista("Manager", 5);
             staffList.add(curStaff);
         }
-
-//    public void registerObserver(Observer obs) {
-//        observers.add(obs);
-//    }
-//
-//    public void removeObserver(Observer obs) {
-//        observers.remove(obs);
-//    }
-//
-//    public void notifyObservers() {
-//        for (Observer obs : observers) {
-//            obs.update();
-//        }
-//    }
 
     // Getter methods
 
@@ -80,62 +64,7 @@ public class SimUIModel extends Subject {
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
     public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
-            Staff curStaff = staffList.getStaff(ID);
-
-//            if (curStaff.getCurrentOrder() == null) {
-//                throw new StaffNullOrderException("Selected staff has no order");
-//            }
-//
-//            Order curOrder = curStaff.getCurrentOrder();
-//            String name = curStaff.getWorkerName();
-//            ArrayList<String> orderDetails = new ArrayList<>();
-//
-//            // Add the staff name to the list
-//            orderDetails.add(name);
-//
-//            // Add the order's customer ID to the list
-//            orderDetails.add(String.valueOf(curOrder.getCustomerID()));
-//
-//            // Add the item names to the list
-//            for (String itemID : curOrder.getDetails()) {
-//                Item item = menu.getMenu().get(itemID);
-//                if (item != null) {
-//                    orderDetails.add(item.getDescription());
-//                }
-//            }
-//
-//            // Add the total cost and discounted cost to the last two values in the list
-//            orderDetails.add(String.valueOf(curOrder.getTotalCost()));
-//            orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
-            return curStaff.getCurrentOrderDetails();
-/*
-    public ArrayList<String> getStaffDetails(UUID ID) {
-        if (ID == null) {
-            return(null);
-        }
-        Staff curStaff = staffList.getStaff(ID);
-        ArrayList<String> orderDetails = new ArrayList<>();
-        // Add the staff name to the list
-        orderDetails.add(curStaff.getWorkerName());
-        orderDetails.add(String.valueOf(curStaff.getExperience()));
-
-        if (curStaff.getCurrentOrder() != null) {
-            Order curOrder = curStaff.getCurrentOrder();
-            // Add the order's customer ID to the list
-            orderDetails.add(String.valueOf(curOrder.getCustomerID()));
-            // Add the item names to the list
-            for (String itemID : curOrder.getDetails()) {
-                Item item = menu.getMenu().get(itemID);
-                if (item != null) {
-                    orderDetails.add(item.getDescription());
-                }
-                // Add the total cost and discounted cost to the last two values in the list
-                orderDetails.add(String.valueOf(curOrder.getTotalCost()));
-                orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
-            }
-        }
-        return orderDetails;
-*/
+            return staffList.getStaff(ID).getCurrentOrderDetails();
     }
 
 
@@ -152,9 +81,12 @@ public class SimUIModel extends Subject {
 
         if (role.equals("Waiter")) {
             Waiter curStaff = new Waiter(name, experience);
-            staffList.put(curStaff.getID(), curStaff);
-        if (role.equals("Barista")) {
+            staffList.add(curStaff);
+        } else if (role.equals("Barista")) {
             Barista curStaff = new Barista(name, experience);
+            staffList.add(curStaff);
+        } else if (role.equals("Chef")) {
+            Chef curStaff = new Chef(name, experience);
             staffList.add(curStaff);
         }
         notifyObservers();
