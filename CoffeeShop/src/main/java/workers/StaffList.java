@@ -40,8 +40,21 @@ public class StaffList implements EntityList<Staff, UUID> {
      * @return true if the removal was successful, false otherwise
      */
     public boolean remove(UUID ID) {
-        //getStaff(ID).removeStaff();
-        return staffList.remove(ID) != null;
+        Staff staff = staffList.remove(ID);
+
+        if (staff == null) {
+            return false;
+        }
+
+        staff.removeStaff();
+
+        return true;
+    }
+
+    public void setDefaultDelay(double defaultDelay) {
+        for (Staff staff : staffList.values()) {
+            staff.setDefaultDelay(defaultDelay);
+        }
     }
 
     /**

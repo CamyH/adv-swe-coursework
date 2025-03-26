@@ -5,7 +5,10 @@ import workers.Staff;
 import workers.StaffList;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -55,10 +58,22 @@ public class SimulationUI extends JFrame implements Observer {
         setLocationRelativeTo(null);
         setVisible(true);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Demo.cleanUp();
+            }
+        });
+
         // Make all non-editable fields un-editable
         OrderListArea.setEnabled(false);
+        OrderListArea.setDisabledTextColor(Color.BLACK);
         OnlineOrderArea.setEnabled(false);
+        OnlineOrderArea.setDisabledTextColor(Color.BLACK);
         SimSpdField.setEnabled(false);
+        SimSpdField.setDisabledTextColor(Color.BLACK);
+
+        //SimSpdSlider.addChangeListener(e -> updateSimulationSpeed(SimSpdSlider.getValue()));
 
         // Fill the experience combo box with options
         for (int i = 1; i <= 5; i++) {
@@ -98,7 +113,10 @@ public class SimulationUI extends JFrame implements Observer {
     }
 
     public void setOrderLists(String orders, String onlineOrders) {
+        OrderListArea.setText("");
         OrderListArea.append(orders + "\n");
+
+        OnlineOrderArea.setText("");
         OnlineOrderArea.append(onlineOrders + "\n");
     }
 

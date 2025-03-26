@@ -1,6 +1,8 @@
 package workers;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
+import exceptions.InvalidOrderException;
 import item.ItemCategory;
 import item.ItemList;
 import order.DrinkList;
@@ -32,12 +34,6 @@ import logs.CoffeeShopLogger;
 public class Waiter extends Staff<Order> {
     /** Stores the List of Orders */
     private OrderList orderList;
-
-    //private ItemList itemList;
-
-    //private DrinkList drinkList;
-
-    //private FoodList foodList;
 
     StaffList staffList;
 
@@ -72,15 +68,12 @@ public class Waiter extends Staff<Order> {
         super(name, experience);
         orderList = OrderList.getInstance();
         orderList.registerObserver(this);
-        //foodList = FoodList.getInstance();
-        //drinkList = DrinkList.getInstance();
         logger = CoffeeShopLogger.getInstance();
         waiterList.add(this);
         thisOrder = new ArrayList<>();
         staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
-        start();
     }
 
     /**
@@ -150,16 +143,17 @@ public class Waiter extends Staff<Order> {
     public String getCurrentOrderDetails() {
         StringBuilder orderDetails = new StringBuilder();
 
-        orderDetails.append(this.getWorkerName()).append("\n");
-        orderDetails.append("Waiter").append("\n");
-        orderDetails.append(this.getExperience()).append("\n");
+        orderDetails.append("Staff Name : ").append(this.getWorkerName()).append("\n");
+        orderDetails.append("Staff Type : ").append("Waiter").append("\n");
+        orderDetails.append("Staff Experience Level : ").append(this.getExperience()).append("\n");
 
         if (currentOrder == null) {
             orderDetails.append("Staff is Currently Idle").append("\n");
             return orderDetails.toString();
         }
 
-        orderDetails.append(currentOrder.getCustomerID()).append("\n");
+        orderDetails.append("Order ID : ").append(currentOrder.getOrderID()).append("\n");
+        orderDetails.append("Customer ID : ").append(currentOrder.getCustomerID()).append("\n");
 
         for (String itemID : currentOrder.getDetails()) {
             try {
@@ -187,6 +181,18 @@ public class Waiter extends Staff<Order> {
      */
     public Order getCurrentOrder() {
         return currentOrder;
+    }
+
+    public static void addBackAllCurrentOrders() {
+        ArrayList<Order> allOrders = new ArrayList<>();
+
+        for (Waiter waiter : waiterList) {
+            try {
+                OrderList.getInstance().add(waiter.getCurrentOrder());
+            } catch (InvalidOrderException | DuplicateOrderException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
@@ -278,7 +284,7 @@ public class Waiter extends Staff<Order> {
                 processingOrder();
 
                 try {
-                    sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
+                    sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
                 } catch (InterruptedException e) {
                     logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
                 }

@@ -20,23 +20,22 @@ public class SimUIModel extends Subject {
 
     private Integer simSpd = 2000;
 
-        private SimUIModel() {
-            this.menu = ItemList.getInstance();
-            this.staffList = StaffList.getInstance();
-            roles = new ArrayList<>();
+    private SimUIModel() {
+        this.menu = ItemList.getInstance();
+        this.staffList = StaffList.getInstance();
+        roles = new ArrayList<>();
 
-            // Populate roles
-            roles.add("Waiter");
-            roles.add("Barista");
-            roles.add("Chef");
-
-        }
+        // Populate roles
+        roles.add("Waiter");
+        roles.add("Barista");
+        roles.add("Chef");
+    }
 
     public static SimUIModel getInstance() {
-            if (instance == null) {
+        if (instance == null) {
             instance = new SimUIModel();
-            }
-            return instance;
+        }
+        return instance;
     }
 
     // Getter methods
@@ -64,14 +63,15 @@ public class SimUIModel extends Subject {
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
     public String getStaffDetails(UUID ID) {
-            return staffList.getStaff(ID).getCurrentOrderDetails();
+        return staffList.getStaff(ID).getCurrentOrderDetails();
     }
 
 
     // Setter methods
 
     public void setSimSpd(int speed) {
-            this.simSpd = Math.round(speed/ 100.0f) * 100;
+        this.simSpd = Math.round(speed/ 100.0f) * 100;
+        StaffList.getInstance().setDefaultDelay(this.simSpd);
     }
 
     public void addStaff(String name, String role, int experience) throws StaffNullNameException {
@@ -80,11 +80,11 @@ public class SimUIModel extends Subject {
         }
 
         if (role.equals("Waiter")) {
-            StaffFactory.getStaff("Waiter", name, experience);
+            StaffFactory.getStaff("Waiter", name, experience).start();
         } else if (role.equals("Barista")) {
-            StaffFactory.getStaff("Barista", name, experience);
+            StaffFactory.getStaff("Barista", name, experience).start();
         } else if (role.equals("Chef")) {
-            StaffFactory.getStaff("Chef", name, experience);
+            StaffFactory.getStaff("Chef", name, experience).start();
         }
         notifyObservers();
 

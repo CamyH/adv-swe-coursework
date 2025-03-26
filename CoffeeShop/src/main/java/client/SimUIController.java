@@ -28,11 +28,11 @@ public class SimUIController implements Observer {
         simView = SimulationUI.getInstance();
         simView.addSetListener(new SetListener());
 
-        try {
-            simModel.addStaff("Manager", "Barista", 5);
-        } catch (StaffNullNameException e) {
-            message(e.getMessage());
-        }
+//        try {
+//            simModel.addStaff("Manager", "Barista", 5);
+//        } catch (StaffNullNameException e) {
+//            message(e.getMessage());
+//        }
 
         //updateOrders();
     }
@@ -115,6 +115,10 @@ public class SimUIController implements Observer {
 
             else if (sourceBtn.getName().equals("SimSpdBtn")) {
                 updateSimSpd();
+            }
+
+            else if (sourceBtn.getName().equals("SimSpdSlider")) {
+                System.out.println("HELLO");
             }
         }
     }

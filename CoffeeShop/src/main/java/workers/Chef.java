@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author Fraser Holman
  */
-public class Chef extends Staff<String> implements Observer {
+public class Chef extends Staff<String> {
     FoodList foodList;
 
     ItemList itemList;
@@ -53,7 +53,6 @@ public class Chef extends Staff<String> implements Observer {
         foodList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
-        start();
     }
 
     /**
@@ -164,8 +163,7 @@ public class Chef extends Staff<String> implements Observer {
 
             if (currentItem != null) {
                 try {
-                    System.out.println("SLEEPING");
-                    sleep((int) (defaultDelay * ((6 - getExperience()) / 5)));
+                    sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
                 } catch (InterruptedException e) {
                     logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
                 }

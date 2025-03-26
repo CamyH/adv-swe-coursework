@@ -108,19 +108,24 @@ public class ThreadTest {
      */
     @Test
     public void testThreads() throws InterruptedException {
-//        a.start();
-//        b.start();
-//        c.start();
-//        d.start();
-//        e.start();
-//        f.start();
+        a.start();
+        b.start();
+        c.start();
+        d.start();
+        e.start();
+        f.start();
 
-
+        StaffList staffList = StaffList.getInstance();
+        staffList.setDefaultDelay(10000);
 
 //        b.removeStaff();
 
 //        orderList = SetupOrderFile.generateOrderList();
 //
+        Thread.sleep(10000);
+
+        staffList.setDefaultDelay(1000);
+
         Thread.sleep(20000);
 //
 //        orderList = SetupOrderFile.generateOrderList();

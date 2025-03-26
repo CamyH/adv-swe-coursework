@@ -1,9 +1,8 @@
 package workers;
 
+import client.SimUIModel;
 import interfaces.Observer;
-import order.Order;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -18,7 +17,7 @@ import java.util.UUID;
 public abstract class Staff<T> extends Thread implements Observer {
     private String name;
 
-    protected double defaultDelay = 2000.0;
+    protected double defaultDelay;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
@@ -39,6 +38,7 @@ public abstract class Staff<T> extends Thread implements Observer {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
+        this.defaultDelay = SimUIModel.getInstance().getSimSpd();
     }
 
     /**
