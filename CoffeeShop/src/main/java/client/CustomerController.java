@@ -3,44 +3,29 @@ package client;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
-import item.ItemList;
-import order.Order;
-import order.OrderList;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Controller Class (Refactored for MVC by Akash)
- * Handles user interactions and updates the Model and View.
+ * Controller Class (Refactored for MVC)
+ * Handles user interactions and coordinates between View and Model
  * @author Caelan Mackenzie
  */
 public class CustomerController implements ActionListener {
 
     private final CustomerView view;
-    private final OrderList orders;
-    private final ItemList menu;
-    private Order currentOrder;
+    private final CustomerModel model;
 
     /**
-     * Initializes the Controller
-     *
-     * @param view The View (GUI)
+     * Initializes the Controller with View and Model
+     * @param view The View component
      */
     public CustomerController(CustomerView view) {
         this.view = view;
-        orders = OrderList.getInstance();
-        menu = ItemList.getInstance();
+        this.model = new CustomerModel();
 
-        // Initialize the current order
-        try {
-            currentOrder = new Order();
-        } catch (InvalidOrderException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Set up action listeners for buttons
+        // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
         view.getCancelOrderButton().addActionListener(this);
         view.getAddItemButton().addActionListener(this);
@@ -48,120 +33,124 @@ public class CustomerController implements ActionListener {
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
 
-        // Display the menu in the View
-        view.displayMenu(menu.getMenuDetails());
+        // Initialize view with menu data
+        view.displayMenu(model.getMenuDetails());
     }
 
     /**
-     * Handles button clicks
-     *
+     * Handles button click events
      * @param e The ActionEvent
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == view.getSubmitOrderButton()) {
-            submitOrder();
+            handleSubmitOrder();
         } else if (e.getSource() == view.getCancelOrderButton()) {
-            cancelOrder();
+            handleCancelOrder();
         } else if (e.getSource() == view.getAddItemButton()) {
-            addItem();
+            handleAddItem();
         } else if (e.getSource() == view.getRemoveLastItemButton()) {
-            removeLastItem();
+            handleRemoveLastItem();
         } else if (e.getSource() == view.getRemoveItemButton()) {
-            removeItem();
+            handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
-            JOptionPane.showMessageDialog(view, "Good Bye!");
-            exit();
+            handleExit();
         }
     }
 
     /**
-     * Submits the current order
+     * Handles order submission
      */
-    private void submitOrder() {
+    private void handleSubmitOrder() {
         try {
-
-            if (!orders.add(currentOrder)) {
-                JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
-                return;
+            boolean orderAdded = model.submitOrder();
+            if (orderAdded) {
+                Demo.demoWriteOrders();  // Existing demo functionality
+                JOptionPane.showMessageDialog(view, "Order has been submitted");
+                updateView();
+            } else {
+                JOptionPane.showMessageDialog(view,
+                        "Order could not be placed - Please Try Again Later");
             }
-            Demo.demoWriteOrders();
-            JOptionPane.showMessageDialog(view, "Order has been submitted");
         } catch (InvalidOrderException | DuplicateOrderException e) {
             JOptionPane.showMessageDialog(view, e.getMessage());
         }
-        try {
-            currentOrder = new Order();
-            updateView();
-        } catch (InvalidOrderException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
-     * Cancels the current order
+     * Handles order cancellation
      */
-    private void cancelOrder() {
+    private void handleCancelOrder() {
+        model.cancelOrder();
         JOptionPane.showMessageDialog(view, "Order Cancelled");
-        try {
-            currentOrder = new Order();
-            updateView();
-        } catch (InvalidOrderException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * Adds an item to the current order
-     */
-    private void addItem() {
-        String itemID = view.getItemIDField().getText();
-        try {
-            currentOrder.addItem(itemID.toUpperCase());
-        } catch (InvalidItemIDException e) {
-            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
-        }
-        view.getItemIDField().setText("");
         updateView();
     }
 
     /**
-     * Removes the last item from the current order
+     * Handles item addition
      */
-    private void removeLastItem() {
-        if (!currentOrder.removeLastItem()) {
+    private void handleAddItem() {
+        String itemID = view.getItemIDField().getText().trim();
+        if (!itemID.isEmpty()) {
+            try {
+                model.addItem(itemID);
+                view.getItemIDField().setText("");
+                updateView();
+            } catch (InvalidItemIDException ex) {
+                JOptionPane.showMessageDialog(view,
+                        itemID.toUpperCase() + " is not a valid item ID");
+            }
+        }
+    }
+
+    /**
+     * Handles removal of last item
+     */
+    private void handleRemoveLastItem() {
+        if (!model.removeLastItem()) {
             JOptionPane.showMessageDialog(view, "No Items in this Order");
         }
         updateView();
     }
 
     /**
-     * Removes a specific item from the current order
+     * Handles removal of specific item
      */
-    private void removeItem() {
-        String itemID = view.getItemIDField().getText();
-        if (!currentOrder.removeItem(itemID.toUpperCase())) {
-            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+    private void handleRemoveItem() {
+        String itemID = view.getItemIDField().getText().trim();
+        if (!itemID.isEmpty()) {
+            if (model.removeItem(itemID)) {
+                view.getItemIDField().setText("");
+                updateView();
+            } else {
+                JOptionPane.showMessageDialog(view,
+                        itemID.toUpperCase() + " is not in the current order");
+            }
         }
-        view.getItemIDField().setText("");
-        updateView();
     }
 
     /**
-     * Exits the application
+     * Handles application exit
      */
-    private void exit() {
-        Demo.demoCloseGUI();
+    private void handleExit() {
+        Demo.demoCloseGUI();  // Existing demo functionality
+        JOptionPane.showMessageDialog(view, "Good Bye!");
+        view.closeGUI();
     }
 
     /**
-     * Updates the View with the current order details
+     * Updates the View with current order data
      */
     private void updateView() {
         StringBuilder orderDetails = new StringBuilder();
-        for (String entry : currentOrder.getDetails()) {
-            orderDetails.append(entry).append("\n");
+        for (String item : model.getOrderDetails()) {
+            orderDetails.append(item).append("\n");
         }
-        view.updateUI(orderDetails.toString(), currentOrder.getTotalCost(), currentOrder.getDiscountedCost());
+
+        view.updateUI(
+                orderDetails.toString(),
+                model.getTotalCost(),
+                model.getDiscountedCost()
+        );
     }
 }
