@@ -131,8 +131,9 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
+        Order o = allOrders.getFirst().poll();
         SimUIController.getInstance().updateOrders();
-        return allOrders.getFirst().poll();
+        return o;
     }
 
     /**
@@ -143,8 +144,9 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @return Order object to be processed by staff
      */
     public synchronized Order removeOnline() {
+        Order o = allOrders.getLast().poll();
         SimUIController.getInstance().updateOrders();
-        return allOrders.getLast().poll();
+        return o;
     }
 
     public void completeOrder(Order order) {

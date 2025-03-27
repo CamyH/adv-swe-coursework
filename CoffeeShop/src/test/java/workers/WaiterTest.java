@@ -18,12 +18,13 @@ class WaiterTest {
     @BeforeEach
     void setUp() {
         Staff staff = StaffFactory.getStaff("waiter", "Bob", 1);
+        System.out.println(staff == null);
     }
 
-    @AfterEach
-    void tearDown() {
-        staff.removeStaff();
-    }
+//    @AfterEach
+//    void tearDown() {
+//        staff.removeStaff();
+//    }
 
     /**
      * Test priority setting

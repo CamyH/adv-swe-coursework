@@ -183,12 +183,22 @@ public class Waiter extends Staff<Order> {
         return currentOrder;
     }
 
+    public void addBackOrder() {
+        try {
+            OrderList.getInstance().add(getCurrentOrder());
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static void addBackAllCurrentOrders() {
         ArrayList<Order> allOrders = new ArrayList<>();
 
         for (Waiter waiter : waiterList) {
             try {
-                OrderList.getInstance().add(waiter.getCurrentOrder());
+                if (waiter.getCurrentOrder() != null) {
+                    OrderList.getInstance().add(waiter.getCurrentOrder());
+                }
             } catch (InvalidOrderException | DuplicateOrderException e) {
                 System.out.println(e.getMessage());
             }
@@ -207,10 +217,11 @@ public class Waiter extends Staff<Order> {
      */
     @Override
     public synchronized void removeStaff() {
+        addBackOrder();
         orderList.removeObserver(this);
         active = false;
         waiterList.remove(this);
-        staffList.remove(this.getID());
+        //staffList.remove(this.getID());
         updatePriority();
         notifyAll(); // wakes up thread
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");
