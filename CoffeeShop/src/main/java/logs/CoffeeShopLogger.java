@@ -11,7 +11,7 @@ import java.util.logging.*;
 public class CoffeeShopLogger {
 
     private static final Logger logger = Logger.getLogger(CoffeeShopLogger.class.getName());
-    private static CoffeeShopLogger instance = new CoffeeShopLogger();
+    private static final CoffeeShopLogger instance = new CoffeeShopLogger();
 
     private CoffeeShopLogger() {
         try {
@@ -21,7 +21,7 @@ public class CoffeeShopLogger {
             // Set the log level
             logger.setLevel(Level.ALL); // Log all levels (INFO, WARNING, SEVERE, etc.)
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e + e.getMessage());
         }
     }
 
