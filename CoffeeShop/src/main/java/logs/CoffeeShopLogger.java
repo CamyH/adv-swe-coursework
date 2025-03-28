@@ -1,6 +1,5 @@
 package logs;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -16,15 +15,6 @@ public class CoffeeShopLogger {
 
     private CoffeeShopLogger() {
         try {
-            // Remove the default ConsoleHandler to prevent logs from being printed to the console
-            Logger rootLogger = Logger.getLogger("");
-            Handler[] handlers = rootLogger.getHandlers();
-            for (Handler handler : handlers) {
-                if (handler instanceof ConsoleHandler) {
-                    rootLogger.removeHandler(handler); // Remove the ConsoleHandler
-                }
-            }
-
             // Create and configure the FileHandler
             createFileHandler();
 
