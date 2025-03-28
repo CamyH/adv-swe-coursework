@@ -39,18 +39,55 @@ public class CoffeeShopLogger {
         return instance;
     }
 
-    // Info level logging
+    /**
+     * Logs a message at the INFO level
+     * Used for general messages
+     *
+     * @param message the message to log
+     */
     public void logInfo(String message) {
         logger.info(message);
     }
 
-    // Warning level logging
+    /**
+     * Logs a message at the WARNING level
+     * Use for potential problems
+     *
+     * @param message the message to log
+     */
     public void logWarning(String message) {
         logger.warning(message);
     }
 
-    // Severe level logging
+    /**
+     * Logs a message at the SEVERE level
+     * Used for critical errors
+     *
+     * @param message the message to log
+     */
     public void logSevere(String message) {
         logger.severe(message);
+    }
+
+    /**
+     * Logs a message at the SEVERE level
+     * Used for critical errors
+     * Allows for passing in the exception itself
+     *
+     * @param message the message to log
+     * @param exceptionDetails the extra exception details
+     */
+    public void logSevere(String message, Exception exceptionDetails) {
+        logger.severe(message + exceptionDetails);
+    }
+
+    /**
+     * Logs a message at the FINE level
+     * Used for debugging
+     *
+     * @param message the message to log
+     */
+    public void logDebug(String message) {
+        logger.fine(message);
     }
 }
