@@ -85,12 +85,12 @@ public class ThreadTest {
             System.out.println(e.getMessage());
         }
 
-        a = StaffFactory.getStaff("waiter", "Waiter1", 1);
-        b = StaffFactory.getStaff("chef", "Chef1", 2);
-        c = StaffFactory.getStaff("barista", "Barista1", 3);
-        d = StaffFactory.getStaff("waiter", "Waiter2", 1);
-        e = StaffFactory.getStaff("chef", "Chef2", 2);
-        f = StaffFactory.getStaff("barista", "Barista2", 3);
+//        a = StaffFactory.getStaff("waiter", "Waiter1", 1);
+//        b = StaffFactory.getStaff("chef", "Chef1", 2);
+//        c = StaffFactory.getStaff("barista", "Barista1", 3);
+//        d = StaffFactory.getStaff("waiter", "Waiter2", 1);
+//        e = StaffFactory.getStaff("chef", "Chef2", 2);
+//        f = StaffFactory.getStaff("barista", "Barista2", 3);
     }
 
     @AfterEach
@@ -118,10 +118,10 @@ public class ThreadTest {
 //        StaffList staffList = StaffList.getInstance();
 //        staffList.setDefaultDelay(10000);
 //
-////        b.removeStaff();
+//        b.removeStaff();
 //
-////        orderList = SetupOrderFile.generateOrderList();
-////
+//        orderList = SetupOrderFile.generateOrderList();
+//
 //        Thread.sleep(10000);
 //
 //        staffList.setDefaultDelay(1000);

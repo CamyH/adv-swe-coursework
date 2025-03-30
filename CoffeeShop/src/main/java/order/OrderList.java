@@ -78,9 +78,14 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
             return false;
         }
 
+        if (order == null) {
+            logger.logSevere("Invalid order: Order details cannot be null");
+            throw new InvalidOrderException("Order details cannot be null");
+        }
+
         if (order.getDetails().isEmpty()) {
-            logger.logSevere("Invalid order: Order details cannot be null or empty");
-            throw new InvalidOrderException("Order details cannot be null or empty");
+            logger.logSevere("Invalid order: Order details cannot be empty");
+            throw new InvalidOrderException("Order details cannot be empty");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {

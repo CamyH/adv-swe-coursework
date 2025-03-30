@@ -19,15 +19,7 @@ class StaffTest {
 
     @BeforeEach
     void setUp() {
-        StaffFactory.getStaff("barista", "Bob", 1);
-
-        StaffList.resetInstance();
-        StaffList staffList = StaffList.getInstance();
-        Collection<Staff> all = staffList.getStaffList().values();
-
-        for (Staff staffs : all) {
-            staff = staffs;
-        }
+        staff = StaffFactory.getStaff("barista", "Bob", 1);
     }
 
     @AfterEach

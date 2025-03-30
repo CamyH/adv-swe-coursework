@@ -80,7 +80,6 @@ public class CustomerController implements ActionListener {
      */
     private void submitOrder() {
         try {
-
             if (!orders.add(currentOrder)) {
                 JOptionPane.showMessageDialog(view, "Order could not be placed - Please Try Again Later");
                 return;
