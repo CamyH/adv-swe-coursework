@@ -35,7 +35,7 @@ public class Waiter extends Staff<Order> {
     /** Stores the List of Orders */
     private OrderList orderList;
 
-    StaffList staffList;
+    private StaffList staffList;
 
     /** Stores the current order this staff member is working on */
     private Order currentOrder;
@@ -95,7 +95,7 @@ public class Waiter extends Staff<Order> {
                 wait();
             }
             catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                logger.logSevere(e.getMessage());
             }
         }
         else {
@@ -103,16 +103,37 @@ public class Waiter extends Staff<Order> {
                 ItemList itemList = ItemList.getInstance();
                 ItemCategory category = itemList.getCategory(s);
 
-                if (category == ItemCategory.ROLL || category == ItemCategory.FOOD || category == ItemCategory.PASTRY || category == ItemCategory.SNACK) {
+                if (isFoodCategory(category)) {
                     FoodList foodList = FoodList.getInstance();
                     foodList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
-                else if (category == ItemCategory.HOTDRINK || category == ItemCategory.SOFTDRINK) {
+
+                if (isDrinkCategory(category)) {
                     DrinkList drinkList = DrinkList.getInstance();
                     drinkList.add(new AbstractMap.SimpleEntry<>(this, s));
                 }
             }
         }
+    }
+
+    /**
+     * Getter method to determine if the item is of type food or not
+     *
+     * @param category Item category to be checked
+     * @return whether the item is a food item or not
+     */
+    private boolean isFoodCategory(ItemCategory category) {
+        return category == ItemCategory.ROLL || category == ItemCategory.FOOD || category == ItemCategory.PASTRY || category == ItemCategory.SNACK;
+    }
+
+    /**
+     * Getter method to determine if the item is of type drink or not
+     *
+     * @param category Item category to be checked
+     * @return whether the item is a drink item or not
+     */
+    private boolean isDrinkCategory(ItemCategory category) {
+        return category == ItemCategory.HOTDRINK || category == ItemCategory.SOFTDRINK;
     }
 
     /**
@@ -221,7 +242,6 @@ public class Waiter extends Staff<Order> {
         orderList.removeObserver(this);
         active = false;
         waiterList.remove(this);
-        //staffList.remove(this.getID());
         updatePriority();
         notifyAll(); // wakes up thread
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");
@@ -291,21 +311,20 @@ public class Waiter extends Staff<Order> {
         while (active) {
             getOrders();
 
-            if (currentOrder != null) {
-                processingOrder();
+            if (currentOrder == null) continue;
 
-                try {
-                    sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-                } catch (InterruptedException e) {
-                    logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
-                }
+            processingOrder();
 
-                System.out.println(getWorkerName() + " completed order " + currentOrder.getOrderID());
-                logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
-
-                completeCurrentOrder();
+            try {
+                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
+            } catch (InterruptedException e) {
+                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
             }
 
+            System.out.println(getWorkerName() + " completed order " + currentOrder.getOrderID());
+            logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
+
+            completeCurrentOrder();
         }
     }
 }

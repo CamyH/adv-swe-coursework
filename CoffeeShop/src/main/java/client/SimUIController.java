@@ -23,7 +23,6 @@ public class SimUIController {
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");
         this.simModel = simModel;
-        //simModel.registerObserver(this);
         this.simView = simView;
         simView.addSetListener(new SetListener());
 

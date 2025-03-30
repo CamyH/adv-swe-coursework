@@ -43,7 +43,6 @@ public class SimUIModel extends Subject implements Observer {
     }
 
     public String getOrderList(boolean online) {
-        //orderList = OrderList.getInstance();
         return orderList.getOrdersForDisplay(online);
     }
 

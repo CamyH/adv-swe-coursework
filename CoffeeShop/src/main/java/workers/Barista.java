@@ -158,23 +158,22 @@ public class Barista extends Staff<String> {
         while (active) {
             getOrders();
 
-            if (currentItem != null) {
-                try {
-                    sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-                } catch (InterruptedException e) {
-                    logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
-                }
+            if (currentItem == null) continue;
 
-                try {
-                    System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-                    logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-                }
-                catch (InvalidItemIDException e) {
-                    System.out.println(e.getMessage());
-                }
-                completeCurrentOrder();
+            try {
+                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
+            } catch (InterruptedException e) {
+                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
             }
 
+            try {
+                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+            }
+            catch (InvalidItemIDException e) {
+                System.out.println(e.getMessage());
+            }
+            completeCurrentOrder();
         }
     }
 }

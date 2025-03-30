@@ -104,8 +104,6 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
             success = allOrders.getFirst().offer(order);
         }
 
-        //SimUIController.getInstance().update();
-
         notifyObservers();
 
         return success;
@@ -137,7 +135,6 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public synchronized Order remove() {
         Order o = allOrders.getFirst().poll();
-        //SimUIController.getInstance().update();
         notifyObservers();
         return o;
     }
@@ -151,7 +148,6 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public synchronized Order removeOnline() {
         Order o = allOrders.getLast().poll();
-        //SimUIController.getInstance().update();
         notifyObservers();
         return o;
     }
