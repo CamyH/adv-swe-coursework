@@ -2,6 +2,7 @@ package client;
 
 import exceptions.StaffNullNameException;
 import interfaces.Observer;
+import logs.CoffeeShopLogger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ public class SimUIController {
     private SimUIModel simModel;
     private SimUIView simView;
     private static SimUIController instance;
+    private CoffeeShopLogger coffeeShopLogger;
 
     public SimUIController(SimUIView simView, SimUIModel simModel) {
 
@@ -24,6 +26,7 @@ public class SimUIController {
         System.out.println("-----------------------------------");
         this.simModel = simModel;
         this.simView = simView;
+        coffeeShopLogger = CoffeeShopLogger.getInstance();
         simView.addSetListener(new SetListener());
 
         simView.addSimSpeedChangeListener(e -> updateSimSpeed());
@@ -45,7 +48,12 @@ public class SimUIController {
         try {
             String name = simView.getStaffName();
             simView.clearCurStaff();
-            simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
+            try {
+                simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
+            }
+            catch (NumberFormatException e) {
+                coffeeShopLogger.logSevere("Staff Experience Error - Must be a Valid Integer");
+            }
             simView.showPopup("Added " + name + " to Staff List");
         } catch (StaffNullNameException e) {
             simView.showPopup(e.getMessage());
