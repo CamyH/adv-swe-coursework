@@ -19,6 +19,8 @@ public class Demo {
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static CustomerView view;
+    private static SimUIView simView;
+    private static SimUIModel simModel;
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
@@ -44,7 +46,9 @@ public class Demo {
     }
 
     public void showSimUI(){
-        simController =  SimUIController.getInstance();
+        simModel = new SimUIModel();
+        simView = new SimUIView(simModel);
+        simController =  new SimUIController(simView, simModel);
     }
 
     /**

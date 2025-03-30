@@ -1,6 +1,7 @@
 package client;
 
 import exceptions.StaffNullNameException;
+import interfaces.Observer;
 import interfaces.Subject;
 import item.ItemList;
 import order.OrderList;
@@ -9,7 +10,7 @@ import workers.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class SimUIModel extends Subject {
+public class SimUIModel extends Subject implements Observer {
 
     private OrderList orderList;
     private final ItemList menu;
@@ -18,11 +19,15 @@ public class SimUIModel extends Subject {
 
     private static SimUIModel instance;
 
-    private Integer simSpeed = 50;
+    private static Integer simSpeed = 50;
 
-    private SimUIModel() {
+    public SimUIModel() {
         this.menu = ItemList.getInstance();
         this.staffList = StaffList.getInstance();
+        this.orderList = OrderList.getInstance();
+
+        orderList.registerObserver(this);
+
         roles = new ArrayList<>();
 
         // Populate roles
@@ -31,21 +36,14 @@ public class SimUIModel extends Subject {
         roles.add("Chef");
     }
 
-    public static SimUIModel getInstance() {
-        if (instance == null) {
-            instance = new SimUIModel();
-        }
-        return instance;
-    }
-
     // Getter methods
 
-    public int getSimSpeed() {
-        return this.simSpeed;
+    public static int getSimSpeed() {
+        return simSpeed;
     }
 
     public String getOrderList(boolean online) {
-        orderList = OrderList.getInstance();
+        //orderList = OrderList.getInstance();
         return orderList.getOrdersForDisplay(online);
     }
 
@@ -82,7 +80,10 @@ public class SimUIModel extends Subject {
         StaffFactory.getStaff(role, name, experience).start();
 
         notifyObservers();
+    }
 
+    public void update() {
+        notifyObservers();
     }
 
     public void removeStaff(UUID ID) {

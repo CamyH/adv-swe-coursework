@@ -12,30 +12,22 @@ import java.util.UUID;
  * The simulation UI controller
  * Uses action listener to watch for any button presses on the UI
  */
-public class SimUIController implements Observer {
+public class SimUIController {
 
     private SimUIModel simModel;
     private SimUIView simView;
     private static SimUIController instance;
 
-    private SimUIController() {
+    public SimUIController(SimUIView simView, SimUIModel simModel) {
 
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");
-        simModel = SimUIModel.getInstance();
-        simModel.registerObserver(this);
-        simView = SimUIView.getInstance();
+        this.simModel = simModel;
+        //simModel.registerObserver(this);
+        this.simView = simView;
         simView.addSetListener(new SetListener());
 
         simView.addSimSpeedChangeListener(e -> updateSimSpeed());
-    }
-
-    public static SimUIController getInstance() {
-        if (instance == null) {
-            instance = new SimUIController();
-            System.out.println(instance.toString());
-        }
-        return instance;
     }
 
     private void viewStaffDetails() {
@@ -74,11 +66,6 @@ public class SimUIController implements Observer {
     public void updateSimSpeed() {
         simModel.setSimSpeed(simView.getSimSliderValue());
         simModel.notifyObservers();
-    }
-
-    public void update() {
-        // get the order list and send it to the view
-        simView.setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void message(String msg) {

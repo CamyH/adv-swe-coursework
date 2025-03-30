@@ -94,31 +94,27 @@ public class Chef extends Staff<String> {
      */
     @Override
     public String getCurrentOrderDetails() {
+        StringBuilder itemDetails = new StringBuilder();
+
+        itemDetails.append("Staff Name : ").append(this.getWorkerName()).append("\n");
+        itemDetails.append("Staff Type : ").append("Chef").append("\n");
+        itemDetails.append("Staff Experience Level : ").append(this.getExperience()).append("\n");
+
         if (currentItem == null) {
-            return String.join("\n",
-                    this.getWorkerName(),
-                    "Chef",
-                    String.valueOf(this.getExperience()),
-                    "Staff is Currently Idle"
-            );
+            itemDetails.append("Staff is Currently Idle").append("\n");
+            return itemDetails.toString();
         }
 
-        String description;
+        itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
+
         try {
-            description = itemList.getDescription(currentItem.getValue());
+            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue())).append("\n");
         } catch (InvalidItemIDException e) { // this will never happen
-            description = "ERROR";
+            itemDetails.append("Item Description : ").append("ERROR LOADING ITEMS").append("\n");
             System.out.println(e.getMessage());
         }
 
-        return String.join("\n",
-                this.getWorkerName(),
-                "Chef",
-                String.valueOf(this.getExperience()),
-                currentItem.getValue(),
-                description,
-                currentItem.getKey().getWorkerName()
-        );
+        return itemDetails.toString();
     }
 
     public String getRole() {

@@ -42,8 +42,8 @@ public class SimUIView extends JFrame implements Observer {
     private SimUIModel simModel;
     private static SimUIView instance;
 
-    private SimUIView() {
-        simModel = SimUIModel.getInstance();
+    public SimUIView(SimUIModel simModel) {
+        this.simModel = simModel;
         simModel.registerObserver(this);
         setContentPane(contentPanel);
         setTitle("Coffee Shop Simulation");
@@ -80,13 +80,6 @@ public class SimUIView extends JFrame implements Observer {
 
     public void addSimSpeedChangeListener(ChangeListener listener) {
         SimSpeedSlider.addChangeListener(listener);
-    }
-
-    public static SimUIView getInstance() {
-        if (instance == null) {
-            instance = new SimUIView();
-        }
-        return instance;
     }
 
     public String getStaffName() {
@@ -162,7 +155,6 @@ public class SimUIView extends JFrame implements Observer {
     }
 
     public void update() {
-
         // Refresh sim speed related fields
         setSimSpeed();
 
@@ -173,6 +165,7 @@ public class SimUIView extends JFrame implements Observer {
         setStaffList(simModel.getStaffList());
 
         // Refresh the Order lists
+        setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void showPopup(String message) {
