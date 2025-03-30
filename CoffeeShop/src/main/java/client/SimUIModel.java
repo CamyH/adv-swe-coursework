@@ -18,7 +18,7 @@ public class SimUIModel extends Subject {
 
     private static SimUIModel instance;
 
-    private Integer simSpd = 2000;
+    private Integer simSpeed = 2000;
 
     private SimUIModel() {
         this.menu = ItemList.getInstance();
@@ -40,8 +40,8 @@ public class SimUIModel extends Subject {
 
     // Getter methods
 
-    public int getSimSpd() {
-        return simSpd;
+    public int getSimSpeed() {
+        return simSpeed;
     }
 
     public String getOrderList(boolean online) {
@@ -69,9 +69,9 @@ public class SimUIModel extends Subject {
 
     // Setter methods
 
-    public void setSimSpd(int speed) {
-        this.simSpd = Math.round(speed/ 100.0f) * 100;
-        StaffList.getInstance().setDefaultDelay(this.simSpd);
+    public void setSimSpeed(int speed) {
+        this.simSpeed = Math.round(speed/ 100.0f) * 100;
+        StaffList.getInstance().setDefaultDelay(this.simSpeed);
     }
 
     public void addStaff(String name, String role, int experience) throws StaffNullNameException {
@@ -79,13 +79,8 @@ public class SimUIModel extends Subject {
             throw new StaffNullNameException("Staff name is empty");
         }
 
-        if (role.equals("Waiter")) {
-            StaffFactory.getStaff("Waiter", name, experience).start();
-        } else if (role.equals("Barista")) {
-            StaffFactory.getStaff("Barista", name, experience).start();
-        } else if (role.equals("Chef")) {
-            StaffFactory.getStaff("Chef", name, experience).start();
-        }
+        StaffFactory.getStaff(role, name, experience).start();
+
         notifyObservers();
 
     }

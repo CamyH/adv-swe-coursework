@@ -1,21 +1,18 @@
 package client;
 
 import interfaces.Observer;
-import workers.Staff;
 import workers.StaffList;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
-public class SimulationUI extends JFrame implements Observer {
+public class SimUIView extends JFrame implements Observer {
 
     private JPanel contentPanel;
     private JTextArea OrderListArea;
@@ -24,9 +21,9 @@ public class SimulationUI extends JFrame implements Observer {
     private JComboBox<Integer> StaffExpCombo;
     private JTextField StaffNameField;
     private JButton AddStaffBtn;
-    private JSlider SimSpdSlider;
-    private JTextField SimSpdField;
-    private JLabel SimSpdLabel;
+    private JSlider SimSpeedSlider;
+    private JTextField SimSpeedField;
+    private JLabel SimSpeedLabel;
     private JComboBox SelectStaffCombo;
     private JButton RemoveStaffBtn;
     private JButton ViewDetailsBtn;
@@ -40,15 +37,12 @@ public class SimulationUI extends JFrame implements Observer {
     private JLabel StaffNameLabel;
     private JLabel StaffRoleLabel;
     private JLabel StaffExpLabel;
-    private JPanel SimSpdPanel;
-    private JButton SimSpdBtn;
+    private JPanel SimSpeedPanel;
 
     private SimUIModel simModel;
-    private static SimulationUI instance;
+    private static SimUIView instance;
 
-    private SimulationUI() {
-
-
+    private SimUIView() {
         simModel = SimUIModel.getInstance();
         simModel.registerObserver(this);
         setContentPane(contentPanel);
@@ -67,17 +61,13 @@ public class SimulationUI extends JFrame implements Observer {
             }
         });
 
-        //SimSpdSlider.addChangeListener(e -> SimUIController.getInstance().updateSimSpd());
-
         // Make all non-editable fields un-editable
         OrderListArea.setEnabled(false);
         OrderListArea.setDisabledTextColor(Color.BLACK);
         OnlineOrderArea.setEnabled(false);
         OnlineOrderArea.setDisabledTextColor(Color.BLACK);
-        SimSpdField.setEnabled(false);
-        SimSpdField.setDisabledTextColor(Color.BLACK);
-
-        //SimSpdSlider.addChangeListener(e -> updateSimulationSpeed(SimSpdSlider.getValue()));
+        SimSpeedField.setEnabled(false);
+        SimSpeedField.setDisabledTextColor(Color.BLACK);
 
         // Fill the experience combo box with options
         for (int i = 1; i <= 5; i++) {
@@ -88,13 +78,13 @@ public class SimulationUI extends JFrame implements Observer {
         update();
     }
 
-    public void addSimSpdChangeListener(ChangeListener listener) {
-        SimSpdSlider.addChangeListener(listener);
+    public void addSimSpeedChangeListener(ChangeListener listener) {
+        SimSpeedSlider.addChangeListener(listener);
     }
 
-    public static SimulationUI getInstance() {
+    public static SimUIView getInstance() {
         if (instance == null) {
-            instance = new SimulationUI();
+            instance = new SimUIView();
         }
         return instance;
     }
@@ -117,7 +107,7 @@ public class SimulationUI extends JFrame implements Observer {
     }
 
     public int getSimSliderValue() {
-        return SimSpdSlider.getValue();
+        return SimSpeedSlider.getValue();
     }
 
     public void setOrderLists(String orders, String onlineOrders) {
@@ -130,10 +120,10 @@ public class SimulationUI extends JFrame implements Observer {
 
     private void setSimSpeed() {
         // Refresh the sim speed text field
-        SimSpdField.setText(String.valueOf(simModel.getSimSpd()));
+        SimSpeedField.setText(String.valueOf(simModel.getSimSpeed()));
 
         // Refresh the sim speed slider
-        SimSpdSlider.setValue(simModel.getSimSpd());
+        SimSpeedSlider.setValue(simModel.getSimSpeed());
     }
 
     private void setRoles(ArrayList<String> roles) {
@@ -169,9 +159,6 @@ public class SimulationUI extends JFrame implements Observer {
 
         ViewDetailsBtn.setName("ViewDetailsBtn");
         ViewDetailsBtn.addActionListener(al);
-
-        SimSpdBtn.setName("SimSpdBtn");
-        SimSpdBtn.addActionListener(al);
     }
 
     public void update() {
@@ -189,12 +176,12 @@ public class SimulationUI extends JFrame implements Observer {
     }
 
     public void showPopup(String message) {
-        JOptionPane.showMessageDialog(SimulationUI.this, message);
+        JOptionPane.showMessageDialog(SimUIView.this, message);
     }
 
     public void close() {
         // close the window
-        SimulationUI.this.dispose();
+        SimUIView.this.dispose();
     }
 }
 

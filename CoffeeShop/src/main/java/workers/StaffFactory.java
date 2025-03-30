@@ -27,8 +27,6 @@ public class StaffFactory {
             default:
                 return null;
         }
-
-        //return null;
     }
 
 }

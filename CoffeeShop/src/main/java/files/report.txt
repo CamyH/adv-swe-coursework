@@ -1,11 +1,11 @@
 =======================
 Current Order Details
 -----------------------
-edc2523b-3003-46d1-9b83-1b3fc0c87681,9fd33004-0fab-4ed7-bd39-f083d92eba24,2025-03-27T13:51:17.510099100,RL1;SD2;HD3,false
+d9adabc5-8ad2-4dd5-83ad-2385c50a35bf,f4d43dc9-78f6-4905-a021-4e6af52ae307,2025-03-30T10:28:58.811637500,SD4,false
 -----------------------
 Number of Items Ordered
 -----------------------
-RL1 = 1
+RL1 = 0
 RL2 = 0
 RL3 = 0
 RL4 = 0
@@ -16,15 +16,15 @@ FD4 = 0
 FD5 = 0
 HD1 = 0
 HD2 = 0
-HD3 = 1
+HD3 = 0
 HD4 = 0
 HD5 = 0
 HD6 = 0
 HD7 = 0
 SD1 = 0
-SD2 = 1
+SD2 = 0
 SD3 = 0
-SD4 = 0
+SD4 = 1
 SD5 = 0
 SD6 = 0
 SD7 = 0
@@ -46,10 +46,10 @@ PSY5 = 0
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £7.30
-Total Income (Including Discounts) : £5.93
+Total Income (Excluding Discounts) : £2.50
+Total Income (Including Discounts) : £2.50
 Total Orders : 1
-Average Spend Per Order (Excluding Discounts) : £7.30
-Average Spend Per Order (Including Discounts) : £5.93
+Average Spend Per Order (Excluding Discounts) : £2.50
+Average Spend Per Order (Including Discounts) : £2.50
 =======================
 

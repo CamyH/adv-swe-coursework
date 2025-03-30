@@ -2,7 +2,6 @@ package client;
 
 import exceptions.StaffNullNameException;
 import interfaces.Observer;
-import order.OrderList;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +15,7 @@ import java.util.UUID;
 public class SimUIController implements Observer {
 
     private SimUIModel simModel;
-    private SimulationUI simView;
+    private SimUIView simView;
     private static SimUIController instance;
 
     private SimUIController() {
@@ -25,18 +24,10 @@ public class SimUIController implements Observer {
         System.out.println("-----------------------------------");
         simModel = SimUIModel.getInstance();
         simModel.registerObserver(this);
-        simView = SimulationUI.getInstance();
+        simView = SimUIView.getInstance();
         simView.addSetListener(new SetListener());
 
-        simView.addSimSpdChangeListener(e -> updateSimSpd());
-
-//        try {
-//            simModel.addStaff("Manager", "Barista", 5);
-//        } catch (StaffNullNameException e) {
-//            message(e.getMessage());
-//        }
-
-        //updateOrders();
+        simView.addSimSpeedChangeListener(e -> updateSimSpeed());
     }
 
     public static SimUIController getInstance() {
@@ -49,9 +40,8 @@ public class SimUIController implements Observer {
 
     private void viewStaffDetails() {
         StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
-        UUID curStaffID;
         try {
-            curStaffID = simView.getCurStaff();
+            UUID curStaffID = simView.getCurStaff();
             staffDetailsPopup.setDetails(simModel.getStaffDetails(curStaffID));
         } catch (NullPointerException e) {
             staffDetailsPopup.exit();
@@ -81,19 +71,14 @@ public class SimUIController implements Observer {
         }
     }
 
-    public void updateSimSpd() {
-        simModel.setSimSpd(simView.getSimSliderValue());
+    public void updateSimSpeed() {
+        simModel.setSimSpeed(simView.getSimSliderValue());
         simModel.notifyObservers();
-        //simView.showPopup("Updated Simulation Speed");
-    }
-
-    public void updateOrders() {
-        // get the order list and send it to the view
-        simView.setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void update() {
-
+        // get the order list and send it to the view
+        simView.setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void message(String msg) {
@@ -113,14 +98,6 @@ public class SimUIController implements Observer {
 
             else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
                 viewStaffDetails();
-            }
-
-            else if (sourceBtn.getName().equals("SimSpdBtn")) {
-                updateSimSpd();
-            }
-
-            else if (sourceBtn.getName().equals("SimSpdSlider")) {
-                System.out.println("HELLO");
             }
         }
     }

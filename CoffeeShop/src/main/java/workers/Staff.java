@@ -38,7 +38,7 @@ public abstract class Staff<T> extends Thread implements Observer {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
-        this.defaultDelay = SimUIModel.getInstance().getSimSpd();
+        this.defaultDelay = SimUIModel.getInstance().getSimSpeed();
     }
 
     /**

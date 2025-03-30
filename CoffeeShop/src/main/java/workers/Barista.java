@@ -171,6 +171,7 @@ public class Barista extends Staff<String> {
 
                 try {
                     System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+                    logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
                 }
                 catch (InvalidItemIDException e) {
                     System.out.println(e.getMessage());
