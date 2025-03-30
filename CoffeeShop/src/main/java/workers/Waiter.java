@@ -209,7 +209,6 @@ public class Waiter extends Staff<Order> {
      * Method used by the Subject (OrderList) to tell the Staff member that an order has been added
      */
     public synchronized void update() {
-        System.out.println("NOTIFIED");
         notifyAll();
     }
 

@@ -38,7 +38,7 @@ public abstract class Staff<T> extends Thread implements Observer {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
-        this.defaultDelay = SimUIModel.getInstance().getSimSpeed();
+        setDefaultDelay(SimUIModel.getInstance().getSimSpeed());
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class Staff<T> extends Thread implements Observer {
      * @param defaultDelay double representing the delay in completing orders
      */
     public void setDefaultDelay(double defaultDelay) {
-        this.defaultDelay = defaultDelay;
+        this.defaultDelay = 10000 - ( defaultDelay / 100 * 10000 ) + 100;
     }
 
     /**

@@ -18,7 +18,7 @@ public class SimUIModel extends Subject {
 
     private static SimUIModel instance;
 
-    private Integer simSpeed = 2000;
+    private Integer simSpeed = 50;
 
     private SimUIModel() {
         this.menu = ItemList.getInstance();
@@ -41,7 +41,7 @@ public class SimUIModel extends Subject {
     // Getter methods
 
     public int getSimSpeed() {
-        return simSpeed;
+        return this.simSpeed;
     }
 
     public String getOrderList(boolean online) {
@@ -70,8 +70,8 @@ public class SimUIModel extends Subject {
     // Setter methods
 
     public void setSimSpeed(int speed) {
-        this.simSpeed = Math.round(speed/ 100.0f) * 100;
-        StaffList.getInstance().setDefaultDelay(this.simSpeed);
+        this.simSpeed = speed;
+        StaffList.getInstance().setDefaultDelay(simSpeed);
     }
 
     public void addStaff(String name, String role, int experience) throws StaffNullNameException {
