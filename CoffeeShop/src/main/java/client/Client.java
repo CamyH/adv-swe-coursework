@@ -1,6 +1,5 @@
 package client;
 
-import exceptions.InvalidOrderException;
 import logs.CoffeeShopLogger;
 import order.Order;
 import message.Message;
@@ -22,7 +21,7 @@ public class Client {
     private static int port = 9876;
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
-    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Constructor for initialising a client
@@ -56,22 +55,12 @@ public class Client {
         Server.addClient(outputStream);
     }
 
-    public Client start() {
+    public static Client start() {
         try {
             Socket clientSocket = new Socket(host, port);
 
-
-            Client client = new Client(clientSocket);
-
-            // Test for now
-            Order testOrder = new Order();
-            client.sendOrder(testOrder);
-
-            Message response = client.receiveMessage();
-            logger.logInfo("Server response: " + response);
-
-            return client;
-        } catch (IOException | ClassNotFoundException | InvalidOrderException e) {
+            return new Client(clientSocket);
+        } catch (IOException e) {
             logger.logSevere("Error in client: " + e.getMessage());
         }
         return null;
@@ -104,6 +93,14 @@ public class Client {
     public synchronized Message receiveMessage() throws IOException, ClassNotFoundException {
         return Optional.ofNullable((Message) inputStream.readObject())
                .orElseThrow(() -> new IOException("Message received is NULL"));
+    }
+
+    public synchronized void sendMessage(Message message) throws IOException {
+        if (message == null) throw new NullPointerException("Message cannot be null");
+
+        outputStream.writeObject(message);
+        outputStream.flush();
+        logger.logInfo("Message sent to the server: " + message);
     }
 
     /**
