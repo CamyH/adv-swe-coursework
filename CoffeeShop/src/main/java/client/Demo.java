@@ -1,6 +1,7 @@
 package client;
 import item.ItemFileReader;
 import order.OrderFileReadWrite;
+import server.Server;
 import utils.GenerateReportFileWriter;
 
 import java.io.FileNotFoundException;
@@ -65,8 +66,10 @@ public class Demo {
             throw new RuntimeException(e);
         }
 
-        demo.showGUI();
+        //demo.showGUI();
         demo.showSimUI();
+        Server server = new Server();
+        server.start();
         demo.showConsole();
     }
 
