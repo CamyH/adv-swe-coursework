@@ -2,9 +2,11 @@ package client;
 
 import item.ItemFileReader;
 import message.Message;
+import message.MessageType;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.UUID;
 
 /**
  * Test Class to show how to run a new client
@@ -12,25 +14,17 @@ import java.net.Socket;
  */
 public class ClientApp {
     public static void main(String[] args) {
-        try (Socket clientSocket = new Socket("localhost", 9876)) {
-            System.out.println("Connected to server");
-
+        try {
+            Socket clientSocket = new Socket("localhost", 9876);
             Client client = new Client(clientSocket);
-            client.start();
-            // Sending the test message to the server
-            //client.sendMessage(new Message(UUID.randomUUID(), "Test Message", MessageType.ORDER_COMPLETED));
+            System.out.println("Connected to server");
+            Demo demo = new Demo();
+            demo.showGUI();
+            // Test messages
+            client.sendMessage(new Message(UUID.randomUUID(), "hi", MessageType.ORDER_RECEIVED));
+            client.sendMessage(new Message(UUID.randomUUID(), "Test Message", MessageType.ORDER_COMPLETED));
 
-            // Sending test object
-            //Order testOrder = OrderList.getInstance().getOrderList().peek();
-            //initialiseItemsFromFile();
-            //Order testOrder = new Order();
-            //client.sendOrder(testOrder);
-
-            // Receiving the response message
-            Message response = client.receiveMessage();
-            System.out.println("Server response: " + response);
-
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             System.err.println("Error in client: " + e.getMessage());
         }
     }
