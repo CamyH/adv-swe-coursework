@@ -1,62 +1,61 @@
 package client;
 
-import exceptions.StaffNullOrderException;
+import exceptions.StaffNullNameException;
 import interfaces.Observer;
-import order.OrderList;
+import logs.CoffeeShopLogger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * The simulation UI controller
  * Uses action listener to watch for any button presses on the UI
  */
-public class SimUIController implements Observer {
+public class SimUIController {
 
     private SimUIModel simModel;
-    private SimulationUI simView;
+    private SimUIView simView;
+    private static SimUIController instance;
+    private CoffeeShopLogger coffeeShopLogger;
 
-    // The order list to display
-    // Contains both in person and online orders
-    private OrderList orders;
-
-    public SimUIController() {
+    public SimUIController(SimUIView simView, SimUIModel simModel) {
 
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");
-        simModel = new SimUIModel();
-        simModel.registerObserver(this);
-        simView = new SimulationUI(simModel);
+        this.simModel = simModel;
+        this.simView = simView;
+        coffeeShopLogger = CoffeeShopLogger.getInstance();
         simView.addSetListener(new SetListener());
-        orders = OrderList.getInstance();
 
+        simView.addSimSpeedChangeListener(e -> updateSimSpeed());
     }
 
     private void viewStaffDetails() {
         StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
         try {
-            staffDetailsPopup.setDetails(simModel.getStaffDetails(simView.getCurStaff()));
-        } catch (StaffNullOrderException e) {
-            staffDetailsPopup.exit();
-            simView.showPopup(e.getMessage());
+            UUID curStaffID = simView.getCurStaff();
+            staffDetailsPopup.setDetails(simModel.getStaffDetails(curStaffID));
         } catch (NullPointerException e) {
             staffDetailsPopup.exit();
             simView.showPopup("No Staff Found");
         }
 
-        simModel.notifyObservers();
     }
 
     private void addStaff() {
         try {
             String name = simView.getStaffName();
-            simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
             simView.clearCurStaff();
-            simModel.notifyObservers();
+            try {
+                simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
+            }
+            catch (NumberFormatException e) {
+                coffeeShopLogger.logSevere("Staff Experience Error - Must be a Valid Integer");
+            }
             simView.showPopup("Added " + name + " to Staff List");
-        } catch (StaffNullOrderException e) {
+        } catch (StaffNullNameException e) {
             simView.showPopup(e.getMessage());
         }
     }
@@ -71,19 +70,13 @@ public class SimUIController implements Observer {
         }
     }
 
-    private void updateSimSpd() {
-        simModel.setSimSpd(simView.getSimSliderValue());
+    public void updateSimSpeed() {
+        simModel.setSimSpeed(simView.getSimSliderValue());
         simModel.notifyObservers();
-        simView.showPopup("Updated Simulation Speed");
     }
 
-    private void updateOrders() {
-        // get the order list and send it to the view
-        ArrayList<String> list = simModel.getOrderList();
-    }
-
-    public void update() {
-        updateOrders();
+    public void message(String msg) {
+        simView.showPopup(msg);
     }
 
     public class SetListener implements ActionListener {
@@ -99,10 +92,6 @@ public class SimUIController implements Observer {
 
             else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
                 viewStaffDetails();
-            }
-
-            else if (sourceBtn.getName().equals("SimSpdBtn")) {
-                updateSimSpd();
             }
         }
     }

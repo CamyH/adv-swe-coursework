@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Fraser Holman
  */
 public class StaffListTest {
-    Staff a;
-    Staff b;
-    Staff c;
-
     StaffList staffList;
 
     @BeforeEach
@@ -25,26 +22,18 @@ public class StaffListTest {
         StaffList.resetInstance();
         staffList = StaffList.getInstance();
 
-        a = StaffFactory.getStaff("barista", "Bob", 1);
-        b = StaffFactory.getStaff("barista", "Bill", 0.2);
-        c = StaffFactory.getStaff("barista", "Fraser", 0.6);
+        StaffFactory.getStaff("barista", "Bob", 1);
+        StaffFactory.getStaff("barista", "Bill", 2);
+        StaffFactory.getStaff("barista", "Fraser", 3);
     }
 
     @AfterEach
     void tearDown() {
-        a.removeStaff();
-        b.removeStaff();
-        c.removeStaff();
-    }
+        Collection<Staff> all = staffList.getStaffList().values();
 
-    /**
-     * Tests adding staff to the staff list
-     */
-    @Test
-    public void testAddStaff() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
+        for (Staff staff : all) {
+            staff.removeStaff();
+        }
     }
 
     /**
@@ -76,10 +65,6 @@ public class StaffListTest {
      */
     @Test
     public void testRemoveStaff() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
-
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
         assertTrue(staffList.remove(staffList.getStaffIDs()[0]));
@@ -90,10 +75,6 @@ public class StaffListTest {
      */
     @Test
     public void getStaffObject() throws InterruptedException {
-        assertTrue(staffList.add(a));
-        assertTrue(staffList.add(b));
-        assertTrue(staffList.add(c));
-
         assertInstanceOf(Staff.class, staffList.getStaff(staffList.getStaffIDs()[0]));
     }
 }

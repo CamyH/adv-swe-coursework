@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 /**
  * JUnit tests for Staff class and Staff Factory
  *
@@ -46,7 +48,7 @@ class StaffTest {
      */
     @Test
     void testSetExperience() {
-        staff.setExperience(0.2);
-        assertEquals(0.2, staff.getExperience(), "Experience level was not updated correctly.");
+        staff.setExperience(2);
+        assertEquals(2, staff.getExperience(), "Experience level was not updated correctly.");
     }
 }
