@@ -25,14 +25,24 @@ public class CoffeeShopLogger {
         }
     }
 
-    /**
+/**
      * Creates and configures the FileHandler for logging to a file.
      */
     private void createFileHandler() throws IOException {
-        // Create the FileHandler
-        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true); // Append mode
-        fileHandler.setFormatter(new SimpleFormatter()); // Use a simple text format for logs
-        logger.addHandler(fileHandler); // Add the FileHandler to the logger
+        // Check if the FileHandler is already added
+        for (Handler handler : logger.getHandlers()) {
+            if (handler instanceof FileHandler) {
+                return;
+            }
+        }
+
+        // Create the FileHandler if not added already
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true);
+        fileHandler.setLevel(Level.ALL);
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+        //logger.addHandler(consoleHandler);
     }
 
     public static CoffeeShopLogger getInstance() {
