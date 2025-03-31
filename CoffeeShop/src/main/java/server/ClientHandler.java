@@ -6,6 +6,7 @@ import logs.CoffeeShopLogger;
 import message.Message;
 import order.Order;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,11 +30,11 @@ public class ClientHandler implements Runnable {
      * @param clientSocket the {@link Socket} that is created by the client
      */
     public ClientHandler(Socket clientSocket) throws IOException {
-
         this.clientSocket = clientSocket;
+        this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
         this.outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
         outputStream.flush();
-        this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
+        logger.logInfo("Initialising client handler for: " + clientSocket);
     }
 
     /**
@@ -44,22 +45,29 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            // Create a new client to handle communication with the connected client
-            Client client = new Client(clientSocket);
+            // Now wait for orders from the client
+            while (true) {
+                try {
+                    logger.logDebug("Idling...");
+                    Object receivedMessage = inputStream.readObject();
 
-            /* Example:
-            Order order = client.receiveOrder();
-            System.out.println("Received order: " + order.getOrderID());
-            OrderList orderList = OrderList.getInstance();
-            orderList.add(order);
-            System.out.println(orderList.getOrderList()); */
-
+                    logger.logDebug("Message " + receivedMessage.toString());
+                } catch (EOFException e) {
+                    logger.logInfo("Client disconnected: " + clientSocket.getInetAddress());
+                    clientSocket.close();
+                    break;
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.logSevere("Error while handling client: " + e.getMessage());
+                    clientSocket.close();
+                    break;
+                }
+            }
         } catch (Exception e) {
-            logger.logSevere("Error while handling client: " + e.getMessage());
+            logger.logSevere("Error in server: " + e.getMessage());
         }
     }
 
-    /**
+        /**
      * Sends a {@link Message} object to the server.
      * The message is serialized and sent using {@link ObjectOutputStream}.
      *
