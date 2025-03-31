@@ -50,7 +50,6 @@ public class Server {
     public void start() {
         try (ServerSocket serverSocket = setupServer()) {
             logger.logInfo("Server started on " + host + ":" + port);
-
             // A Thread pool is used to handle multiple
             // client connections concurrently
             threadPool = Executors.newFixedThreadPool(pool_size);
@@ -63,9 +62,9 @@ public class Server {
                 threadPool.submit(clientHandler);
             }
         } catch (IOException e) {
-            logger.logSevere("Could not start server: " + e.getMessage());
-            // Shut down threadPool
-            threadPool.shutdownNow();
+            logger.logSevere("Error in server: " + e);
+            // Shut down threadPool to clean up resources
+            shutdownThreadPool();
         }
     }
 
@@ -162,5 +161,24 @@ public class Server {
      */
     public synchronized void updateClientItemList() throws IOException {
         broadcast(ItemList.getInstance());
+    }
+
+
+    /**
+     * Shuts down the thread pool gracefully, if the shutdown does not complete within
+     * 10 seconds, the thread pool is forcibly terminated
+     *
+     */
+    private void shutdownThreadPool() {
+        try {
+            threadPool.shutdown();
+            // If it has not fully shut down after 10 seconds
+            // then we want to force it
+            if (!threadPool.awaitTermination(10, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (Exception e) {
+            logger.logSevere("Error shutting down thread pool: " + e.getMessage(), e);
+        }
     }
 }
