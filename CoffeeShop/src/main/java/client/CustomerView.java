@@ -1,7 +1,6 @@
 package client;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 
 /**
@@ -9,7 +8,7 @@ import java.awt.*;
  * Represents the user interface for the Coffee Shop application.
  * @author Caelan Mackenzie
  */
-public class CustomerView extends JFrame {
+public class  CustomerView extends JFrame {
 
     // UI components
     private JPanel contentPanel;
@@ -35,18 +34,22 @@ public class CustomerView extends JFrame {
     private JButton exitButton;
     private JButton removeLastItemButton;
     private JButton removeItemButton;
+    private JCheckBox onlineOrderCheckBox;
 
     /**s
      * Sets up the View (GUI)
      */
     public CustomerView() {
         // UI parameters
+
         setContentPane(contentPanel);
         setTitle("Coffee Shop App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 300);
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
+
+
 
         // Disable editing for certain fields
         totalCostField.setEnabled(false);
@@ -66,7 +69,13 @@ public class CustomerView extends JFrame {
         totalCostField.setText("£0.00");
         discountedCostField.setText("£0.00");
         displayMenuField.append("Item ID, Name, Cost \n");
+
+
+
+
     }
+
+
 
     /**
      * Updates the UI with the current order details
