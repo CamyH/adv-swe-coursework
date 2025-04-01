@@ -89,19 +89,37 @@ public class CustomerController implements ActionListener {
     /**
      * Handles item addition
      */
+//    private void handleAddItem() {
+//        String itemID = view.getItemIDField().getText().trim();
+//        if (!itemID.isEmpty()) {
+//            try {
+//                model.addItem(itemID);
+//                view.getItemIDField().setText("");
+//                updateView();
+//            } catch (InvalidItemIDException ex) {
+//                JOptionPane.showMessageDialog(view,
+//                        itemID.toUpperCase() + " is not a valid item ID");
+//            }
+//        }
+//    }
+
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
-        if (!itemID.isEmpty()) {
-            try {
-                model.addItem(itemID);
-                view.getItemIDField().setText("");
-                updateView();
-            } catch (InvalidItemIDException ex) {
-                JOptionPane.showMessageDialog(view,
-                        itemID.toUpperCase() + " is not a valid item ID");
-            }
+        // Guard clause: fail fast if input is empty
+        if (itemID.isEmpty()) {
+            return;
         }
+        try {
+            model.addItem(itemID.toUpperCase());
+        } catch (InvalidItemIDException e) {
+            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+        }
+        view.getItemIDField().setText("");
+        updateView();
     }
+
+
+
 
     /**
      * Handles removal of last item
