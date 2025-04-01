@@ -10,9 +10,7 @@ import java.util.*;
 
 /**
  * Singleton class
- *
- * Class represents a list of all avaible items that can be ordered
- *
+ * Class represents a list of all available items that can be ordered
  * Contains a hashmap of all the items
  *
  * @author Fraser Holman
@@ -42,6 +40,7 @@ public class ItemList implements EntityList<Item, String>, Serializable {
         if (item == null) {
             return false;
         }
+
         return items.putIfAbsent(item.getItemID(), item) == null;
     }
 
