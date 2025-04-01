@@ -89,23 +89,8 @@ public class CustomerController implements ActionListener {
     /**
      * Handles item addition
      */
-//    private void handleAddItem() {
-//        String itemID = view.getItemIDField().getText().trim();
-//        if (!itemID.isEmpty()) {
-//            try {
-//                model.addItem(itemID);
-//                view.getItemIDField().setText("");
-//                updateView();
-//            } catch (InvalidItemIDException ex) {
-//                JOptionPane.showMessageDialog(view,
-//                        itemID.toUpperCase() + " is not a valid item ID");
-//            }
-//        }
-//    }
-
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
-        // Guard clause: fail fast if input is empty
         if (itemID.isEmpty()) {
             return;
         }
