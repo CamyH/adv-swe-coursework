@@ -92,7 +92,7 @@ public class CustomerController implements ActionListener {
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
 
-        // Guard clause for empty input
+        // Guard clause
         if (itemID.isEmpty()) {
             return;
         }
