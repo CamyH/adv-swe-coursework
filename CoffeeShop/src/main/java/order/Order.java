@@ -187,33 +187,41 @@ public class Order {
 
         DiscountDataStructure structure = new DiscountDataStructure();
 
-        /** Nested for loop to compare each item to another to check for available discounts */
-        for (int i = 0; i < myOrderDetails.size(); i++) {
-            for (int j = i + 1; j < myOrderDetails.size(); j++) {
-                if (menu.getCategory(myOrderDetails.get(i)) != menu.getCategory(myOrderDetails.get(j))) {
-                    /** If a discount is found this will then be added to the custom DiscountDataStructure */
-                    Discount d = discountsMap.get(Set.of(menu.getCategory(myOrderDetails.get(i)), menu.getCategory(myOrderDetails.get(j))));
-                    if (d != null) {
-                        structure.addEntry(d, i, j);
-                    }
+        // Nested for loop to compare each item to another to check for available discounts
+        int myOrderDetailsSize = myOrderDetails.size();
+
+        for (int i = 0; i < myOrderDetailsSize; i++) {
+            ItemCategory category1 = menu.getCategory(myOrderDetails.get(i));
+            for (int j = i + 1; j < myOrderDetailsSize; j++) {
+                ItemCategory category2 = menu.getCategory(myOrderDetails.get(j));
+
+                if (category1 == category2) {
+                    continue;
+                }
+
+                // If a discount is found this will then be added to the custom DiscountDataStructure
+                Discount discount = discountsMap.get(Set.of(category1, category2));
+
+                if (discount != null) {
+                    structure.addEntry(discount, i, j);
                 }
             }
         }
 
-        /** Removes and looks at the first entry in the discount data structure (ie the first discount to apply) */
+        // Removes and looks at the first entry in the discount data structure (ie the first discount to apply)
         ArrayList<Object> s = structure.removeEntry();
 
         while (s != null) {
-            /** Applies the discount */
+            // Applies the discount
             discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
             discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
             int index1 = (Integer) s.get(1);
             int index2 = (Integer) s.get(2);
-            /** Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again */
+            // Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again
             myOrderDetails.remove(index2);
             myOrderDetails.remove(index1);
 
-            /** This is then repeated for anymore available discounts */
+            // This is then repeated for anymore available discounts
             s = structure.removeEntry();
         }
     }
