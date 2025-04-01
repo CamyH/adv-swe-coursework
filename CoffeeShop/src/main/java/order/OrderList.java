@@ -70,6 +70,9 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * Eg will be used when a new Order has been placed
      *
      * @param order The order to be added to the queue
+     * @return True if order successfully added, false otherwise
+     * @throws InvalidOrderException if the order is incorrect
+     * @throws DuplicateOrderException if the order already exists
      */
     @Override
     public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
@@ -78,14 +81,14 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
             return false;
         }
 
-        if (order == null) {
-            logger.logSevere("Invalid order: Order details cannot be null");
-            throw new InvalidOrderException("Order details cannot be null");
+        if (Order.isInvalidOrder(order)) {
+            logger.logSevere("Invalid order: Order or Order ID cannot be null");
+            throw new InvalidOrderException("Order or Order ID cannot be null");
         }
 
-        if (order.getDetails().isEmpty()) {
-            logger.logSevere("Invalid order: Order details cannot be empty");
-            throw new InvalidOrderException("Order details cannot be empty");
+        if (Order.isOrderDetailsNullOrEmpty(order)) {
+            logger.logSevere("Invalid order: Order must contain at least one item");
+            throw new InvalidOrderException("Order must contain at least one item");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
@@ -106,7 +109,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
 
         notifyObservers();
 
-        return success;
+        return order.getOnlineStatus() ? allOrders.getFirst().add(order) : allOrders.getLast().add(order);
     }
 
     /**

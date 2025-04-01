@@ -289,4 +289,25 @@ public class Order {
     public boolean getOnlineStatus() {
         return onlineStatus;
     }
+
+    /**
+     * Checks if the given order is invalid
+     * An order is considered invalid if it is {@code null} or if its order ID is {@code null}
+     *
+     * @param order the order to check
+     * @return {@code true} if the order is null or has a null order ID, {@code false} otherwise
+     */
+    public static boolean isInvalidOrder(Order order) {
+        return order == null || order.getOrderID() == null;
+    }
+
+    /**
+     * Checks if the order details are null or empty
+     *
+     * @param order the order to check
+     * @return true if the order details are null or empty, false otherwise
+     */
+    public static boolean isOrderDetailsNullOrEmpty(Order order) {
+        return order.getDetails() == null || order.getDetails().isEmpty();
+    }
 }

@@ -75,7 +75,7 @@ public class Client {
      * @throws NullPointerException if the order is null
      */
     public synchronized void sendOrder(Order order) throws IOException {
-        if (order == null) throw new NullPointerException("Order cannot be null");
+        if (Order.isInvalidOrder(order)) throw new NullPointerException("Order cannot be null");
 
         logger.logInfo("Sending order: " + order.getOrderID());
 
