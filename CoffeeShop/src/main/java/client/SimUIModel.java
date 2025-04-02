@@ -23,6 +23,7 @@ public class SimUIModel implements Subject {
     private final ItemList menu;
     private final ArrayList<String> roles;
     private final StaffList staffList;
+    private ArrayList<StaffPopupController> popupList;
 
     private Integer simSpd = 2000;
 
@@ -30,6 +31,7 @@ public class SimUIModel implements Subject {
             this.orderList = OrderList.getInstance();
             this.menu = ItemList.getInstance();
             this.staffList = StaffList.getInstance();
+            popupList = new ArrayList<>();
             roles = new ArrayList<>();
 
             // Populate roles
@@ -114,6 +116,10 @@ public class SimUIModel implements Subject {
             this.simSpd = Math.round(speed/ 100.0f) * 100;
     }
 
+    public void addPopup(StaffPopupController popup) {
+        popupList.add(popup);
+    }
+
     public void addStaff(String name, String role, int experience) throws StaffNullOrderException {
         if (name.isEmpty()) {
             throw new StaffNullOrderException("Staff name is empty");
@@ -126,6 +132,10 @@ public class SimUIModel implements Subject {
         }
         notifyObservers();
 
+    }
+
+    public void removePopup(StaffPopupController popup) {
+        popupList.remove(popup);
     }
 
     public void removeStaff(UUID ID) {

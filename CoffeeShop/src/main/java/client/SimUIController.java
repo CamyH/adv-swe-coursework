@@ -19,10 +19,6 @@ public class SimUIController implements Observer {
     private SimUIModel simModel;
     private SimulationUI simView;
 
-    // The order list to display
-    // Contains both in person and online orders
-    private OrderList orders;
-
     public SimUIController() {
 
         System.out.println("SimUIController()");
@@ -31,18 +27,14 @@ public class SimUIController implements Observer {
         simModel.registerObserver(this);
         simView = new SimulationUI(simModel);
         simView.addSetListener(new SetListener());
-        orders = OrderList.getInstance();
 
     }
 
     private void viewStaffDetails() {
-        StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
-        UUID curStaffID;
+        StaffPopupController staffPopupController;
         try {
-            curStaffID = simView.getCurStaff();
-            staffDetailsPopup.setDetails(simModel.getStaffDetails(curStaffID));
+            staffPopupController = new StaffPopupController(simModel,simView.getCurStaff());
         } catch (NullPointerException e) {
-            staffDetailsPopup.exit();
             simView.showPopup("No Staff Found");
         }
 

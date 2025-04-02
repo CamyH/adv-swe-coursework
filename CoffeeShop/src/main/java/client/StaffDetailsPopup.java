@@ -4,23 +4,36 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.UUID;
 
-public class StaffDetailsPopup extends JFrame implements ActionListener  {
+public class StaffDetailsPopup extends JFrame  {
 
     private JPanel contentPanel;
     private JTextArea detailsArea;
     private JScrollPane detailsScrollPane;
     private JButton exitButton;
+    private UUID ID;
 
-    public StaffDetailsPopup()  {
+    public StaffDetailsPopup(StaffPopupModel SM)  {
+
         // Ensure the UI window is shown in the center of the screen
         setContentPane(contentPanel);
         setLocationRelativeTo(null);
         setVisible(true);
         setTitle("Server Details");
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(300,200);
-        exitButton.addActionListener(this);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                close();
+            }
+        });
+    }
+
+    public void addSetListener(ActionListener al) {
+        exitButton.setName("ExitBtn");
+        exitButton.addActionListener(al);
     }
 
     public void setDetails(ArrayList<String> details) {
@@ -38,13 +51,8 @@ public class StaffDetailsPopup extends JFrame implements ActionListener  {
 
     }
 
-    public void exit() {
+    public void close() {
         StaffDetailsPopup.this.dispose();
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == exitButton) {
-            exit();
-        }
+        System.out.println("Server has been closed");
     }
 }
