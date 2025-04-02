@@ -187,6 +187,18 @@ public class Order {
 
         DiscountDataStructure structure = new DiscountDataStructure();
 
+        // First checking discounts for daily special items
+        Item dailySpecial = Discount.getDailySpecialItem();
+        if (dailySpecial != null) {
+            for (int i = 0; i < myOrderDetails.size(); i++) {
+                if (myOrderDetails.get(i).equals(dailySpecial.getItemID())) {
+                    structure.addEntry(Discount.DAILY_SPECIAL, i, i);
+                }
+            }
+        }
+
+        // After checking for Daily Specials, checking for other discounts
+
         /** Nested for loop to compare each item to another to check for available discounts */
         for (int i = 0; i < myOrderDetails.size(); i++) {
             for (int j = i + 1; j < myOrderDetails.size(); j++) {
@@ -204,11 +216,19 @@ public class Order {
         ArrayList<Object> s = structure.removeEntry();
 
         while (s != null) {
-            /** Applies the discount */
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
+            Discount discount = (Discount) s.get(0);
+
             int index1 = (Integer) s.get(1);
             int index2 = (Integer) s.get(2);
+
+            if (discount == Discount.DAILY_SPECIAL) {
+                discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
+                myOrderDetails.remove(index1);
+            } else {
+                discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
+                discountedCost -= (menu.getCost(myOrderDetails.get(index2)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index2))));
+            }
+
             /** Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again */
             myOrderDetails.remove(index2);
             myOrderDetails.remove(index1);

@@ -3,9 +3,11 @@ package client;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemList;
 import order.Order;
 import order.OrderList;
+import utils.Discount;
 
 import java.util.List;
 
@@ -66,5 +68,23 @@ public class CustomerModel {
 
     public double getDiscountedCost() {
         return currentOrder.getDiscountedCost();
+    }
+
+    public String getDailySpecialInfo() {
+        Item dailySpecial = Discount.getDailySpecialItem();
+        if (dailySpecial != null) {
+            return String.format("OO Today's Special OO\n\n" +
+                            "Item: %s\n" +
+                            "Original Price: £%.2f\n" +
+                            "Special Price: £%.2f\n" +
+                            "Discount: %d%% OFF\n\n" +
+                            "Add this to your order:\n%s",
+                    dailySpecial.getDescription(),
+                    dailySpecial.getCost(),
+                    Discount.DAILY_SPECIAL.calculateDiscount(dailySpecial.getCost()),
+                    Discount.DAILY_SPECIAL.getValue(),
+                    dailySpecial.getItemID());
+        }
+        return "No daily special today";
     }
 }
