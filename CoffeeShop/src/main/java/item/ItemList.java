@@ -2,6 +2,7 @@ package item;
 
 import exceptions.InvalidItemIDException;
 import interfaces.EntityList;
+import order.OrderList;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,7 +23,7 @@ public class ItemList implements EntityList<Item, String>, Serializable {
     private Map<String, Item> items;
 
     /** ItemList instance to be used by other classes */
-    private static ItemList instance = new ItemList();
+    private static ItemList instance;
 
     /**
      * Initialises the hashmap to contain the items
@@ -163,6 +164,7 @@ public class ItemList implements EntityList<Item, String>, Serializable {
      * @return an instance of ItemList
      */
     public static ItemList getInstance() {
+        if (instance == null) instance = new ItemList();
         return instance;
     }
 

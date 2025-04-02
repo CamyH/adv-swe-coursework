@@ -3,6 +3,8 @@ package client;
 import javax.swing.*;
 import javax.swing.text.View;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * View Class (Refactored from GUI by Akash)
@@ -47,6 +49,13 @@ public class CustomerView extends JFrame {
         setSize(800, 300);
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Demo.cleanUp();
+            }
+        });
 
         // Disable editing for certain fields
         totalCostField.setEnabled(false);

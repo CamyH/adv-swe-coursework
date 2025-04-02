@@ -1,5 +1,7 @@
 package logs;
 
+import item.ItemList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.*;
@@ -12,7 +14,7 @@ import java.util.logging.*;
 public class CoffeeShopLogger {
 
     private static final Logger logger = Logger.getLogger(CoffeeShopLogger.class.getName());
-    private static CoffeeShopLogger instance = new CoffeeShopLogger();
+    private static CoffeeShopLogger instance;
 
     private CoffeeShopLogger() {
         try {
@@ -46,6 +48,7 @@ public class CoffeeShopLogger {
     }
 
     public static CoffeeShopLogger getInstance() {
+        if (instance == null) instance = new CoffeeShopLogger();
         return instance;
     }
 

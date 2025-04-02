@@ -3,6 +3,7 @@ package client;
 import item.ItemFileReader;
 import order.OrderFileReadWrite;
 import utils.GenerateReportFileWriter;
+import workers.Waiter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +19,8 @@ public class Demo {
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static CustomerView view;
+    private static SimUIView simView;
+    private static SimUIModel simModel;
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
@@ -43,7 +46,9 @@ public class Demo {
     }
 
     public void showSimUI(){
-        simController = new SimUIController();
+        simModel = new SimUIModel();
+        simView = new SimUIView(simModel);
+        simController =  new SimUIController(simView, simModel);
     }
 
     /**
@@ -78,8 +83,16 @@ public class Demo {
         System.out.println("Goodbye.");
         view.closeGUI();
         simController.close();
+        Waiter.addBackAllCurrentOrders();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
+
+        try {
+            orderReader.writeToFile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         System.exit(0);
     }
 
@@ -87,6 +100,21 @@ public class Demo {
      * Writes to order txt file
      */
     static void demoWriteOrders() {
+        try {
+            orderReader.writeToFile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static void cleanUp() {
+        System.out.println("Goodbye.");
+
+        Waiter.addBackAllCurrentOrders();
+
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
+        generateReportFileWriter.writeToFile();
+
         try {
             orderReader.writeToFile();
         } catch (Exception e) {
