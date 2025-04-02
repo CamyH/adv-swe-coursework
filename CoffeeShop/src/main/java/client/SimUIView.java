@@ -1,16 +1,18 @@
 package client;
 
 import interfaces.Observer;
-import workers.Staff;
 import workers.StaffList;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
-public class SimulationUI extends JFrame implements Observer {
+public class SimUIView extends JFrame implements Observer {
 
     private JPanel contentPanel;
     private JTextArea OrderListArea;
@@ -19,9 +21,9 @@ public class SimulationUI extends JFrame implements Observer {
     private JComboBox<Integer> StaffExpCombo;
     private JTextField StaffNameField;
     private JButton AddStaffBtn;
-    private JSlider SimSpdSlider;
-    private JTextField SimSpdField;
-    private JLabel SimSpdLabel;
+    private JSlider SimSpeedSlider;
+    private JTextField SimSpeedField;
+    private JLabel SimSpeedLabel;
     private JComboBox SelectStaffCombo;
     private JButton RemoveStaffBtn;
     private JButton ViewDetailsBtn;
@@ -35,16 +37,14 @@ public class SimulationUI extends JFrame implements Observer {
     private JLabel StaffNameLabel;
     private JLabel StaffRoleLabel;
     private JLabel StaffExpLabel;
-    private JPanel SimSpdPanel;
-    private JButton SimSpdBtn;
+    private JPanel SimSpeedPanel;
 
     private SimUIModel simModel;
+    private static SimUIView instance;
 
-    public SimulationUI(SimUIModel model) {
-        model.registerObserver(this);
-
-        simModel = model;
-
+    public SimUIView(SimUIModel simModel) {
+        this.simModel = simModel;
+        simModel.registerObserver(this);
         setContentPane(contentPanel);
         setTitle("Coffee Shop Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,10 +54,20 @@ public class SimulationUI extends JFrame implements Observer {
         setLocationRelativeTo(null);
         setVisible(true);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Demo.cleanUp();
+            }
+        });
+
         // Make all non-editable fields un-editable
         OrderListArea.setEnabled(false);
+        OrderListArea.setDisabledTextColor(Color.BLACK);
         OnlineOrderArea.setEnabled(false);
-        SimSpdField.setEnabled(false);
+        OnlineOrderArea.setDisabledTextColor(Color.BLACK);
+        SimSpeedField.setEnabled(false);
+        SimSpeedField.setDisabledTextColor(Color.BLACK);
 
         // Fill the experience combo box with options
         for (int i = 1; i <= 5; i++) {
@@ -66,6 +76,10 @@ public class SimulationUI extends JFrame implements Observer {
 
         // Initial update to populate fields
         update();
+    }
+
+    public void addSimSpeedChangeListener(ChangeListener listener) {
+        SimSpeedSlider.addChangeListener(listener);
     }
 
     public String getStaffName() {
@@ -81,29 +95,28 @@ public class SimulationUI extends JFrame implements Observer {
     }
 
     public UUID getCurStaff() throws NullPointerException {
-        String[] curStaffParts = SelectStaffCombo.getSelectedItem().toString().split(",", 2);
-        return UUID.fromString(curStaffParts[1]);
+        String[] curStaffParts = SelectStaffCombo.getSelectedItem().toString().split(", ", 3);
+        return UUID.fromString(curStaffParts[2]);
     }
 
     public int getSimSliderValue() {
-        return SimSpdSlider.getValue();
+        return SimSpeedSlider.getValue();
     }
 
-    public void setOrderLists(ArrayList<String> orders, ArrayList<String> onlineOrders) {
-        for (String order : orders) {
-            OrderListArea.append(order + "\n");
-        }
-        for (String onlineOrder : onlineOrders) {
-            OnlineOrderArea.append(onlineOrder + "\n");
-        }
+    public void setOrderLists(String orders, String onlineOrders) {
+        OrderListArea.setText("");
+        OrderListArea.append(orders + "\n");
+
+        OnlineOrderArea.setText("");
+        OnlineOrderArea.append(onlineOrders + "\n");
     }
 
     private void setSimSpeed() {
         // Refresh the sim speed text field
-        SimSpdField.setText(String.valueOf(simModel.getSimSpd()));
+        SimSpeedField.setText(String.valueOf(simModel.getSimSpeed()));
 
         // Refresh the sim speed slider
-        SimSpdSlider.setValue(simModel.getSimSpd());
+        SimSpeedSlider.setValue(simModel.getSimSpeed());
     }
 
     private void setRoles(ArrayList<String> roles) {
@@ -121,7 +134,7 @@ public class SimulationUI extends JFrame implements Observer {
         // Should work with Stafflist
 
         staffList.getStaffList().forEach((uuid, curStaff) -> {
-            SelectStaffCombo.addItem((curStaff.getWorkerName()) + "," + uuid);
+            SelectStaffCombo.addItem((curStaff.getWorkerName()) + ", " + curStaff.getRole() + ", "+ uuid);
         });
     }
 
@@ -139,13 +152,9 @@ public class SimulationUI extends JFrame implements Observer {
 
         ViewDetailsBtn.setName("ViewDetailsBtn");
         ViewDetailsBtn.addActionListener(al);
-
-        SimSpdBtn.setName("SimSpdBtn");
-        SimSpdBtn.addActionListener(al);
     }
 
     public void update() {
-
         // Refresh sim speed related fields
         setSimSpeed();
 
@@ -156,15 +165,16 @@ public class SimulationUI extends JFrame implements Observer {
         setStaffList(simModel.getStaffList());
 
         // Refresh the Order lists
+        setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
     }
 
     public void showPopup(String message) {
-        JOptionPane.showMessageDialog(SimulationUI.this, message);
+        JOptionPane.showMessageDialog(SimUIView.this, message);
     }
 
     public void close() {
         // close the window
-        SimulationUI.this.dispose();
+        SimUIView.this.dispose();
     }
 }
 

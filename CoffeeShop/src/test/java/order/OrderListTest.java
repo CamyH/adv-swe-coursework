@@ -360,4 +360,43 @@ public class OrderListTest {
         }
     }
 
+    /**
+     * Tests adding online orders
+     */
+    @Test
+    void testOnlineOrders() {
+        OrderList.resetInstance();
+        orderList = OrderList.getInstance();
+
+        try {
+            Order o = new Order();
+            o.addItem("RL1");
+            o.addItem("RL1");
+            o.addItem("PSY5");
+            o.setOnlineStatus();
+            orderList.add(o);
+
+            o = new Order();
+            o.addItem("SD1");
+            o.addItem("HD2");
+            o.addItem("PSY5");
+            o.setOnlineStatus();
+            orderList.add(o);
+
+            o = new Order();
+            o.addItem("SD1");
+            o.addItem("SD2");
+            o.addItem("PSY5");
+            orderList.add(o);
+
+            System.out.println("ONLINE ORDERS");
+            System.out.println(orderList.getOrdersForDisplay(true));
+            System.out.println("IN PERSON ORDERS");
+            System.out.println(orderList.getOrdersForDisplay(false));
+
+        } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

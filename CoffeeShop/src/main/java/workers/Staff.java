@@ -1,9 +1,8 @@
 package workers;
 
+import client.SimUIModel;
 import interfaces.Observer;
-import order.Order;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -15,10 +14,10 @@ import java.util.UUID;
  *
  * @author Fraser Holman
  */
-public abstract class Staff extends Thread implements Observer {
+public abstract class Staff<T> extends Thread implements Observer {
     private String name;
 
-    protected double defaultDelay = 2000.0;
+    protected double defaultDelay;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
@@ -39,6 +38,7 @@ public abstract class Staff extends Thread implements Observer {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
+        setDefaultDelay(SimUIModel.getSimSpeed());
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @return String representing workers name
      */
-    public String getWorkerName() {
+    public synchronized String getWorkerName() {
         return name;
     }
 
@@ -85,7 +85,7 @@ public abstract class Staff extends Thread implements Observer {
      * @param defaultDelay double representing the delay in completing orders
      */
     public void setDefaultDelay(double defaultDelay) {
-        this.defaultDelay = defaultDelay;
+        this.defaultDelay = 10000 - ( defaultDelay / 100 * 10000 ) + 100;
     }
 
     /**
@@ -112,8 +112,10 @@ public abstract class Staff extends Thread implements Observer {
      */
     public abstract void removeStaff();
 
-    public abstract ArrayList<String> getCurrentOrderDetails();
+    public abstract String getRole();
 
-    public abstract Order getCurrentOrder();
+    public abstract String getCurrentOrderDetails();
+
+    public abstract T getCurrentOrder();
 
 }

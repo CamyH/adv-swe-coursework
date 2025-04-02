@@ -36,19 +36,8 @@ public class StaffDetailsPopup extends JFrame  {
         exitButton.addActionListener(al);
     }
 
-    public void setDetails(ArrayList<String> details) {
-        int size = details.size();
-        detailsArea.append("Server: " + details.getFirst() + "\n" + "Experience: " + details.get(1) + "\n");
-        if (details.size() < 5) {
-            detailsArea.append("Staff is currently waiting for an order");
-        } else {
-            detailsArea.append("\n" + "Order Customer ID: " + details.get(2));
-            for (int i = 3; i < size-2; i++) {
-                detailsArea.append("\n" + "Item " + i + ": " + details.get(i));
-            }
-            detailsArea.append("\n" + "Total: " + details.get((size-2)) + ", " + details.getLast());
-        }
-
+    public void setDetails(String details) {
+        detailsArea.append(details);
     }
 
     public void close() {

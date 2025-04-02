@@ -3,6 +3,7 @@ package workers;
 import interfaces.EntityList;
 import interfaces.Observer;
 import interfaces.Subject;
+import item.ItemList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class StaffList implements EntityList<Staff, UUID>, Subject {
     private final ArrayList<Observer> observers = new ArrayList<Observer>();
 
     /** Initialise the instance of StaffList */
-    private static StaffList instance = new StaffList();
+    private static StaffList instance;
 
     /**
      * Private constructor as Object is a singleton
@@ -44,8 +45,21 @@ public class StaffList implements EntityList<Staff, UUID>, Subject {
      * @return true if the removal was successful, false otherwise
      */
     public boolean remove(UUID ID) {
-        getStaff(ID).removeStaff();
-        return staffList.remove(ID) != null;
+        Staff staff = staffList.remove(ID);
+
+        if (staff == null) {
+            return false;
+        }
+
+        staff.removeStaff();
+
+        return true;
+    }
+
+    public void setDefaultDelay(double defaultDelay) {
+        for (Staff staff : staffList.values()) {
+            staff.setDefaultDelay(defaultDelay);
+        }
     }
 
     /**
@@ -82,6 +96,7 @@ public class StaffList implements EntityList<Staff, UUID>, Subject {
      * @return an instance of StaffList
      */
     public static StaffList getInstance() {
+        if (instance == null) instance = new StaffList();
         return instance;
     }
 

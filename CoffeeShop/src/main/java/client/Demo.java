@@ -1,22 +1,27 @@
 package client;
+
 import item.ItemFileReader;
 import order.OrderFileReadWrite;
 import utils.GenerateReportFileWriter;
+import workers.Waiter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Demo initialises the CoffeeShop program
- * Contains the main method
+ * Refactored to support MVC by Akash
+ * Demo initializes the Coffee Shop program.
+ * Contains the main method.
  * @author Caelan Mackenzie
  */
-
 public class Demo {
 
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
-    private static GUI gui;
+    private static CustomerView view;
+    private static SimUIView simView;
+    private static SimUIModel simModel;
+    private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
 
@@ -24,12 +29,11 @@ public class Demo {
      * Initialises and Empty ItemList and OrderList
      */
     public Demo() {}
-
     /**
      * Runs the Console Code
      */
     public void showConsole() {
-        console =  new Console();
+        Console console = new Console();
         console.run();
     }
 
@@ -37,18 +41,20 @@ public class Demo {
      * Starts the GUI
      */
     public void showGUI() {
-        gui = new GUI();
+        view = new CustomerView();
+        customerController = new CustomerController(view);
     }
 
     public void showSimUI(){
-        simController = new SimUIController();
+        simModel = new SimUIModel();
+        simView = new SimUIView(simModel);
+        simController =  new SimUIController(simView, simModel);
     }
 
     /**
      * Starts the whole system
      */
     public static void main(String[] args) {
-        // Create a new demo object
         Demo demo = new Demo();
 
         itemReader = new ItemFileReader("menu.txt");
@@ -73,12 +79,19 @@ public class Demo {
     /**
      * Closes the GUI
      */
-    static void demoCloseGUI(){
+    static void demoCloseGUI() {
         System.out.println("Goodbye.");
-        gui.closeGUI();
+        view.closeGUI();
         simController.close();
+        Waiter.addBackAllCurrentOrders();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
+
+        try {
+            orderReader.writeToFile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         System.exit(0);
     }
@@ -86,11 +99,25 @@ public class Demo {
     /**
      * Writes to order txt file
      */
-    static void demoWriteOrders(){
+    static void demoWriteOrders() {
         try {
             orderReader.writeToFile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        catch (IOException e) {
+    }
+
+    static void cleanUp() {
+        System.out.println("Goodbye.");
+
+        Waiter.addBackAllCurrentOrders();
+
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
+        generateReportFileWriter.writeToFile();
+
+        try {
+            orderReader.writeToFile();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

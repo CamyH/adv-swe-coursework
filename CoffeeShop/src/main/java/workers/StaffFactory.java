@@ -17,11 +17,16 @@ public class StaffFactory {
      * @return Returns either a Staff Object or a null object
      */
     public static Staff getStaff(String type, String name, int experience) {
-        if (type.equalsIgnoreCase("Barista")) {
-            return new Barista(name, experience);
+        switch (type.toLowerCase()) {
+            case "waiter":
+                return new Waiter(name, experience);
+            case "barista":
+                return new Barista(name, experience);
+            case "chef":
+                return new Chef(name, experience);
+            default:
+                return null;
         }
-
-        return null;
     }
 
 }

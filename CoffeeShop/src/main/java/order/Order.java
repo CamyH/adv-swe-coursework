@@ -1,6 +1,7 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemCategory;
 import item.ItemFileReader;
 import item.ItemList;
