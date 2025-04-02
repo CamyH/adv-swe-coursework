@@ -1,7 +1,9 @@
 package server;
 
 import client.Client;
+import client.SimUIModel;
 import exceptions.InvalidOrderException;
+import interfaces.OrderObserver;
 import logs.CoffeeShopLogger;
 import message.Message;
 import order.Order;
@@ -12,25 +14,28 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Handles the communication between the server and a single client.
  * Implements the {@link Runnable} interface to allow for multi-threaded processing of client requests.
- * Each {@link ClientHandler} instance is responsible for managing a single client's socket connection.
+ * Each {@link ClientService} instance is responsible for managing a single client's socket connection.
  */
-public class ClientHandler implements Runnable {
+public class ClientService implements Runnable, OrderObserver {
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private final SimUIModel simUIModel;
 
     /**
      * Constructor to initialise the client handler
      *
      * @param clientSocket the {@link Socket} that is created by the client
      */
-    public ClientHandler(Socket clientSocket) throws IOException {
+    public ClientService(Socket clientSocket, SimUIModel simUIModel) throws IOException {
         this.clientSocket = clientSocket;
+        this.simUIModel = simUIModel;
         this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
         this.outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
         outputStream.flush();
@@ -49,9 +54,10 @@ public class ClientHandler implements Runnable {
             while (true) {
                 try {
                     logger.logDebug("Idling...");
-                    Object receivedMessage = inputStream.readObject();
+                    Order receivedOrder = (Order) inputStream.readObject();
 
-                    logger.logDebug("Message " + receivedMessage.toString());
+                    logger.logInfo("Order " + receivedOrder.getOrderID());
+                    simUIModel.addOrder(receivedOrder);
                 } catch (EOFException e) {
                     logger.logInfo("Client disconnected: " + clientSocket.getInetAddress());
                     clientSocket.close();
@@ -92,5 +98,25 @@ public class ClientHandler implements Runnable {
     public synchronized Order receiveOrder() throws IOException, ClassNotFoundException, InvalidOrderException {
         return Optional.ofNullable((Order) inputStream.readObject())
                .orElseThrow(() -> new InvalidOrderException("Order received is NULL"));
+    }
+
+    /**
+     * Notifies the observer that an order has moved to the processing stage
+     *
+     * @param orderID the ID of the order that has been updated
+     */
+    @Override
+    public void sendOrderProcessingNotification(UUID orderID) {
+        
+    }
+
+    /**
+     * Notifies the observer that an order has been completed
+     *
+     * @param orderID the ID of the order that has been updated
+     */
+    @Override
+    public void sendOrderCompletedNotification(UUID orderID) {
+
     }
 }

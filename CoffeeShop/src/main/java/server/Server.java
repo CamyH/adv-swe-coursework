@@ -58,7 +58,7 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 logger.logInfo("Client connected: " + clientSocket.getInetAddress());
 
-                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                ClientService clientHandler = new ClientService(clientSocket, simUIModel);
                 threadPool.submit(clientHandler);
             }
         } catch (IOException e) {
