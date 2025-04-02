@@ -20,7 +20,7 @@ public class SimUIController {
     private static SimUIController instance;
     private CoffeeShopLogger coffeeShopLogger;
 
-    public SimUIController() {
+    public SimUIController(SimUIView simView, SimUIModel simModel) {
 
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");

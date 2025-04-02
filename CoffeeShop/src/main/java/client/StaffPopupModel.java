@@ -7,13 +7,13 @@ import workers.StaffList;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class StaffPopupModel implements Subject, Observer {
+public class StaffPopupModel extends Subject implements Observer {
 
     private final ArrayList<Observer> observers = new ArrayList<Observer>();
 
     UUID staffID;
     private final SimUIModel simModel;
-    private ArrayList<String> details;
+    private String details;
     private final StaffList staffList;
 
     public StaffPopupModel(SimUIModel simModel, UUID staffID) {
@@ -39,7 +39,7 @@ public class StaffPopupModel implements Subject, Observer {
         }
     }
 
-    public ArrayList<String> getDetails() {
+    public String getDetails() {
         return details;
     }
 
