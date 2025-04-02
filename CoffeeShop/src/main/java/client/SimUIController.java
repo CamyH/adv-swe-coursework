@@ -37,39 +37,62 @@ public class SimUIController {
         try {
             staffPopupController = new StaffPopupController(simModel,simView.getCurStaff());
         } catch (NullPointerException e) {
-            simView.showPopup("No Staff Found");
+            SwingUtilities.invokeLater(() -> simView.showPopup("No Staff Found"));
         }
 
     }
 
     private void addStaff() {
-        try {
-            String name = simView.getStaffName();
-            simView.clearCurStaff();
-            try {
-                simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
+
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            String name;
+            @Override
+            protected Void doInBackground() {
+                try {
+                    name = simView.getStaffName();
+                    simModel.addStaff(name, simView.getStaffRole(), simView.getStaffExp());
+                    SwingUtilities.invokeLater(() -> simView.showPopup("Added " + name + " to Staff List"));
+                } catch (StaffNullNameException e) {
+                    SwingUtilities.invokeLater(() -> simView.showPopup("Please insert a staff name"));
+                }
+                return null;
             }
-            catch (NumberFormatException e) {
-                coffeeShopLogger.logSevere("Staff Experience Error - Must be a Valid Integer");
+
+            @Override
+            protected void done() {
+                simModel.notifyObservers();
             }
-            simView.showPopup("Added " + name + " to Staff List");
-        } catch (StaffNullNameException e) {
-            simView.showPopup(e.getMessage());
-        }
+        };
+        worker.execute();
     }
 
     private void removeStaff() {
-        try {
-            simModel.removeStaff(simView.getCurStaff());
-            simModel.notifyObservers();
-            simView.showPopup("Removed Selected Staff");
-        } catch (NullPointerException e) {
-            simView.showPopup("No Staff to Remove");
-        }
+
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            String name;
+            @Override
+            protected Void doInBackground() {
+                try {
+                    name = simView.getStaffName();
+                    System.out.println(name);
+                    simModel.removeStaff(simView.getCurStaff());
+                    simView.showPopup("Removed " + name + " from Staff List");
+                } catch (NullPointerException e) {
+                    simView.showPopup("No Staff to Remove");
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                simModel.notifyObservers();
+            }
+        };
+        worker.execute();
     }
 
     public void updateSimSpeed() {
-        simModel.setSimSpeed(simView.getSimSliderValue());
+        SwingUtilities.invokeLater(() -> simModel.setSimSpeed(simView.getSimSliderValue()));
         simModel.notifyObservers();
     }
 
@@ -79,16 +102,14 @@ public class SimUIController {
 
     public class SetListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton sourceBtn = (JButton)e.getSource();
+
+            JButton sourceBtn = (JButton) e.getSource();
+
             if (sourceBtn.getName().equals("RemoveStaffBtn")) {
                 removeStaff();
-            }
-
-            else if (sourceBtn.getName().equals("AddStaffBtn")) {
+            } else if (sourceBtn.getName().equals("AddStaffBtn")) {
                 addStaff();
-            }
-
-            else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
+            } else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
                 viewStaffDetails();
             }
         }
