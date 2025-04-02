@@ -25,8 +25,9 @@
               <component id="9bad6" class="javax.swing.JTextArea" binding="displayMenuField">
                 <constraints/>
                 <properties>
-                  <editable value="false"/>
+                  <editable value="true"/>
                   <lineWrap value="true"/>
+                  <text value=""/>
                   <wrapStyleWord value="true"/>
                 </properties>
               </component>
