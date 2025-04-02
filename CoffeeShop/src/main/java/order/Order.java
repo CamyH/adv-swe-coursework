@@ -222,17 +222,28 @@ public class Order {
             int index2 = (Integer) s.get(2);
 
             if (discount == Discount.DAILY_SPECIAL) {
-                discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
-                myOrderDetails.remove(index1);
-            } else {
-                discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
-                discountedCost -= (menu.getCost(myOrderDetails.get(index2)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index2))));
+                if (index1 < myOrderDetails.size()) {
+                    discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
+                    myOrderDetails.remove(index1);
+                }
             }
+            else {
+                // Process the higher index first to avoid index shifting issues
+                int higherIndex = Math.max(index1, index2);
+                int lowerIndex = Math.min(index1, index2);
 
-            /** Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again */
-            myOrderDetails.remove(index2);
-            myOrderDetails.remove(index1);
+                if (higherIndex < myOrderDetails.size() && lowerIndex < myOrderDetails.size()) {
+                    // Apply discount to both items
+                    discountedCost -= (menu.getCost(myOrderDetails.get(higherIndex)) -
+                            discount.calculateDiscount(menu.getCost(myOrderDetails.get(higherIndex))));
+                    discountedCost -= (menu.getCost(myOrderDetails.get(lowerIndex)) -
+                            discount.calculateDiscount(menu.getCost(myOrderDetails.get(lowerIndex))));
 
+                    // Remove items starting from higher index first
+                    myOrderDetails.remove(higherIndex);
+                    myOrderDetails.remove(lowerIndex);
+                }
+            }
             /** This is then repeated for anymore available discounts */
             s = structure.removeEntry();
         }

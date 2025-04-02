@@ -51,9 +51,9 @@ public class CustomerView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 400);
         setLocationRelativeTo(null); // Center the window
-       // setVisible(true);
-
+        setVisible(true);
         initDailySpecialPanel();
+
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -159,9 +159,5 @@ public class CustomerView extends JFrame {
 
     public JTextField getItemIDField() {
         return itemIDField;
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
