@@ -1,13 +1,18 @@
 package workers;
 
 import interfaces.EntityList;
+import interfaces.Observer;
+import interfaces.Subject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StaffList implements EntityList<Staff, UUID> {
+public class StaffList implements EntityList<Staff, UUID>, Subject {
     // Hashmap of staff ID as the key, and Staff Object as the value
     private HashMap<UUID, Staff> staffList;
+
+    private final ArrayList<Observer> observers = new ArrayList<Observer>();
 
     /** Initialise the instance of StaffList */
     private static StaffList instance = new StaffList();
@@ -85,5 +90,19 @@ public class StaffList implements EntityList<Staff, UUID> {
      */
     public static void resetInstance() {
         instance = new StaffList();
+    }
+
+    public void registerObserver(Observer obs) {
+        observers.add(obs);
+    }
+
+    public void removeObserver(Observer obs) {
+        observers.remove(obs);
+    }
+
+    public void notifyObservers() {
+        for (Observer obs : observers) {
+            obs.update();
+        }
     }
 }

@@ -2,6 +2,7 @@ package client;
 
 import interfaces.Observer;
 import interfaces.Subject;
+import workers.StaffList;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,11 +14,15 @@ public class StaffPopupModel implements Subject, Observer {
     UUID staffID;
     private final SimUIModel simModel;
     private ArrayList<String> details;
+    private final StaffList staffList;
 
     public StaffPopupModel(SimUIModel simModel, UUID staffID) {
         this.simModel = simModel;
         this.details = simModel.getStaffDetails(staffID);
         this.staffID = staffID;
+        this.staffList = StaffList.getInstance();
+        staffList.registerObserver(this);
+
     }
 
     public void registerObserver(Observer obs) {
@@ -42,4 +47,9 @@ public class StaffPopupModel implements Subject, Observer {
         details = simModel.getStaffDetails(staffID);
         notifyObservers();
     }
+
+    public void removeThisObserver() {
+        staffList.removeObserver(this);
+    }
+
 }

@@ -49,6 +49,7 @@ public class StaffPopupController implements Observer {
     }
 
     public void close() {
+        staffPopupModel.removeThisObserver();
         simModel.removePopup(this);
         staffPopup.close();
     }
