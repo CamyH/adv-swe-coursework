@@ -53,8 +53,9 @@ public class SimUIView extends JFrame implements Observer {
      */
     public SimUIView(SimUIModel simModel) {
 
+        simModel.registerObserver(this);
+
         SwingUtilities.invokeLater(() -> {
-            simModel.registerObserver(this);
 
             // Set the UI's basic parameters
             setContentPane(contentPanel);

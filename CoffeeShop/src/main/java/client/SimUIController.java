@@ -29,18 +29,17 @@ public class SimUIController {
         this.simView = simView;
         coffeeShopLogger = CoffeeShopLogger.getInstance();
         simView.addSetListener(new SetListener());
-
         simView.addSimSpeedChangeListener(e -> updateSimSpeed());
     }
 
     private void viewStaffDetails() {
-        StaffPopupController staffPopupController;
-        try {
-            staffPopupController = new StaffPopupController(simModel,simView.getCurStaff());
-        } catch (NullPointerException e) {
-            SwingUtilities.invokeLater(() -> simView.showPopup("No Staff Found"));
-        }
-
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new StaffPopupController(simModel, simView.getCurStaff());
+            } catch (NullPointerException e) {
+                simView.showPopup("No Staff Found");
+            }
+        });
     }
 
     /**

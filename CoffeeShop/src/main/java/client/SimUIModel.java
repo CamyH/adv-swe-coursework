@@ -59,7 +59,9 @@ public class SimUIModel extends Subject implements Observer {
     }
 
     public String getStaffDetails(UUID ID) {
-        return staffList.getStaff(ID).getCurrentOrderDetails();
+        synchronized (staffList) {
+            return staffList.getStaff(ID).getCurrentOrderDetails();
+        }
     }
 
 
