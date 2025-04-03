@@ -12,8 +12,13 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * The simulation UI View
+ * @author Caelan Mackenzie
+ */
 public class SimUIView extends JFrame implements Observer {
 
+    // Declare the GUI components
     private JPanel contentPanel;
     private JTextArea OrderListArea;
     private JTextArea OnlineOrderArea;
@@ -39,13 +44,19 @@ public class SimUIView extends JFrame implements Observer {
     private JLabel StaffExpLabel;
     private JPanel SimSpeedPanel;
 
+    // Declare the UI Model
     private final SimUIModel simModel;
-    private static SimUIView instance;
 
+    /**
+     * SimUIView constructor method
+     * @param simModel the Model for the MVC
+     */
     public SimUIView(SimUIModel simModel) {
-        SwingUtilities.invokeLater(() -> {
 
+        SwingUtilities.invokeLater(() -> {
             simModel.registerObserver(this);
+
+            // Set the UI's basic parameters
             setContentPane(contentPanel);
             setTitle("Coffee Shop Simulation");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,8 +80,10 @@ public class SimUIView extends JFrame implements Observer {
             }
         });
 
+        // Initialise the Model
         this.simModel = simModel;
 
+        // Add window listener for the user closing the window
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -82,6 +95,7 @@ public class SimUIView extends JFrame implements Observer {
         update();
     }
 
+    /** Add a listener to the sim speed slider */
     public void addSimSpeedChangeListener(ChangeListener listener) {
         SimSpeedSlider.addChangeListener(listener);
     }
@@ -98,6 +112,11 @@ public class SimUIView extends JFrame implements Observer {
         return (Integer) StaffExpCombo.getSelectedItem();
     }
 
+    /**
+     * Retrieves the ID of the selected staff from the staff list dropdown menu by parsing the displayed string
+     * @return the ID of the selected staff
+     * @throws NullPointerException thrown when there is no staff in the drop-down list
+     */
     public UUID getCurStaff() throws NullPointerException {
         String selectedItem = (String) SelectStaffCombo.getSelectedItem();
         if (selectedItem == null) {
@@ -111,6 +130,11 @@ public class SimUIView extends JFrame implements Observer {
         return SimSpeedSlider.getValue();
     }
 
+    /**
+     * Write the contents of the pending online and in person orders to the text areas
+     * @param orders the list in person orders
+     * @param onlineOrders the list of online orders
+     */
     public void setOrderLists(String orders, String onlineOrders) {
         SwingUtilities.invokeLater(() -> {
             OrderListArea.setText("");
@@ -121,6 +145,7 @@ public class SimUIView extends JFrame implements Observer {
         });
     }
 
+    /** Write the sim speed to the sim speed field and update the position of the slider */
     private void setSimSpeed() {
         SwingUtilities.invokeLater(() -> {
             // Refresh the sim speed text field
@@ -131,6 +156,10 @@ public class SimUIView extends JFrame implements Observer {
         });
     }
 
+    /**
+     * Write the list roles to the role drop-down menu
+     * @param roles the list of available staff roles
+     */
     private void setRoles(ArrayList<String> roles) {
         SwingUtilities.invokeLater(() -> {
             StaffRoleCombo.removeAllItems();
@@ -142,11 +171,13 @@ public class SimUIView extends JFrame implements Observer {
         });
     }
 
+    /**
+     * Write the staff list to the staff drop down menu, with each item in the form (name,role,ID)
+     * @param staffList the list off current staff
+     */
     private void setStaffList(StaffList staffList) {
         SwingUtilities.invokeLater(() -> {
             SelectStaffCombo.removeAllItems();
-
-            // Should work with Stafflist
 
             staffList.getStaffList().forEach((uuid, curStaff) -> {
                 SelectStaffCombo.addItem((curStaff.getWorkerName()) + ", " + curStaff.getRole() + ", " + uuid);
@@ -158,6 +189,10 @@ public class SimUIView extends JFrame implements Observer {
         SwingUtilities.invokeLater(() -> StaffNameField.setText(""));
     }
 
+    /**
+     * Add the Controller's action listener to the buttons and give the buttons names to be referenced by Controller
+     * @param al the Controller's action listener
+     */
     public void addSetListener(ActionListener al) {
         SwingUtilities.invokeLater(() -> {
             RemoveStaffBtn.setName("RemoveStaffBtn");
@@ -171,6 +206,10 @@ public class SimUIView extends JFrame implements Observer {
         });
     }
 
+    /**
+     * Update the contents of the UI
+     * Utilises a Swing Worker to ensure thread safety
+     */
     public void update() {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override

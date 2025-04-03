@@ -12,6 +12,7 @@ import java.util.UUID;
 /**
  * The simulation UI controller
  * Uses action listener to watch for any button presses on the UI
+ * @author Caelan Mackenzie
  */
 public class SimUIController {
 
@@ -42,8 +43,11 @@ public class SimUIController {
 
     }
 
+    /**
+     * Retrieve the current staff details from the View and get the Model to add them to the staffList
+     * Utilises a Swing Worker to ensure thread safety
+     */
     private void addStaff() {
-
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             String name;
             @Override
@@ -52,6 +56,7 @@ public class SimUIController {
                     name = simView.getStaffName();
                     simModel.addStaff(name, simView.getStaffRole(), simView.getStaffExp());
                     SwingUtilities.invokeLater(() -> simView.showPopup("Added " + name + " to Staff List"));
+                    simView.clearCurStaff();
                 } catch (StaffNullNameException e) {
                     SwingUtilities.invokeLater(() -> simView.showPopup("Please insert a staff name"));
                 }
@@ -66,6 +71,10 @@ public class SimUIController {
         worker.execute();
     }
 
+    /**
+     * Retrieve the selected staff from the View and get the Model to remove it from the staffList
+     * Utilises a Swing Worker to ensure thread safety
+     */
     private void removeStaff() {
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -91,15 +100,20 @@ public class SimUIController {
         worker.execute();
     }
 
+
     public void updateSimSpeed() {
         SwingUtilities.invokeLater(() -> simModel.setSimSpeed(simView.getSimSliderValue()));
-        simModel.notifyObservers();
     }
 
+    /** Send a message to the view to be sown as a popup */
     public void message(String msg) {
         simView.showPopup(msg);
     }
 
+    /**
+     * The set listener to detect button presses on the UI
+     * Determines the button by using the defined button names
+     */
     public class SetListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
