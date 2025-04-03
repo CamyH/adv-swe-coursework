@@ -1,41 +1,28 @@
 package client;
 
-import item.ItemFileReader;
-import message.Message;
-import message.MessageType;
+import logs.CoffeeShopLogger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.UUID;
 
 /**
  * Test Class to show how to run a new client
  * instance and connect to the server
  */
 public class ClientApp {
+    private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     public static void main(String[] args) {
         try {
             Socket clientSocket = new Socket("localhost", 9876);
-            Client client = new Client(clientSocket);
-            System.out.println("Connected to server");
+            CustomerModel customerModel = new CustomerModel();
+            Client client = new Client(clientSocket, customerModel);
+            logger.logInfo("Connected to server");
             Demo demo = new Demo();
-            demo.showGUI();
-            // Test messages
-            client.sendMessage(new Message(UUID.randomUUID(), "hi", MessageType.ORDER_RECEIVED));
-            client.sendMessage(new Message(UUID.randomUUID(), "Test Message", MessageType.ORDER_COMPLETED));
+            demo.showCustomerGUI(client);
+            client.startListening(demo);
 
         } catch (IOException e) {
-            System.err.println("Error in client: " + e.getMessage());
-        }
-    }
-
-    private static void initialiseItemsFromFile() {
-        // Read in items file and
-        // populate itemList instance
-        try (ItemFileReader reader = new ItemFileReader("menu.txt")) {
-            reader.readFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.logSevere("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
         }
     }
 }
