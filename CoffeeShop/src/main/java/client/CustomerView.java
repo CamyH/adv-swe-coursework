@@ -38,7 +38,6 @@ public class CustomerView extends JFrame {
     private JButton removeLastItemButton;
     private JButton removeItemButton;
     private JPanel dailySpecialPanel;
-    private JScrollPane dailySpecialScrollPane;
     private JTextArea dailySpecialTextArea;
 
     /**s

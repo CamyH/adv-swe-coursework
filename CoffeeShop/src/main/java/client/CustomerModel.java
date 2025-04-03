@@ -73,7 +73,7 @@ public class CustomerModel {
     public String getDailySpecialInfo() {
         Item dailySpecial = Discount.getDailySpecialItem();
         if (dailySpecial != null) {
-            return String.format("OO Today's Special OO\n\n" +
+            return String.format(" \uD83D\uDD25 Today's Special \uD83D\uDD25 \n\n" +
                             "Item: %s\n" +
                             "Original Price: £%.2f\n" +
                             "Special Price: £%.2f\n" +
