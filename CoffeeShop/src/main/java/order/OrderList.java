@@ -152,9 +152,13 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         return o;
     }
 
+    /**
+     * Completes an order from the queue of orders and plays a sound
+     */
     public void completeOrder(Order order) {
         completeOrders.add(order);
         logger.logInfo("Order completed: " + order.getOrderID());
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
     /**

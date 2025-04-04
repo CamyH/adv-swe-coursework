@@ -38,6 +38,8 @@ public class CustomerView extends JFrame {
     private JButton exitButton;
     private JButton removeLastItemButton;
     private JButton removeItemButton;
+    private JPanel dailySpecialPanel;
+    private JTextArea dailySpecialTextArea;
 
     /**s
      * Sets up the View (GUI)
@@ -47,9 +49,11 @@ public class CustomerView extends JFrame {
         setContentPane(contentPanel);
         setTitle("Coffee Shop App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 300);
+        setSize(900, 400);
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
+        initDailySpecialPanel();
+
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -78,6 +82,20 @@ public class CustomerView extends JFrame {
         displayMenuField.append("Item ID, Name, Cost \n");
     }
 
+    private void initDailySpecialPanel() {
+
+        dailySpecialTextArea.setEditable(false);
+        dailySpecialTextArea.setLineWrap(true);
+        dailySpecialTextArea.setWrapStyleWord(true);
+        dailySpecialTextArea.setMargin(new Insets(5, 5, 5, 5));
+
+        // Set scroll policy if scroll pane exists
+        if (dailySpecialTextArea.getParent() instanceof JScrollPane) {
+            ((JScrollPane)dailySpecialTextArea.getParent())
+                    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        }
+    }
+
     /**
      * Updates the UI with the current order details
      *
@@ -97,9 +115,14 @@ public class CustomerView extends JFrame {
      * @param menuDetails Details of the menu items
      */
     public void displayMenu(String[] menuDetails) {
+        displayMenuField.setText("");
         for (String entry : menuDetails) {
             displayMenuField.append(entry + "\n");
         }
+    }
+
+    public void displayDailySpecial(String specialText) {
+        dailySpecialTextArea.setText(specialText);
     }
 
     /**
