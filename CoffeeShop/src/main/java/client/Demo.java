@@ -1,13 +1,15 @@
 package client;
 
+import interfaces.INotificationService;
+import item.Item;
 import item.ItemFileReader;
+import item.ItemList;
 import order.OrderFileReadWrite;
-import server.Server;
+import services.NotificationService;
 import utils.GenerateReportFileWriter;
 import workers.Waiter;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Refactored to support MVC by Akash
@@ -25,11 +27,13 @@ public class Demo {
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
+    private CustomerModel customerModel;
 
     /**
      * Initialises and Empty ItemList and OrderList
      */
     public Demo() {}
+
     /**
      * Runs the Console Code
      */
@@ -41,13 +45,14 @@ public class Demo {
     /**
      * Starts the GUI
      */
-    public void showGUI() {
+    public void showCustomerGUI(Client client) {
         view = new CustomerView();
-        customerController = new CustomerController(view);
+        customerModel = new CustomerModel();
+        customerController = new CustomerController(view, client, customerModel);
     }
 
-    public void showSimUI(){
-        simModel = new SimUIModel();
+    public void showSimUI(INotificationService notificationService) {
+        simModel = new SimUIModel(notificationService);
         simView = new SimUIView(simModel);
         simController =  new SimUIController(simView, simModel);
     }
@@ -56,6 +61,9 @@ public class Demo {
      * Starts the whole system
      */
     public static void main(String[] args) {
+        // Start Services Here
+        INotificationService notificationService = new NotificationService();
+
         Demo demo = new Demo();
 
         itemReader = new ItemFileReader("menu.txt");
@@ -72,10 +80,7 @@ public class Demo {
             throw new RuntimeException(e);
         }
 
-        //demo.showGUI();
-        demo.showSimUI();
-        Server server = new Server();
-        server.start();
+        demo.showSimUI(notificationService);
         demo.showConsole();
     }
 
@@ -123,5 +128,15 @@ public class Demo {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void updateItemList(ItemList itemList) {
+        ItemList test = ItemList.getInstance();
+        System.out.println(test.getMenu());
+        for (Item item : itemList.getMenu().values()) {
+            test.add(item);
+        }
+
+        System.out.println(test.getMenu());
     }
 }
