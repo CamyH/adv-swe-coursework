@@ -5,7 +5,6 @@ import interfaces.INotificationService;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.*;
-import server.ClientService;
 
 import java.util.Map;
 
@@ -56,7 +55,6 @@ public class Chef extends Staff<String> {
 
     /**
      * Method gets next food item in food list
-     *
      * If there is no food left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
@@ -86,7 +84,6 @@ public class Chef extends Staff<String> {
 
     /**
      * This method will be used to display current order details on the GUI
-     *
      * Will return a list of items in the order. This can be further customised depending on what we want to show
      *
      * @return ArrayList of Current Order Details
