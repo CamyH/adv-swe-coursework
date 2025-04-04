@@ -1,13 +1,9 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
-import interfaces.Observer;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.FoodList;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +25,7 @@ public class Chef extends Staff<String> {
 
     private ItemList itemList;
 
+    /** Holds a single entry representing the current processed item and the corresponding waiter */
     private Map.Entry<Waiter, String> currentItem;
 
     private StaffList staffList;
@@ -61,12 +58,14 @@ public class Chef extends Staff<String> {
      * If there is no food left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
-    public synchronized void getOrders() {
+    public void getOrders() {
         currentItem = foodList.remove();
 
         if (currentItem == null) {
             try {
-                wait();
+                synchronized (this) {
+                    wait();
+                }
             }
             catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -80,7 +79,7 @@ public class Chef extends Staff<String> {
      * @return Boolean representing whether completion was a success
      */
     @Override
-    public synchronized boolean completeCurrentOrder() {
+    public boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue());
         currentItem = null;
         return true;
@@ -118,6 +117,11 @@ public class Chef extends Staff<String> {
         return itemDetails.toString();
     }
 
+    /**
+     * Method to return the role of the staff object in this case "chef"
+     *
+     * @return String representing this staff's role
+     */
     public String getRole() {
         return "Chef";
     }
@@ -146,8 +150,10 @@ public class Chef extends Staff<String> {
     /**
      * Method used by the Subject (FoodList) to tell the Staff member that an order has been added
      */
-    public synchronized void update() {
-        notifyAll();
+    public void update() {
+        synchronized (this) {
+            notifyAll();
+        }
     }
 
     /**

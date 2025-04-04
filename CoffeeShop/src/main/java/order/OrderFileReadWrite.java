@@ -67,7 +67,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                 UUID.fromString(lineData[0]);
                 UUID.fromString(lineData[1]);
 
-                orderList.add(new Order(lineData[0],
+                orderList.addSimulation(new Order(lineData[0],
                         lineData[1],
                         LocalDateTime.parse(lineData[2]),
                         new ArrayList<>(List.of(itemIds)),

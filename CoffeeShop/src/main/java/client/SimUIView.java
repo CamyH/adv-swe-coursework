@@ -43,6 +43,11 @@ public class SimUIView extends JFrame implements Observer {
     private JLabel StaffRoleLabel;
     private JLabel StaffExpLabel;
     private JPanel SimSpeedPanel;
+    private JButton PopOrderListBtn;
+    private JScrollPane CompleteOrderScrollPane;
+    private JTextArea CompleteOrderArea;
+    private JScrollPane ProcessedOrdersScrollPane;
+    private JTextArea ProcessedOrderArea;
 
     // Declare the UI Model
     private final SimUIModel simModel;
@@ -61,7 +66,7 @@ public class SimUIView extends JFrame implements Observer {
             setContentPane(contentPanel);
             setTitle("Coffee Shop Simulation");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setSize(800,300);
+            setSize(800,500);
 
             // Ensure the UI window is shown in the center of the screen
             setLocationRelativeTo(null);
@@ -74,6 +79,10 @@ public class SimUIView extends JFrame implements Observer {
             OnlineOrderArea.setDisabledTextColor(Color.BLACK);
             SimSpeedField.setEnabled(false);
             SimSpeedField.setDisabledTextColor(Color.BLACK);
+            CompleteOrderArea.setEnabled(false);
+            CompleteOrderArea.setDisabledTextColor(Color.BLACK);
+            ProcessedOrderArea.setEnabled(false);
+            ProcessedOrderArea.setDisabledTextColor(Color.BLACK);
 
             // Fill the experience combo box with options
             for (int i = 1; i <= 5; i++) {
@@ -91,6 +100,8 @@ public class SimUIView extends JFrame implements Observer {
                 Demo.cleanUp();
             }
         });
+
+        setRoles(simModel.getRoles());
 
         // Initial update to populate fields
         update();
@@ -141,13 +152,19 @@ public class SimUIView extends JFrame implements Observer {
      * @param orders the list in person orders
      * @param onlineOrders the list of online orders
      */
-    public void setOrderLists(String orders, String onlineOrders) {
+    public void setOrderLists(String orders, String onlineOrders, String completedOrders, String processedOrders) {
         SwingUtilities.invokeLater(() -> {
             OrderListArea.setText("");
             OrderListArea.append(orders + "\n");
 
             OnlineOrderArea.setText("");
             OnlineOrderArea.append(onlineOrders + "\n");
+
+            CompleteOrderArea.setText("");
+            CompleteOrderArea.append(completedOrders + "\n");
+
+            ProcessedOrderArea.setText("");
+            ProcessedOrderArea.append(processedOrders + "\n");
         });
     }
 
@@ -209,6 +226,9 @@ public class SimUIView extends JFrame implements Observer {
 
             ViewDetailsBtn.setName("ViewDetailsBtn");
             ViewDetailsBtn.addActionListener(al);
+
+            PopOrderListBtn.setName("PopOrderListBtn");
+            PopOrderListBtn.addActionListener(al);
         });
     }
 
@@ -223,14 +243,11 @@ public class SimUIView extends JFrame implements Observer {
                 // Refresh sim speed related fields
                 setSimSpeed();
 
-                // Refresh the roles list
-                setRoles(simModel.getRoles());
-
                 // Refresh the Staff list
                 setStaffList(simModel.getStaffList());
 
                 // Refresh the Order lists
-                setOrderLists(simModel.getOrderList(false), simModel.getOrderList(true));
+                setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
                 return null;
             }
         };

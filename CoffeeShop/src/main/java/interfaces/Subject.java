@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class Subject {
 
-    private List<Observer> registeredObservers = new LinkedList<Observer>();
+    private List<Observer> registeredObservers = new LinkedList<>();
 
     /**
      * Method used to register observers
@@ -33,7 +33,9 @@ public abstract class Subject {
     /**
      * Method used to notify observers
      */
-    public void notifyObservers() {
-        for(Observer obs : registeredObservers) obs.update();
+    public synchronized void notifyObservers() {
+        for(Observer obs : registeredObservers) {
+            obs.update();
+        }
     }
 }
