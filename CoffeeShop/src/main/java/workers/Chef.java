@@ -1,22 +1,19 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
-import interfaces.Observer;
+import interfaces.INotificationService;
 import item.ItemList;
 import logs.CoffeeShopLogger;
-import order.FoodList;
+import order.*;
+import server.ClientService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Class represents how a Chef functions in the Coffee Shop Simulation
- *
  * This class uses two design patterns:
  * 1. Factory Design Pattern (with Staff and StaffFactory)
  * 2. Observer Design Pattern (between this class and FoodList)
- *
  * Tasks:
  * 1. Check for Item by checking for items in FoodList
  * 2. Wait specified amount of time to complete Item
@@ -25,19 +22,20 @@ import java.util.Map;
  * @author Fraser Holman
  */
 public class Chef extends Staff<String> {
-    private FoodList foodList;
+    private final INotificationService notificationService;
+    private final FoodList foodList;
 
-    private ItemList itemList;
+    private final ItemList itemList;
 
-    private Map.Entry<Waiter, String> currentItem;
+    private Map.Entry<Waiter, FoodItem> currentItem;
 
-    private StaffList staffList;
+    private final StaffList staffList;
 
     /** Tells if the staff member is currently active (ie not fired) */
     private boolean active = true;
 
     /** Logger instance */
-    private CoffeeShopLogger logger;
+    private final CoffeeShopLogger logger;
 
     /**
      * Constructor to setup Chef
@@ -45,8 +43,9 @@ public class Chef extends Staff<String> {
      * @param name Name of Chef
      * @param experience experience level of Chef
      */
-    public Chef(String name, int experience) {
+    public Chef(String name, int experience, INotificationService notificationService) {
         super(name, experience);
+        this.notificationService = notificationService;
         foodList = FoodList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
@@ -81,7 +80,7 @@ public class Chef extends Staff<String> {
      */
     @Override
     public synchronized boolean completeCurrentOrder() {
-        currentItem.getKey().addItem(currentItem.getValue());
+        currentItem.getKey().addItem(currentItem.getValue().foodItem());
         return true;
     }
 
@@ -108,7 +107,7 @@ public class Chef extends Staff<String> {
         itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
 
         try {
-            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue())).append("\n");
+            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue().foodItem())).append("\n");
         } catch (InvalidItemIDException e) { // this will never happen
             itemDetails.append("Item Description : ").append("ERROR LOADING ITEMS").append("\n");
             System.out.println(e.getMessage());
@@ -127,7 +126,7 @@ public class Chef extends Staff<String> {
      * @return the current order that is being processed
      */
     public String getCurrentOrder() {
-        return currentItem.getValue();
+        return currentItem.getValue().foodItem();
     }
 
     /**
@@ -159,15 +158,19 @@ public class Chef extends Staff<String> {
 
             if (currentItem == null) continue;
 
-            try {
-                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-            } catch (InterruptedException e) {
-                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
+            for (Order item : OrderList.getInstance().getOrderList()) {
+                System.out.println("HEY " + item.getOrderID() + " " + item.getClientService());
             }
 
             try {
-                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
+            } catch (InterruptedException e) {
+                logger.logSevere("InterruptedException in Chef.run: " + e.getMessage());
+            }
+
+            try {
+                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
+                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
             }
             catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
