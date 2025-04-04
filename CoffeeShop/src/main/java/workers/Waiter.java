@@ -3,27 +3,20 @@ package workers;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import interfaces.INotificationService;
 import item.ItemCategory;
 import item.ItemList;
-import order.DrinkList;
-import order.FoodList;
-import order.Order;
-import order.OrderList;
+import order.*;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import logs.CoffeeShopLogger;
 
 /**
  * Class represents how a Waiter functions in the Coffee Shop Simulation
- *
  * This class uses two design patterns:
  * 1. Factory Design Pattern (with Staff and StaffFactory)
  * 2. Observer Design Pattern (between this class and OrderList)
- *
  * Tasks:
  * 1. Check for Order by checking incomplete orders in OrderList
  * 2. Wait specified amount of time to complete order
@@ -32,15 +25,9 @@ import logs.CoffeeShopLogger;
  * @author Fraser Holman
  */
 public class Waiter extends Staff<Order> {
-    /** Stores the List of Orders */
-    private OrderList orderList;
-
-    private StaffList staffList;
-
-    /** Stores the current order this staff member is working on */
+    private final INotificationService notificationService;
+    private final OrderList orderList;
     private Order currentOrder;
-
-    /** Tells if the staff member is currently active (ie not fired) */
     private boolean active = true;
 
     /** Whether the waiter prioritises online or in person order
@@ -49,13 +36,8 @@ public class Waiter extends Staff<Order> {
      * >1 = larger the positive integer the more in person orders are prioritised
      * */
     private double priority = 0;
-
-    /** List of existing Waiters */
-    private static List<Waiter> waiterList = new ArrayList<>();
-
-    /** Logger instance */
-    private CoffeeShopLogger logger;
-
+    private static final List<Waiter> waiterList = new ArrayList<>();
+    private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private ArrayList<String> thisOrder;
 
     /**
@@ -64,14 +46,14 @@ public class Waiter extends Staff<Order> {
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
      */
-    public Waiter(String name, int experience) {
+    public Waiter(String name, int experience, INotificationService notificationService) {
         super(name, experience);
+        this.notificationService = notificationService;
         orderList = OrderList.getInstance();
         orderList.registerObserver(this);
-        logger = CoffeeShopLogger.getInstance();
         waiterList.add(this);
         thisOrder = new ArrayList<>();
-        staffList = StaffList.getInstance();
+        StaffList staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
     }
@@ -99,18 +81,20 @@ public class Waiter extends Staff<Order> {
             }
         }
         else {
-            for (String s : currentOrder.getDetails()) {
+            for (String item : currentOrder.getDetails()) {
                 ItemList itemList = ItemList.getInstance();
-                ItemCategory category = itemList.getCategory(s);
+                ItemCategory category = itemList.getCategory(item);
 
                 if (isFoodCategory(category)) {
                     FoodList foodList = FoodList.getInstance();
-                    foodList.add(new AbstractMap.SimpleEntry<>(this, s));
+                    FoodItem foodItem = new FoodItem(currentOrder.getOrderID(), item, currentOrder.getClientService());
+                    foodList.add(new AbstractMap.SimpleEntry<>(this, foodItem));
                 }
 
                 if (isDrinkCategory(category)) {
                     DrinkList drinkList = DrinkList.getInstance();
-                    drinkList.add(new AbstractMap.SimpleEntry<>(this, s));
+                    DrinkItem drinkItem = new DrinkItem(currentOrder.getOrderID(), item, currentOrder.getClientService());
+                    drinkList.add(new AbstractMap.SimpleEntry<>(this, drinkItem));
                 }
             }
         }
@@ -147,6 +131,12 @@ public class Waiter extends Staff<Order> {
         
         orderList.completeOrder(currentOrder);
         logger.logInfo("Waiter " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
+
+        if (hasClientService(currentOrder)) {
+            notificationService.sendOrderCompleteNotification(currentOrder.getOrderID(), currentOrder.getClientService());
+            notificationService.removeObserver(currentOrder.getClientService());
+        }
+
         currentOrder = null;
 
         thisOrder = new ArrayList<>();
@@ -181,7 +171,7 @@ public class Waiter extends Staff<Order> {
                 ItemList itemList = ItemList.getInstance();
                 orderDetails.append(itemList.getDescription(itemID)).append("\n");
             } catch (InvalidItemIDException e) {
-                System.out.println(e.getMessage());
+                logger.logSevere(e.getCause() + " " + e.getMessage());
             }
         }
 
@@ -208,7 +198,7 @@ public class Waiter extends Staff<Order> {
         try {
             OrderList.getInstance().add(getCurrentOrder());
         } catch (InvalidOrderException | DuplicateOrderException e) {
-            System.out.println(e.getMessage());
+            logger.logSevere(e.getCause() + " " + e.getMessage());
         }
     }
 
@@ -221,7 +211,7 @@ public class Waiter extends Staff<Order> {
                     OrderList.getInstance().add(waiter.getCurrentOrder());
                 }
             } catch (InvalidOrderException | DuplicateOrderException e) {
-                System.out.println(e.getMessage());
+                logger.logSevere(e.getCause() + " " + e.getMessage());
             }
         }
     }
@@ -254,9 +244,10 @@ public class Waiter extends Staff<Order> {
         while (thisOrder.size() != currentOrder.getDetails().size()) {
             try {
                 wait();
+                notificationService.sendOrderProcessingNotification(currentOrder.getOrderID(), currentOrder.getClientService());
             }
             catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                logger.logSevere(e.getCause() + " " + e.getMessage());
             }
         }
     }
@@ -313,6 +304,10 @@ public class Waiter extends Staff<Order> {
 
             if (currentOrder == null) continue;
 
+            if (currentOrder.getClientService() != null) {
+                notificationService.addObserver(currentOrder.getClientService());
+            }
+
             processingOrder();
 
             try {
@@ -321,7 +316,6 @@ public class Waiter extends Staff<Order> {
                 logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
             }
 
-            System.out.println(getWorkerName() + " completed order " + currentOrder.getOrderID());
             logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
 
             completeCurrentOrder();
