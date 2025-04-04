@@ -1,8 +1,9 @@
 package workers;
 
+import interfaces.INotificationService;
+
 /**
  * Factory Design Pattern
- *
  * Class used to create staff objects
  *
  * @author Fraser Holman
@@ -16,17 +17,13 @@ public class StaffFactory {
      * @param experience The experience level of the staff member
      * @return Returns either a Staff Object or a null object
      */
-    public static Staff getStaff(String type, String name, int experience) {
-        switch (type.toLowerCase()) {
-            case "waiter":
-                return new Waiter(name, experience);
-            case "barista":
-                return new Barista(name, experience);
-            case "chef":
-                return new Chef(name, experience);
-            default:
-                return null;
-        }
+    public static Staff<?> getStaff(String type, String name, int experience, INotificationService notificationService) {
+        return switch (type.toLowerCase()) {
+            case "waiter" -> new Waiter(name, experience, notificationService);
+            case "barista" -> new Barista(name, experience, notificationService);
+            case "chef" -> new Chef(name, experience, notificationService);
+            default -> null;
+        };
     }
 
 }
