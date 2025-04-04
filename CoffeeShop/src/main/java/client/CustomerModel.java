@@ -1,9 +1,9 @@
 package client;
 
-import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
+import logs.CoffeeShopLogger;
 import order.Order;
 import order.OrderList;
 
@@ -22,6 +22,7 @@ public class CustomerModel {
     private Order currentOrder;
     private final OrderList orderList;
     private final ItemList itemList;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Constructs a new CustomerModel, initializes the order list and item list,
@@ -80,16 +81,13 @@ public class CustomerModel {
      * Submits the current order to the order list.
      * If the order is successfully added, a new order is created.
      *
-     * @return true if the order was added to the list, false otherwise
-     * @throws InvalidOrderException if the order is invalid
-     * @throws DuplicateOrderException if the order is a duplicate
      */
-    public boolean submitOrder() throws InvalidOrderException, DuplicateOrderException {
-        boolean added = orderList.add(currentOrder);
-        if (added) {
-            createNewOrder();
-        }
-        return added;
+    public void submitOrder() {
+        Demo.demoWriteOrders();
+
+        // If we get this far then the order has been sent so we
+        // can clear the order on the customerGUI
+        createNewOrder();
     }
 
     /**

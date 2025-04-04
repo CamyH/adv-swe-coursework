@@ -1,17 +1,13 @@
 package client;
 
-import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
-import exceptions.InvalidOrderException;
-import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.Order;
-import order.OrderList;
+import utils.RetryPolicy;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Controller Class (Refactored for MVC)
@@ -20,7 +16,6 @@ import java.io.IOException;
  */
 public class CustomerController implements ActionListener {
     private final CustomerView view;
-    private Order currentOrder;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
     private final Client client;
@@ -30,9 +25,9 @@ public class CustomerController implements ActionListener {
      * @param view The View component
      */
     public CustomerController(CustomerView view, Client client, CustomerModel customerModel) {
+        this.client = client;
         this.view = view;
         this.model = customerModel;
-        this.client = client;
 
         // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
@@ -53,7 +48,7 @@ public class CustomerController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == view.getSubmitOrderButton()) {
-            submitOrder(model.getCurrentOrder());
+            submitOrder();
         } else if (e.getSource() == view.getCancelOrderButton()) {
             handleCancelOrder();
         } else if (e.getSource() == view.getAddItemButton()) {
@@ -70,20 +65,17 @@ public class CustomerController implements ActionListener {
     /**
      * Handles order submission
      */
-    private void submitOrder(Order order) {
+    private void submitOrder() {
         try {
-            //Demo.demoWriteOrders();
-            System.out.println(order.getOrderID());
-            client.sendOrder(order);
-            JOptionPane.showMessageDialog(view, "Order has been submitted");
-        } catch (IOException e) {
-            // this disgusts me don't forget to refactor
-            logger.logWarning(e.getClass() + " Order was not sent, retrying " + e.getMessage());
-            try {
-                client.sendOrder(order);
-            } catch (IOException e1) {
-                logger.logSevere("Could not send order, retry failed" + e1.getMessage());
-            }
+            RetryPolicy.retryOnFailure(() ->
+                            client.sendOrder(model.getCurrentOrder()),
+                    3);
+            model.submitOrder();
+        } catch (Exception e) {
+            logger.logSevere("Failed to submit order: "
+                    + e.getClass() + " "
+                    + e.getCause() + " "
+                    + e.getMessage());
         }
     }
 
