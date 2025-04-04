@@ -70,6 +70,12 @@ public class CustomerModel {
         return currentOrder.getDiscountedCost();
     }
 
+    /**
+     * Display about daily special offer. 
+     *
+     * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
+     */
+
     public String getDailySpecialInfo() {
         Item dailySpecial = Discount.getDailySpecialItem();
         if (dailySpecial == null) {
