@@ -1,5 +1,6 @@
 package server;
 
+import client.SimUIModel;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.OrderList;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.*;
 
 /**
@@ -20,18 +22,22 @@ public class Server {
     private static ExecutorService threadPool = null;
     private static final int port = 9876;
     private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private ArrayList<ClientService> activeClientServices = new ArrayList<>();
 
     /**
      * The host used by the server
      * Dev: localhost
      */
-    private String host = "localhost";
+    private String host = "137.195.118.13";
     private int pool_size = 6;
+    private SimUIModel simUIModel;
 
     /**
      * Constructor
      */
-    public Server() {}
+    public Server(SimUIModel simUIModel) {
+        this.simUIModel = simUIModel;
+    }
 
     /**
      * Constructor that allows for passing in
@@ -39,7 +45,8 @@ public class Server {
      * @param host the new host to use
      * @param port the new port to use
      */
-    public Server(String host, int port) {
+    public Server(SimUIModel simUIModel, String host, int port) {
+        this.simUIModel = simUIModel;
         this.host = host;
         this.pool_size = port;
     }
@@ -58,8 +65,12 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 logger.logInfo("Client connected: " + clientSocket.getInetAddress());
 
-                ClientService clientHandler = new ClientService(clientSocket, simUIModel);
-                threadPool.submit(clientHandler);
+                updateClientItemList();
+                updateClientOrderList();
+
+                ClientService clientService = new ClientService(clientSocket, simUIModel);
+                activeClientServices.add(clientService);
+                threadPool.submit(clientService);
             }
         } catch (IOException e) {
             logger.logSevere("Error in server: " + e);
@@ -89,6 +100,10 @@ public class Server {
      */
     public static CopyOnWriteArraySet<ObjectOutputStream> getActiveConnectionsInstance() {
         return activeConnectionsInstance;
+    }
+
+    public ArrayList<ClientService> getActiveClientServices() {
+        return activeClientServices;
     }
 
     /**
@@ -145,7 +160,7 @@ public class Server {
         }
     }
 
-        /**
+    /**
      * Broadcast OrderList to all connected clients
      * @throws IOException if OrderList is unable to be sent
      * to a client
