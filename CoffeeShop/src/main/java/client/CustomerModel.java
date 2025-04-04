@@ -72,19 +72,20 @@ public class CustomerModel {
 
     public String getDailySpecialInfo() {
         Item dailySpecial = Discount.getDailySpecialItem();
-        if (dailySpecial != null) {
-            return String.format(" \uD83D\uDD25 Today's Special \uD83D\uDD25 \n\n" +
-                            "Item: %s\n" +
-                            "Original Price: £%.2f\n" +
-                            "Special Price: £%.2f\n" +
-                            "Discount: %d%% OFF\n\n" +
-                            "Add this to your order:\n%s",
-                    dailySpecial.getDescription(),
-                    dailySpecial.getCost(),
-                    Discount.DAILY_SPECIAL.calculateDiscount(dailySpecial.getCost()),
-                    Discount.DAILY_SPECIAL.getValue(),
-                    dailySpecial.getItemID());
+        if (dailySpecial == null) {
+            return "No daily special today";
         }
-        return "No daily special today";
+        
+        return String.format(" \uD83D\uDD25 Today's Special \uD83D\uDD25 \n\n" +
+                "Item: %s\n" +
+                "Original Price: £%.2f\n" +
+                "Special Price: £%.2f\n" +
+                "Discount: %d%% OFF\n\n" +
+                "Add this to your order:\n%s",
+        dailySpecial.getDescription(),
+        dailySpecial.getCost(),
+        Discount.DAILY_SPECIAL.calculateDiscount(dailySpecial.getCost()),
+        Discount.DAILY_SPECIAL.getValue(),
+        dailySpecial.getItemID());
     }
 }
