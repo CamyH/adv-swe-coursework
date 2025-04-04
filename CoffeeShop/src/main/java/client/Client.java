@@ -141,10 +141,7 @@ public class Client {
     public void startListening(Demo demo) {
         Thread listenerThread = new Thread(() -> {
             try {
-                // Example: Simulate receiving order and item lists from server
                 while (true) {
-                    // Simulating receiving new order list and item list from server
-                    //OrderList orderList = (OrderList) inputStream.readObject();
                     Object object = inputStream.readObject();
                     if (object instanceof ItemList itemList) {
                         customerModel.updateItemList(itemList);
