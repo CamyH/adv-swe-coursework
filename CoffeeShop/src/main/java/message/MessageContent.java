@@ -6,19 +6,24 @@ package message;
  */
 public enum MessageContent {
     /**
-     * Indicates that the order has been received.
+     * Indicates that the order has been received
      */
-    Received("Received"),
+    RECEIVED("Received"),
 
     /**
-     * Indicates that the order is being processed.
+     * Indicates that the order is being processed
      */
-    Processing("Processing"),
+    PROCESSING("Processing"),
 
     /**
-     * Indicates that the order has been completed.
+     * Indicates that the order has been completed
      */
-    COMPLETE("Complete");
+    COMPLETE("Complete"),
+
+    /**
+     * Indicates that there has been an error with the order
+     */
+    ERROR("There has been an error processing order");
 
     /**
      * The custom display name for the message type.
@@ -40,5 +45,19 @@ public enum MessageContent {
     @Override
     public String toString() {
         return displayName;
+    }
+
+    /**
+     * Returns the correct {@link MessageContent} based on the {@link MessageType}
+     * @param type the {@link MessageType}
+     * @return the {@link MessageContent} as a string
+     */
+    public String fromMessageType(MessageType type) {
+        return switch (type) {
+            case ORDER_RECEIVED -> RECEIVED.toString();
+            case PROCESSING_ORDER -> PROCESSING.toString();
+            case ORDER_COMPLETE -> COMPLETE.toString();
+            case ERROR -> ERROR.toString();
+        };
     }
 }
