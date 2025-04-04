@@ -83,8 +83,6 @@ public class CustomerModel {
      *
      */
     public void submitOrder() {
-        Demo.demoWriteOrders();
-
         // If we get this far then the order has been sent so we
         // can clear the order on the customerGUI
         createNewOrder();
