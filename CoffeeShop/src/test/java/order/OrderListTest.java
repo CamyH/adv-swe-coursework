@@ -390,9 +390,9 @@ public class OrderListTest {
             orderList.add(o);
 
             System.out.println("ONLINE ORDERS");
-            System.out.println(orderList.getOrdersForDisplay(true));
+            System.out.println(orderList.getOrdersForDisplay(1));
             System.out.println("IN PERSON ORDERS");
-            System.out.println(orderList.getOrdersForDisplay(false));
+            System.out.println(orderList.getOrdersForDisplay(0));
 
         } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());

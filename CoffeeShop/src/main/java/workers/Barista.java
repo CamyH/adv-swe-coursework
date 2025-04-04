@@ -1,13 +1,9 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
-import interfaces.Observer;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.DrinkList;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +27,7 @@ public class Barista extends Staff<String> {
 
     StaffList staffList;
 
+    /** Holds a single entry representing the current processed item and the corresponding waiter */
     Map.Entry<Waiter, String> currentItem;
 
     /** Tells if the staff member is currently active (ie not fired) */
@@ -61,12 +58,14 @@ public class Barista extends Staff<String> {
      * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
-    public synchronized void getOrders() {
+    public void getOrders() {
         currentItem = drinkList.remove();
 
         if (currentItem == null) {
             try {
-                wait();
+                synchronized (this) {
+                    wait();
+                }
             }
             catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -80,8 +79,9 @@ public class Barista extends Staff<String> {
      * @return Boolean representing whether completion was a success
      */
     @Override
-    public synchronized boolean completeCurrentOrder() {
+    public boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue());
+        currentItem = null;
         return true;
     }
 
@@ -127,6 +127,11 @@ public class Barista extends Staff<String> {
         return itemDetails.toString();
     }
 
+    /**
+     * Method to return the role of the staff object in this case "barista"
+     *
+     * @return String representing this staff's role
+     */
     public String getRole() {
         return "Barista";
     }
@@ -146,8 +151,10 @@ public class Barista extends Staff<String> {
     /**
      * Method used by the Subject (DrinkList) to tell the Staff member that an order has been added
      */
-    public synchronized void update() {
-        notifyAll();
+    public void update() {
+        synchronized (this) {
+            notifyAll();
+        }
     }
 
     /**
@@ -157,6 +164,7 @@ public class Barista extends Staff<String> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentItem == null) continue;
 
@@ -173,7 +181,9 @@ public class Barista extends Staff<String> {
             catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
+
             completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }
