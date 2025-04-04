@@ -135,6 +135,11 @@ public class Demo {
             throw new RuntimeException(e);
         }
 
-        System.out.println(test.getMenu());
+        orderReader = new OrderFileReadWrite("orders.txt");
+        try {
+            orderReader.readFile();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
