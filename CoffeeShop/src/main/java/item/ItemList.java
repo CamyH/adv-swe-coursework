@@ -173,4 +173,13 @@ public class ItemList implements EntityList<Item, String>, Serializable {
     public static void resetInstance() {
         instance = new ItemList();
     }
+
+    /**
+     * Updates the ItemList with a new map of items.
+     *
+     * @param newItems The new map of items to update the ItemList with.
+     */
+    public void updateItems(Map<String, Item> newItems) {
+        this.items = new LinkedHashMap<>(newItems);
+    }
 }
