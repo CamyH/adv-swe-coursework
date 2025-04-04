@@ -53,7 +53,7 @@ public class SimUIView extends JFrame implements Observer {
         setContentPane(contentPanel);
         setTitle("Coffee Shop Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800,300);
+        setSize(800,500);
 
         // Ensure the UI window is shown in the center of the screen
         setLocationRelativeTo(null);
