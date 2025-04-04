@@ -32,6 +32,7 @@ public class CustomerController implements ActionListener {
         view.getRemoveLastItemButton().addActionListener(this);
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
+        view.getOnlineOrderCheckBox().addActionListener(this);
 
         // Initialize view with menu data
         view.displayMenu(model.getMenuDetails());
@@ -56,7 +57,10 @@ public class CustomerController implements ActionListener {
             handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
             handleExit();
+        }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
+            handleOnlineOrderToggle();
         }
+
     }
 
     /**
@@ -64,17 +68,21 @@ public class CustomerController implements ActionListener {
      */
     private void handleSubmitOrder() {
         try {
+            boolean isOnline = model.isOnlineOrder();
             boolean orderAdded = model.submitOrder();
+
             if (orderAdded) {
                 Demo.demoWriteOrders();  // Existing demo functionality
-                JOptionPane.showMessageDialog(view, "Order has been submitted");
+                String message = isOnline ?
+                        "Online order has been submitted for delivery" :
+                        "In-store order has been submitted";
+                view.showPopup(message);
                 updateView();
             } else {
-                JOptionPane.showMessageDialog(view,
-                        "Order could not be placed - Please Try Again Later");
+                view.showPopup("Order could not be placed - Please Try Again Later");
             }
         } catch (InvalidOrderException | DuplicateOrderException e) {
-            JOptionPane.showMessageDialog(view, e.getMessage());
+            view.showPopup(e.getMessage());
         }
     }
 
@@ -83,7 +91,8 @@ public class CustomerController implements ActionListener {
      */
     private void handleCancelOrder() {
         model.cancelOrder();
-        JOptionPane.showMessageDialog(view, "Order Cancelled");
+        view.getOnlineOrderCheckBox().setSelected(false);
+        view.showPopup("Order Cancelled");
         updateView();
     }
 
@@ -92,27 +101,28 @@ public class CustomerController implements ActionListener {
      */
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
+
+        // Guard clause
         if (itemID.isEmpty()) {
+            view.showPopup("Please Input an Item ID");
             return;
         }
+
         try {
             model.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
-            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+            view.showPopup(itemID.toUpperCase() + " is not a valid item ID");
         }
         view.getItemIDField().setText("");
         updateView();
     }
-
-
-
 
     /**
      * Handles removal of last item
      */
     private void handleRemoveLastItem() {
         if (!model.removeLastItem()) {
-            JOptionPane.showMessageDialog(view, "No Items in this Order");
+            view.showPopup("No Items in this Order");
         }
         updateView();
     }
@@ -127,8 +137,7 @@ public class CustomerController implements ActionListener {
                 view.getItemIDField().setText("");
                 updateView();
             } else {
-                JOptionPane.showMessageDialog(view,
-                        itemID.toUpperCase() + " is not in the current order");
+                view.showPopup(itemID.toUpperCase() + " is not in the current order");
             }
         }
     }
@@ -138,8 +147,22 @@ public class CustomerController implements ActionListener {
      */
     private void handleExit() {
         Demo.demoCloseGUI();  // Existing demo functionality
-        JOptionPane.showMessageDialog(view, "Good Bye!");
+        view.showPopup("Good Bye!");
         view.closeGUI();
+    }
+
+    /**
+     * Handles online order checkbox toggle
+     */
+    private void handleOnlineOrderToggle() {
+        boolean isSelected = view.getOnlineOrderCheckBox().isSelected();
+        model.setOnlineOrder(isSelected);
+
+        // Update UI based on order type
+        if (isSelected) {
+            view.showPopup("Online order selected. Delivery charges may apply.");
+        }
+        updateView(); // Refresh to show any price changes
     }
 
     /**

@@ -177,6 +177,9 @@ public class Order {
         }
     }
 
+
+
+
     /**
      * Calculates the discounted cost
      */
@@ -309,7 +312,7 @@ public class Order {
      * This implementation will probably be changed later but useful for me for initial testing
      */
     public void setOnlineStatus() {
-        onlineStatus = true;
+        this.onlineStatus = true;
     }
 
     /**
