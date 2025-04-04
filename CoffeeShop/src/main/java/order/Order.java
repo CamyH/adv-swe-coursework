@@ -1,16 +1,14 @@
 package order;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
-import item.Item;
 import item.ItemCategory;
 import item.ItemFileReader;
 import item.ItemList;
+import server.ClientService;
 import utils.Discount;
 import utils.DiscountDataStructure;
 
 import java.io.Serializable;
-
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -22,7 +20,7 @@ import java.util.*;
  * @author Mohd Faiz
  */
 
-public class Order {
+public class Order implements Serializable {
     /** Unique identifier for the order */
     private final UUID orderID;
 
@@ -45,6 +43,7 @@ public class Order {
     private double discountedCost;
 
     private boolean onlineStatus;
+    private ClientService clientService;
 
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
@@ -57,6 +56,7 @@ public class Order {
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
         this.onlineStatus = false;
+        this.clientService = null;
 
         if (menu.getItemCount() == 0) {
             ItemList.resetInstance();
@@ -101,6 +101,7 @@ public class Order {
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.onlineStatus = onlineStatus;
+        this.clientService = null;
 
         if (menu == null) {
             throw new InvalidOrderException("Menu cannot be null.");
@@ -296,6 +297,14 @@ public class Order {
      */
     public boolean getOnlineStatus() {
         return onlineStatus;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     /**
