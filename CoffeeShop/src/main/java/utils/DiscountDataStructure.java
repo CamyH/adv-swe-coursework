@@ -38,6 +38,12 @@ public class DiscountDataStructure {
      * @param item2 Index that item2 appears in the list of items in the calling method
      */
     public void addEntry(Discount discount, int item1, int item2) {
+        // Check if either item is the daily special
+        if (discount == Discount.DAILY_SPECIAL) {
+            structure.addFirst(new ArrayList<>(Arrays.asList(discount, item1, item2)));
+            return;
+        }
+
         int middle;
         int high = structure.size();
         int low = 0;

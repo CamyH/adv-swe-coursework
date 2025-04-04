@@ -1,12 +1,18 @@
 package client;
 
+import item.Item;
 import item.ItemFileReader;
+import item.ItemList;
 import order.OrderFileReadWrite;
+import utils.Discount;
 import utils.GenerateReportFileWriter;
 import workers.Waiter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Refactored to support MVC by Akash
@@ -60,6 +66,7 @@ public class Demo {
         itemReader = new ItemFileReader("menu.txt");
         try {
             itemReader.readFile();
+            setDailySpecial();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -74,6 +81,21 @@ public class Demo {
         demo.showGUI();
         demo.showSimUI();
         demo.showConsole();
+    }
+
+    /**
+     * Randomly selects an item from the item list to be today's special offer.
+     * Sets the selected item in the Discount class with a random discount between 50-75 percentage.
+     */
+    private static void setDailySpecial() {
+        ItemList itemList = ItemList.getInstance();
+        List<Item> items = new ArrayList<>(itemList.getMenu().values());
+
+        if (!items.isEmpty()) {
+            Random random = new Random();
+            Item dailySpecial = items.get(random.nextInt(items.size()));
+            Discount.setDailySpecialItem(dailySpecial);
+        }
     }
 
     /**
