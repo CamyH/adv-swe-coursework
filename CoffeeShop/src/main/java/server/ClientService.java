@@ -110,13 +110,14 @@ public class ClientService implements Runnable, OrderObserver {
         
     }
 
-    /**
-     * Notifies the observer that an order has been completed
-     *
-     * @param orderID the ID of the order that has been updated
-     */
-    @Override
-    public void sendOrderCompletedNotification(UUID orderID) {
+    public void sendItemListToClient() {
+        try {
+            System.out.println("sending ItemList to Client" + simUIModel.getMenu().getMenu());
+            outputStream.writeObject(simUIModel.getMenu());  // Send item list to client
+        } catch (IOException e) {
+            System.err.println("Error sending item list to client: " + e.getMessage());
+        }
+    }
 
     }
 }
