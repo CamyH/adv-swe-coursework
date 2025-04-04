@@ -134,4 +134,22 @@ public class CustomerModel {
     public double getDiscountedCost() {
         return currentOrder.getDiscountedCost();
     }
+
+    /**
+     * Updates the item list with the given updated item list.
+     *
+     * @param updatedItemList the new item list to update
+     */
+    public void updateItemList(ItemList updatedItemList) {
+        itemList.updateItems(updatedItemList.getMenu());
+    }
+
+    /**
+     * Retrieves the current order.
+     *
+     * @return the current order object
+     */
+    public Order getCurrentOrder() {
+        return currentOrder;
+    }
 }
