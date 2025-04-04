@@ -2,31 +2,28 @@ package workers;
 
 import client.SimUIModel;
 import interfaces.Observer;
-
+import order.Order;
 import java.util.UUID;
 
 /**
  * Staff superclass
- *
  * This class uses a Factory Design Pattern
- *
  * Used by different staffs to ensure correct implementation
  *
  * @author Fraser Holman
  */
 public abstract class Staff<T> extends Thread implements Observer {
-    private String name;
-
+    private final String name;
     protected double defaultDelay;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
      * value is between 0 and 1 - lower values are more experienced
-     * */
+     */
     private int experience;
 
     /** Staff members ID */
-    private UUID ID;
+    private final UUID ID;
 
     /**
      * Constructor to instantiate a new staff member
@@ -52,7 +49,6 @@ public abstract class Staff<T> extends Thread implements Observer {
 
     /**
      * Returns the experience level of the worker
-     *
      * value is between 0 and 1 - lower values are more experienced
      *
      * @return Double representing the experience level of the worker
@@ -103,7 +99,7 @@ public abstract class Staff<T> extends Thread implements Observer {
      *
      * @return Boolean representing whether the order completed was a success
      */
-    public abstract boolean completeCurrentOrder();
+    public abstract boolean completeCurrentOrder(); //ToDO: add defualt implementation
 
     /**
      * Removes staff once they are done
@@ -118,4 +114,11 @@ public abstract class Staff<T> extends Thread implements Observer {
 
     public abstract T getCurrentOrder();
 
+    /**
+     * Checks if the current order has a client service
+     * @return true if the order has a client service, false otherwise
+     */
+    public static boolean hasClientService(Order order) {
+        return order.getClientService() != null;
+    }
 }
