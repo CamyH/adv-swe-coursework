@@ -59,17 +59,6 @@ public class Client {
         Server.addClient(outputStream);
     }
 
-    /*public static Client start() {
-        try {
-            Socket clientSocket = new Socket(host, port);
-
-            return new Client(clientSocket);
-        } catch (IOException e) {
-            logger.logSevere("Error in client: " + e.getMessage());
-        }
-        return null;
-    }*/
-
     /**
      * Sends an {@link Order} object to the server
      * The order is serialized and sent using {@link ObjectOutputStream}.
@@ -165,17 +154,8 @@ public class Client {
                         Message message = receiveMessage(object);
                         System.out.println(message.toString());
                     }
-
-                    // Notify Demo to update UI with received data
-                    /*if (demo != null) {
-                        demo.updateItemList(itemList);    // Update the item list in Demo
-                    }*/
-
-                    // Add a delay (for demo purposes, to simulate receiving new data over time)
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
