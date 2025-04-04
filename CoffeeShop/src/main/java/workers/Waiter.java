@@ -13,7 +13,6 @@ import order.OrderList;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import logs.CoffeeShopLogger;
 
@@ -82,7 +81,7 @@ public class Waiter extends Staff<Order> {
      * If there are no orders left the Staff member thread will be left in the waiting state until notified
      */
     @Override
-    public synchronized void getOrders() {
+    public void getOrders() {
         if (orderList.getQueueSize(false) * priority > orderList.getQueueSize(true)) {
             currentOrder = orderList.remove();
         }
@@ -90,11 +89,14 @@ public class Waiter extends Staff<Order> {
             currentOrder = orderList.removeOnline();
         }
 
+//        orderList.notifyObservers();
+
         if (currentOrder == null) {
             try {
-                wait();
-            }
-            catch (InterruptedException e) {
+                synchronized (this) {
+                    wait();
+                }
+            } catch (InterruptedException e) {
                 logger.logSevere(e.getMessage());
             }
         }
@@ -142,12 +144,15 @@ public class Waiter extends Staff<Order> {
      * @return Boolean representing whether completion was a success
      */
     @Override
-    public synchronized boolean completeCurrentOrder() {
+    public boolean completeCurrentOrder() {
         if (currentOrder == null) return false;
         
         orderList.completeOrder(currentOrder);
+
         logger.logInfo("Waiter " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
         currentOrder = null;
+
+//        orderList.notifyObservers();
 
         thisOrder = new ArrayList<>();
         return true;
@@ -191,6 +196,11 @@ public class Waiter extends Staff<Order> {
         return orderDetails.toString();
     }
 
+    /**
+     * Method to return the role of the staff object in this case "waiter"
+     *
+     * @return String representing this staff's role
+     */
     public String getRole() {
         return "Waiter";
     }
@@ -204,6 +214,9 @@ public class Waiter extends Staff<Order> {
         return currentOrder;
     }
 
+    /**
+     * Method to add order back to order list if waiter is removed during operation
+     */
     public void addBackOrder() {
         try {
             OrderList.getInstance().add(getCurrentOrder());
@@ -212,26 +225,15 @@ public class Waiter extends Staff<Order> {
         }
     }
 
-    public static void addBackAllCurrentOrders() {
-        ArrayList<Order> allOrders = new ArrayList<>();
-
-        for (Waiter waiter : waiterList) {
-            try {
-                if (waiter.getCurrentOrder() != null) {
-                    OrderList.getInstance().add(waiter.getCurrentOrder());
-                }
-            } catch (InvalidOrderException | DuplicateOrderException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
     /**
      * Method used by the Subject (OrderList) to tell the Staff member that an order has been added
      */
-    public synchronized void update() {
-        notifyAll();
+    public void update() {
+        synchronized (this) {
+            notifyAll();
+        }
     }
+
 
     /**
      * Method used to remove staff member from the simulation
@@ -243,20 +245,22 @@ public class Waiter extends Staff<Order> {
         active = false;
         waiterList.remove(this);
         updatePriority();
-        notifyAll(); // wakes up thread
+        notifyAll();
         logger.logInfo("Waiter " + getWorkerName() + " removed from the simulation.");
     }
 
     /**
      * Processing order method - waiter waits until all items have been made by chef's / barista's
      */
-    public synchronized void processingOrder() {
+    public void processingOrder() {
         while (thisOrder.size() != currentOrder.getDetails().size()) {
             try {
-                wait();
+                synchronized (this) {
+                    wait();
+                }
             }
             catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getCause() + e.getMessage());
             }
         }
     }
@@ -304,15 +308,47 @@ public class Waiter extends Staff<Order> {
     }
 
     /**
+     * Method to return every currently being processed order as a string
+     *
+     * @return String of orders currently being processed
+     */
+    public static String getCurrentOrdersForDisplay() {
+        StringBuilder orderString = new StringBuilder();
+
+        for (Waiter waiter : waiterList) {
+            Order o = waiter.getCurrentOrder();
+
+            if (o != null) {
+                String s = String.format("%s,%s,%s",
+                        o.getOrderID().toString(),
+                        o.getTimestamp().toString(),
+                        String.join(";", o.getDetails())
+                );
+
+                orderString.append(s).append("\n");
+            }
+        }
+
+        return orderString.toString();
+    }
+
+    /**
      * This method is the Waiter's thread
      */
     @Override
     public void run() {
         while (active) {
+            try {
+                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
+            } catch (InterruptedException e) {
+                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
+            }
+
             getOrders();
 
             if (currentOrder == null) continue;
 
+            orderList.notifyObservers();
             processingOrder();
 
             try {
@@ -324,7 +360,8 @@ public class Waiter extends Staff<Order> {
             System.out.println(getWorkerName() + " completed order " + currentOrder.getOrderID());
             logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
 
-            completeCurrentOrder();
+            if (active) completeCurrentOrder();
+            orderList.notifyObservers();
         }
     }
 }

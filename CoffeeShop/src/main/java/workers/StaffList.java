@@ -1,13 +1,19 @@
 package workers;
 
 import interfaces.EntityList;
-import item.ItemList;
 
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Class is used to store and manage all the currently running Staff members
+ *
+ * This class is also a singleton as there should only ever be one instance of this class
+ *
+ * @author Fraser Holman
+ */
 public class StaffList implements EntityList<Staff, UUID> {
-    // Hashmap of staff ID as the key, and Staff Object as the value
+    /** Hashmap of staff ID as the key, and Staff Object as the value */
     private HashMap<UUID, Staff> staffList;
 
     /** Initialise the instance of StaffList */
@@ -51,6 +57,11 @@ public class StaffList implements EntityList<Staff, UUID> {
         return true;
     }
 
+    /**
+     * Method used to adjust all current staff's delay time to complete each order
+     *
+     * @param defaultDelay The default delay used to maintain simulation speed
+     */
     public void setDefaultDelay(double defaultDelay) {
         for (Staff staff : staffList.values()) {
             staff.setDefaultDelay(defaultDelay);

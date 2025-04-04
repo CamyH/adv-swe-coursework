@@ -2,7 +2,9 @@ package client;
 
 import item.ItemFileReader;
 import order.OrderFileReadWrite;
+import order.OrderList;
 import utils.GenerateReportFileWriter;
+import workers.StaffList;
 import workers.Waiter;
 
 import java.io.FileNotFoundException;
@@ -83,15 +85,9 @@ public class Demo {
         System.out.println("Goodbye.");
         view.closeGUI();
         simController.close();
-        Waiter.addBackAllCurrentOrders();
+
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
-
-        try {
-            orderReader.writeToFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         System.exit(0);
     }
@@ -110,15 +106,7 @@ public class Demo {
     static void cleanUp() {
         System.out.println("Goodbye.");
 
-        Waiter.addBackAllCurrentOrders();
-
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
-
-        try {
-            orderReader.writeToFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

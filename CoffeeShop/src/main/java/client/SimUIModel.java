@@ -42,8 +42,12 @@ public class SimUIModel extends Subject implements Observer {
         return simSpeed;
     }
 
-    public String getOrderList(boolean online) {
-        return orderList.getOrdersForDisplay(online);
+    public String getOrderList(int state) {
+        return orderList.getOrdersForDisplay(state);
+    }
+
+    public String getCurrentOrders() {
+        return Waiter.getCurrentOrdersForDisplay();
     }
 
     public ArrayList<String> getRoles() {
@@ -79,6 +83,11 @@ public class SimUIModel extends Subject implements Observer {
         StaffFactory.getStaff(role, name, experience).start();
 
         notifyObservers();
+    }
+
+    public void populateOrders() {
+        Thread orders = new Thread(orderList);
+        orders.start();
     }
 
     public void update() {

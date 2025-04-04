@@ -38,6 +38,11 @@ public class SimUIView extends JFrame implements Observer {
     private JLabel StaffRoleLabel;
     private JLabel StaffExpLabel;
     private JPanel SimSpeedPanel;
+    private JButton PopOrderListBtn;
+    private JScrollPane CompleteOrderScrollPane;
+    private JTextArea CompleteOrderArea;
+    private JScrollPane ProcessedOrdersScrollPane;
+    private JTextArea ProcessedOrderArea;
 
     private SimUIModel simModel;
     private static SimUIView instance;
@@ -68,11 +73,17 @@ public class SimUIView extends JFrame implements Observer {
         OnlineOrderArea.setDisabledTextColor(Color.BLACK);
         SimSpeedField.setEnabled(false);
         SimSpeedField.setDisabledTextColor(Color.BLACK);
+        CompleteOrderArea.setEnabled(false);
+        CompleteOrderArea.setDisabledTextColor(Color.BLACK);
+        ProcessedOrderArea.setEnabled(false);
+        ProcessedOrderArea.setDisabledTextColor(Color.BLACK);
 
         // Fill the experience combo box with options
         for (int i = 1; i <= 5; i++) {
             StaffExpCombo.addItem(i);
         }
+
+        setRoles(simModel.getRoles());
 
         // Initial update to populate fields
         update();
@@ -103,12 +114,18 @@ public class SimUIView extends JFrame implements Observer {
         return SimSpeedSlider.getValue();
     }
 
-    public void setOrderLists(String orders, String onlineOrders) {
+    public void setOrderLists(String orders, String onlineOrders, String completedOrders, String processedOrders) {
         OrderListArea.setText("");
         OrderListArea.append(orders + "\n");
 
         OnlineOrderArea.setText("");
         OnlineOrderArea.append(onlineOrders + "\n");
+
+        CompleteOrderArea.setText("");
+        CompleteOrderArea.append(completedOrders + "\n");
+
+        ProcessedOrderArea.setText("");
+        ProcessedOrderArea.append(processedOrders + "\n");
     }
 
     private void setSimSpeed() {
@@ -152,20 +169,20 @@ public class SimUIView extends JFrame implements Observer {
 
         ViewDetailsBtn.setName("ViewDetailsBtn");
         ViewDetailsBtn.addActionListener(al);
+
+        PopOrderListBtn.setName("PopOrderListBtn");
+        PopOrderListBtn.addActionListener(al);
     }
 
     public void update() {
         // Refresh sim speed related fields
         setSimSpeed();
 
-        // Refresh the roles list
-        setRoles(simModel.getRoles());
-
         // Refresh the Staff list
         setStaffList(simModel.getStaffList());
 
         // Refresh the Order lists
-        setOrderLists(simModel.getOrderList(false),simModel.getOrderList(true));
+        setOrderLists(simModel.getOrderList(0),simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
     }
 
     public void showPopup(String message) {
