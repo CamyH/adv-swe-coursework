@@ -162,4 +162,54 @@ public class SimUIModel extends Subject implements Observer {
         staffList.remove(ID);
     }
 
+    /**
+     * Attempts to add a new order to the order list
+     *
+     * @param order the order to add
+     * @return true if added successfully, false otherwise
+     */
+    public boolean addOrder(Order order) {
+        try {
+            return orderList.add(order);
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            logger.logWarning(e.getClass() + e.getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Starts the simulation server on a separate thread
+     */
+    private void startServer() {
+        executor.submit(() -> {
+            Server server = new Server(this);
+            server.start();
+        });
+    }
+
+    /**
+     * Stops the simulation server and shuts down the executor
+     */
+    protected void stopServer() {
+        executor.shutdown();
+    }
+
+    /**
+     * Gets the shared order list instance
+     *
+     * @return order list
+     */
+    public OrderList getOrderList() {
+        return orderList;
+    }
+
+    /**
+     * Gets the shared item list (menu)
+     *
+     * @return menu item list
+     */
+    public ItemList getMenu() {
+        return menu;
+    }
 }
