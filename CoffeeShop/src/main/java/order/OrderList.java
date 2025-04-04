@@ -1,6 +1,5 @@
 package order;
 
-import client.SimUIController;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
@@ -9,8 +8,6 @@ import interfaces.Subject;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import interfaces.Observer;
 
 import logs.CoffeeShopLogger;
 
@@ -75,7 +72,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @throws DuplicateOrderException if the order already exists
      */
     @Override
-    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
         if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
             logger.logWarning("Order queue is full. Cannot add new order.");
             return false;
@@ -98,18 +95,12 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
 
         logger.logInfo("Order added to queue: " + order.getOrderID());
 
-        boolean success;
-
-        if (order.getOnlineStatus()) {
-            success = allOrders.getLast().offer(order);
-        }
-        else {
-            success = allOrders.getFirst().offer(order);
-        }
+        boolean success = order.getOnlineStatus() ? allOrders.getLast().offer(order) : allOrders.getFirst().offer(order);
 
         notifyObservers();
 
-        return order.getOnlineStatus() ? allOrders.getFirst().add(order) : allOrders.getLast().add(order);
+        return success;
+
     }
 
     /**
@@ -187,7 +178,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @param orderID The UUID of the order to be retrieved
      * @return An Order Object
      */
-    public Order getOrder(UUID orderID) throws InvalidOrderException {
+    public synchronized Order getOrder(UUID orderID) throws InvalidOrderException {
         /**
          * Combines the two queues from the array list into one stream
          * Saves having to use nested for loops
