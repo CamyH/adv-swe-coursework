@@ -1,5 +1,6 @@
 package client;
 
+import item.ItemList;
 import logs.CoffeeShopLogger;
 import order.Order;
 import message.Message;
@@ -22,6 +23,7 @@ public class Client {
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
     private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private final CustomerModel customerModel;
 
     /**
      * Constructor for initialising a client
@@ -30,8 +32,9 @@ public class Client {
      * @param socket the client's socket
      * @throws IOException if creation of a stream fails
      */
-    public Client(Socket socket) throws IOException {
+    public Client(Socket socket, CustomerModel customerModel) throws IOException {
         this.socket = socket;
+        this.customerModel = customerModel;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -45,17 +48,18 @@ public class Client {
      * @param port the custom port to use
      * @throws IOException if creation of a stream fails
      */
-    public Client(Socket socket, String host, int port) throws IOException {
+    public Client(Socket socket, String host, int port, CustomerModel customerModel) throws IOException {
         this.socket = socket;
         Client.host = host;
         Client.port = port;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.customerModel = customerModel;
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
         Server.addClient(outputStream);
     }
 
-    public static Client start() {
+    /*public static Client start() {
         try {
             Socket clientSocket = new Socket(host, port);
 
@@ -64,7 +68,7 @@ public class Client {
             logger.logSevere("Error in client: " + e.getMessage());
         }
         return null;
-    }
+    }*/
 
     /**
      * Sends an {@link Order} object to the server
@@ -90,8 +94,8 @@ public class Client {
      * @throws IOException if an I/O error occurs while receiving the object
      * @throws ClassNotFoundException if the class of the received object cannot be found
      */
-    public synchronized Message receiveMessage() throws IOException, ClassNotFoundException {
-        return Optional.ofNullable((Message) inputStream.readObject())
+    public synchronized Message receiveMessage(Object inputStream) throws IOException, ClassNotFoundException {
+        return Optional.ofNullable((Message) inputStream)
                .orElseThrow(() -> new IOException("Message received is NULL"));
     }
 
@@ -143,5 +147,38 @@ public class Client {
         }
 
         if (exception != null) throw exception;
+    }
+
+    public void startListening(Demo demo) {
+        Thread listenerThread = new Thread(() -> {
+            try {
+                // Example: Simulate receiving order and item lists from server
+                while (true) {
+                    // Simulating receiving new order list and item list from server
+                    //OrderList orderList = (OrderList) inputStream.readObject();
+                    Object object = inputStream.readObject();
+                    if (object instanceof ItemList itemList) {
+                        customerModel.updateItemList(itemList);
+                    }
+
+                    if (object instanceof Message) {
+                        Message message = receiveMessage(object);
+                        System.out.println(message.toString());
+                    }
+
+                    // Notify Demo to update UI with received data
+                    /*if (demo != null) {
+                        demo.updateItemList(itemList);    // Update the item list in Demo
+                    }*/
+
+                    // Add a delay (for demo purposes, to simulate receiving new data over time)
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        listenerThread.start();
     }
 }
