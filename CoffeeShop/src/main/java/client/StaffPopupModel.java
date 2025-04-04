@@ -25,22 +25,6 @@ public class StaffPopupModel extends Subject implements Observer {
 
     }
 
-    public synchronized void registerObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    public synchronized void removeObserver(Observer obs) {
-        observers.remove(obs);
-    }
-
-    public void notifyObservers() {
-        synchronized (observers) {
-            for (Observer obs : observers) {
-                obs.update();
-            }
-        }
-    }
-
     public String getDetails() {
         return details;
     }
