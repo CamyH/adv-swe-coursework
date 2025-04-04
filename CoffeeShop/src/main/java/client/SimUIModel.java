@@ -30,7 +30,7 @@ public class SimUIModel extends Subject implements Observer {
         this.orderList = OrderList.getInstance();
 
         // initialise the data for the UI
-        simSpeed = 100;
+        simSpeed = 50;
         popupList = new ArrayList<>();
         roles = new ArrayList<>();
 

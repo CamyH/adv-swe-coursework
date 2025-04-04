@@ -111,6 +111,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         }
 
         notifyObservers();
+        System.out.println("NOTIFYING OBSERVERS");
 
         return success;
     }
@@ -398,19 +399,15 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     @Override
     public void run() {
         while (!simulationOrders.isEmpty()) {
+            System.out.println("ADDING ORDERS");
             try {
-                try {
-                    if (!this.add(simulationOrders.removeFirst())) {
-                        synchronized (this) {
-                            wait();
-                        }
+                if (!this.add(simulationOrders.removeFirst())) {
+                    synchronized (this) {
+                        wait();
                     }
                 }
-                catch (InterruptedException e) {
-                    System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
-                }
             }
-            catch (InvalidOrderException | DuplicateOrderException e) {
+            catch (InvalidOrderException | DuplicateOrderException | InterruptedException e) {
                 System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
             }
 

@@ -130,7 +130,6 @@ public class SimUIController {
             } else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
                 viewStaffDetails();
             }
-
             else if (sourceBtn.getName().equals("PopOrderListBtn")) {
                 simModel.populateOrders();
                 sourceBtn.setEnabled(false);

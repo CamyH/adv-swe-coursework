@@ -152,7 +152,7 @@ public class SimUIView extends JFrame implements Observer {
      * @param orders the list in person orders
      * @param onlineOrders the list of online orders
      */
-    public void setOrderLists(String orders, String onlineOrders) {
+    public void setOrderLists(String orders, String onlineOrders, String completedOrders, String processedOrders) {
         SwingUtilities.invokeLater(() -> {
             OrderListArea.setText("");
             OrderListArea.append(orders + "\n");
@@ -247,7 +247,7 @@ public class SimUIView extends JFrame implements Observer {
                 setStaffList(simModel.getStaffList());
 
                 // Refresh the Order lists
-                setOrderLists(simModel.getOrderList(0), simModel.getOrderList(true));
+                setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
                 return null;
             }
         };
