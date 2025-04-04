@@ -1,11 +1,20 @@
 package client;
 
+import item.Item;
 import item.ItemFileReader;
+import item.ItemList;
 import order.OrderFileReadWrite;
+import order.OrderList;
+import utils.Discount;
 import utils.GenerateReportFileWriter;
+import workers.StaffList;
+import workers.Waiter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Refactored to support MVC by Akash
@@ -18,6 +27,8 @@ public class Demo {
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static CustomerView view;
+    private static SimUIView simView;
+    private static SimUIModel simModel;
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
@@ -43,7 +54,9 @@ public class Demo {
     }
 
     public void showSimUI(){
-        simController = new SimUIController();
+        simModel = new SimUIModel();
+        simView = new SimUIView(simModel);
+        simController =  new SimUIController(simView, simModel);
     }
 
     /**
@@ -55,6 +68,7 @@ public class Demo {
         itemReader = new ItemFileReader("menu.txt");
         try {
             itemReader.readFile();
+            setDailySpecial();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -72,14 +86,31 @@ public class Demo {
     }
 
     /**
+     * Randomly selects an item from the item list to be today's special offer.
+     * Sets the selected item in the Discount class with a random discount between 50-75 percentage.
+     */
+    private static void setDailySpecial() {
+        ItemList itemList = ItemList.getInstance();
+        List<Item> items = new ArrayList<>(itemList.getMenu().values());
+
+        if (!items.isEmpty()) {
+            Random random = new Random();
+            Item dailySpecial = items.get(random.nextInt(items.size()));
+            Discount.setDailySpecialItem(dailySpecial);
+        }
+    }
+
+    /**
      * Closes the GUI
      */
     static void demoCloseGUI() {
         System.out.println("Goodbye.");
         view.closeGUI();
         simController.close();
+
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
+
         System.exit(0);
     }
 
@@ -92,5 +123,12 @@ public class Demo {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    static void cleanUp() {
+        System.out.println("Goodbye.");
+
+        GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
+        generateReportFileWriter.writeToFile();
     }
 }

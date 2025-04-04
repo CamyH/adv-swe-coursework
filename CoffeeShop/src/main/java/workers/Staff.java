@@ -1,9 +1,8 @@
 package workers;
 
+import client.SimUIModel;
 import interfaces.Observer;
-import order.Order;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -15,16 +14,16 @@ import java.util.UUID;
  *
  * @author Fraser Holman
  */
-public abstract class Staff extends Thread implements Observer {
+public abstract class Staff<T> extends Thread implements Observer {
     private String name;
 
-    protected double defaultDelay = 2000.0;
+    protected double defaultDelay;
 
     /**
      * Value between 0 and 1 that will represent how quickly they can complete orders
      * value is between 0 and 1 - lower values are more experienced
      * */
-    private double experience;
+    private int experience;
 
     /** Staff members ID */
     private UUID ID;
@@ -35,10 +34,11 @@ public abstract class Staff extends Thread implements Observer {
      * @param name Name of the staff member
      * @param experience Experience level of the staff member
      */
-    public Staff(String name, double experience) {
+    public Staff(String name, int experience) {
         this.name = name;
         this.experience = experience;
         this.ID = UUID.randomUUID();
+        setDefaultDelay(SimUIModel.getSimSpeed());
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @return String representing workers name
      */
-    public String getWorkerName() {
+    public synchronized String getWorkerName() {
         return name;
     }
 
@@ -57,7 +57,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @return Double representing the experience level of the worker
      */
-    public double getExperience() {
+    public int getExperience() {
         return experience;
     }
 
@@ -75,7 +75,7 @@ public abstract class Staff extends Thread implements Observer {
      *
      * @param experience a Double representing the new experience level of the staff member
      */
-    public void setExperience(double experience) {
+    public void setExperience(int experience) {
         this.experience = experience;
     }
 
@@ -85,7 +85,7 @@ public abstract class Staff extends Thread implements Observer {
      * @param defaultDelay double representing the delay in completing orders
      */
     public void setDefaultDelay(double defaultDelay) {
-        this.defaultDelay = defaultDelay;
+        this.defaultDelay = 10000.0 - ( defaultDelay / 100.0 * 10000.0 ) + 100.0;
     }
 
     /**
@@ -112,8 +112,10 @@ public abstract class Staff extends Thread implements Observer {
      */
     public abstract void removeStaff();
 
-    public abstract ArrayList<String> getCurrentOrderDetails();
+    public abstract String getRole();
 
-    public abstract Order getCurrentOrder();
+    public abstract String getCurrentOrderDetails();
+
+    public abstract T getCurrentOrder();
 
 }

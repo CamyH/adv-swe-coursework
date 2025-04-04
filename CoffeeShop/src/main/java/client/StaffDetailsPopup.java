@@ -1,33 +1,49 @@
 package client;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
+import java.util.UUID;
 
-public class StaffDetailsPopup extends JFrame {
+public class StaffDetailsPopup extends JFrame  {
 
     private JPanel contentPanel;
     private JTextArea detailsArea;
     private JScrollPane detailsScrollPane;
+    private JButton exitButton;
+    private UUID ID;
 
-    public StaffDetailsPopup() {
-        // Ensure the UI window is shown in the center of the screen
-        setLocationRelativeTo(null);
-        setVisible(true);
-        setTitle("Server Details");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public StaffDetailsPopup(StaffPopupModel SM)  {
+        SwingUtilities.invokeLater(() -> {
+            // Ensure the UI window is shown in the center of the screen
+            setContentPane(contentPanel);
+            setLocationRelativeTo(null);
+            setVisible(true);
+            setTitle("Server Details");
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setSize(300, 200);
+        });
     }
 
-    public void setDetails(ArrayList<String> details) {
-        int size = details.size();
-        detailsArea.append("Server: " + details.getFirst());
-        detailsArea.append("\n" + "Order Customer ID: " + details.get(1));
-        for (int i = 2; i < size-2; i++) {
-            detailsArea.append("\n" + "Item " + i + ": " + details.get(i));
-        }
-        detailsArea.append("\n" + "Total: " + details.get((size-2)) + ", " + details.getLast());
+    public void addSetListener(ActionListener al) {
+        SwingUtilities.invokeLater(() -> {
+            exitButton.setName("ExitBtn");
+            exitButton.addActionListener(al);
+        });
     }
 
-    public void exit() {
-        StaffDetailsPopup.this.dispose();
+    public void addWindowCloseListener(WindowListener wl) {
+        this.addWindowListener(wl);
+    }
+
+    public void setDetails(String details) {
+        SwingUtilities.invokeLater(() -> {
+            detailsArea.setText("");
+            detailsArea.append(details);
+        });
+    }
+
+    public void close() {
+        SwingUtilities.invokeLater(StaffDetailsPopup.this::dispose);
     }
 }

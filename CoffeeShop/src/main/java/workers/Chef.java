@@ -3,32 +3,32 @@ package workers;
 import exceptions.InvalidItemIDException;
 import item.ItemList;
 import logs.CoffeeShopLogger;
-import order.DrinkList;
+import order.FoodList;
 import java.util.Map;
 
 /**
- * Class represents how a Barista functions in the Coffee Shop Simulation
+ * Class represents how a Chef functions in the Coffee Shop Simulation
  *
  * This class uses two design patterns:
  * 1. Factory Design Pattern (with Staff and StaffFactory)
- * 2. Observer Design Pattern (between this class and DrinkList)
+ * 2. Observer Design Pattern (between this class and FoodList)
  *
  * Tasks:
- * 1. Check for Item by checking for items in DrinkList
+ * 1. Check for Item by checking for items in FoodList
  * 2. Wait specified amount of time to complete Item
  * 3. Add Item to waiters list for processing
  *
  * @author Fraser Holman
  */
-public class Barista extends Staff<String> {
-    DrinkList drinkList;
+public class Chef extends Staff<String> {
+    private FoodList foodList;
 
-    ItemList itemList;
-
-    StaffList staffList;
+    private ItemList itemList;
 
     /** Holds a single entry representing the current processed item and the corresponding waiter */
-    Map.Entry<Waiter, String> currentItem;
+    private Map.Entry<Waiter, String> currentItem;
+
+    private StaffList staffList;
 
     /** Tells if the staff member is currently active (ie not fired) */
     private boolean active = true;
@@ -37,29 +37,29 @@ public class Barista extends Staff<String> {
     private CoffeeShopLogger logger;
 
     /**
-     * Constructor to set up barista
+     * Constructor to setup Chef
      *
-     * @param name Name of Barista
-     * @param experience Experience level of barista
+     * @param name Name of Chef
+     * @param experience experience level of Chef
      */
-    public Barista(String name, int experience) {
+    public Chef(String name, int experience) {
         super(name, experience);
-        drinkList = DrinkList.getInstance();
+        foodList = FoodList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
-        drinkList.registerObserver(this);
+        foodList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
     }
 
     /**
-     * Method gets next drink in drink list
+     * Method gets next food item in food list
      *
-     * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
+     * If there is no food left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
     public void getOrders() {
-        currentItem = drinkList.remove();
+        currentItem = foodList.remove();
 
         if (currentItem == null) {
             try {
@@ -83,16 +83,6 @@ public class Barista extends Staff<String> {
         currentItem.getKey().addItem(currentItem.getValue());
         currentItem = null;
         return true;
-    }
-
-    /**
-     * Method to return current order that is being processed
-     *
-     * @return the current order that is being processed
-     */
-    @Override
-    public String getCurrentOrder() {
-        return currentItem.getValue();
     }
 
     /**
@@ -128,12 +118,21 @@ public class Barista extends Staff<String> {
     }
 
     /**
-     * Method to return the role of the staff object in this case "barista"
+     * Method to return the role of the staff object in this case "chef"
      *
      * @return String representing this staff's role
      */
     public String getRole() {
-        return "Barista";
+        return "Chef";
+    }
+
+    /**
+     * Method to return current order that is being processed
+     *
+     * @return the current order that is being processed
+     */
+    public String getCurrentOrder() {
+        return currentItem.getValue();
     }
 
     /**
@@ -141,15 +140,15 @@ public class Barista extends Staff<String> {
      */
     @Override
     public synchronized void removeStaff() {
-        drinkList.removeObserver(this);
+        foodList.removeObserver(this);
         active = false;
         staffList.remove(this.getID());
         notifyAll(); // wakes up thread
-        logger.logInfo("Barista " + getWorkerName() + " removed from the simulation.");
+        logger.logInfo("Chef " + getWorkerName() + " removed from the simulation.");
     }
 
     /**
-     * Method used by the Subject (DrinkList) to tell the Staff member that an order has been added
+     * Method used by the Subject (FoodList) to tell the Staff member that an order has been added
      */
     public void update() {
         synchronized (this) {
@@ -158,7 +157,7 @@ public class Barista extends Staff<String> {
     }
 
     /**
-     * This method is the Barista's thread
+     * This method is the Chef's thread
      */
     @Override
     public void run() {
@@ -181,7 +180,6 @@ public class Barista extends Staff<String> {
             catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
-
             completeCurrentOrder();
             staffList.notifyObservers();
         }

@@ -36,6 +36,7 @@ public class CustomerController implements ActionListener {
 
         // Initialize view with menu data
         view.displayMenu(model.getMenuDetails());
+        view.displayDailySpecial(model.getDailySpecialInfo());
     }
 
     /**
@@ -115,7 +116,17 @@ public class CustomerController implements ActionListener {
             JOptionPane.showMessageDialog(view,
                     itemID.toUpperCase() + " is not a valid item ID");
         }
+        try {
+            model.addItem(itemID.toUpperCase());
+        } catch (InvalidItemIDException e) {
+            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+        }
+        view.getItemIDField().setText("");
+        updateView();
     }
+
+
+
 
     /**
      * Handles removal of last item

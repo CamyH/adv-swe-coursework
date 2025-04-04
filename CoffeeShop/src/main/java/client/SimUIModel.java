@@ -1,142 +1,122 @@
 package client;
 
-import exceptions.StaffNullOrderException;
+import exceptions.StaffNullNameException;
 import interfaces.Observer;
 import interfaces.Subject;
-import item.Item;
-import item.ItemList;
-import order.Order;
 import order.OrderList;
-import workers.Barista;
-import workers.Staff;
+import workers.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.UUID;
 
-public class SimUIModel implements Subject {
+/**
+ * The simulation UI Model
+ * @author Caelan Mackenzie
+ */
+public class SimUIModel extends Subject implements Observer {
 
-    private ArrayList<Observer> observers = new ArrayList<Observer>();
+    // Declare the Model's data
+    private final OrderList orderList;
+    private final ArrayList<String> roles;
+    private final StaffList staffList;
+    private ArrayList<UUID> popupList;
+    private static int simSpeed;
 
-    private OrderList orderList;
-    private ItemList menu;
+    /** SimUIModel constructor method */
+    public SimUIModel() {
 
-    private ArrayList<String> roles;
+        // Get the singleton instances of staffList and orderList
+        this.staffList = StaffList.getInstance();
+        this.orderList = OrderList.getInstance();
 
-    private HashMap<UUID, Staff> staffList =  new HashMap<>();
+        orderList.registerObserver(this);
 
-    private Integer simSpd = 2000;
+        // initialise the data for the UI
+        simSpeed = 50;
+        popupList = new ArrayList<>();
+        roles = new ArrayList<>();
 
-        public SimUIModel() {
-            this.orderList = OrderList.getInstance();
-            this.menu = ItemList.getInstance();
-            roles = new ArrayList<>();
-
-            // Populate roles
-            roles.add("Barista");
-
-            // Populate staff list
-            for (int i = 1; i <= 5; i++) {
-                Staff curStaff = new Barista("Staffname" + i, i); {
-                }
-                staffList.put(UUID.randomUUID(),curStaff);
-            }
-        }
-
-    public void registerObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    public void removeObserver(Observer obs) {
-        observers.remove(obs);
-    }
-
-    public void notifyObservers() {
-        for (Observer obs : observers) {
-            obs.update();
-        }
+        // Populate roles
+        roles.add("Waiter");
+        roles.add("Barista");
+        roles.add("Chef");
     }
 
     // Getter methods
 
-    public int getSimSpd() {
-            return simSpd;
+    public static int getSimSpeed() {
+        return simSpeed;
     }
 
-    public ArrayList<String> getOrderList() {
-            ArrayList<String> list = new ArrayList<>(Arrays.asList(orderList.getOrdersToString(true)));
-            for (String line : list) {
-                System.out.println(line);
-            }
-            return list;
+    public String getOrderList(int state) {
+        return orderList.getOrdersForDisplay(state);
+    }
+
+    public String getCurrentOrders() {
+        return Waiter.getCurrentOrdersForDisplay();
     }
 
     public ArrayList<String> getRoles() {
-            return roles;
+        return roles;
     }
 
-    public HashMap<UUID, Staff> getStaffList() {
+    public StaffList getStaffList() {
         return staffList;
     }
 
-    /**
-     *
-     * @param ID The ID of the staff whose details we are collecting
-     * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
-     */
-    public ArrayList<String> getStaffDetails(UUID ID) throws StaffNullOrderException {
-            Staff curStaff = staffList.get(ID);
-
-            if (curStaff.getCurrentOrder() == null) {
-                throw new StaffNullOrderException("Selected staff has no order");
-            }
-
-            Order curOrder = curStaff.getCurrentOrder();
-            String name = curStaff.getWorkerName();
-            ArrayList<String> orderDetails = new ArrayList<>();
-
-            // Add the staff name to the list
-            orderDetails.add(name);
-
-            // Add the order's customer ID to the list
-            orderDetails.add(String.valueOf(curOrder.getCustomerID()));
-
-            // Add the item names to the list
-            for (String itemID : curOrder.getDetails()) {
-                Item item = menu.getMenu().get(itemID);
-                if (item != null) {
-                    orderDetails.add(item.getDescription());
-                }
-            }
-
-            // Add the total cost and discounted cost to the last two values in the list
-            orderDetails.add(String.valueOf(curOrder.getTotalCost()));
-            orderDetails.add(String.valueOf(curOrder.getDiscountedCost()));
-            return orderDetails;
+    public String getStaffDetails(UUID ID) {
+        synchronized (staffList) {
+            return staffList.getStaff(ID).getCurrentOrderDetails();
+        }
     }
 
 
     // Setter methods
 
-    public void setSimSpd(int speed) {
-            this.simSpd = Math.round(speed/ 100.0f) * 100;
+    public void setSimSpeed(int speed) {
+        simSpeed = speed;
+        StaffList.getInstance().setDefaultDelay(simSpeed);
+        notifyObservers();
     }
 
-    public void addStaff(String name, String role, int experience) throws StaffNullOrderException {
+    public void addPopup(UUID popup) {
+        popupList.add(popup);
+    }
+    public boolean checkPopup(UUID popup) {
+        return popupList.contains(popup);
+    }
+
+    /**
+     * Add a new staff to the staffList
+     * @param name staff name
+     * @param role staff role
+     * @param experience staff experience
+     * @throws StaffNullNameException thrown when the staff nae field is empty
+     */
+    public void addStaff(String name, String role, int experience) throws StaffNullNameException {
         if (name.isEmpty()) {
-            throw new StaffNullOrderException("Staff name is empty");
+            throw new StaffNullNameException("Staff name is empty");
         }
 
-        if (role.equals("Barista")) {
-            Barista curStaff = new Barista(name, experience);
-            staffList.put(curStaff.getID(), curStaff);
-            System.out.println(curStaff.getWorkerName());
-        }
+        StaffFactory.getStaff(role, name, experience).start();
+
+        notifyObservers();
+    }
+
+    public void populateOrders() {
+        Thread orders = new Thread(orderList);
+        orders.start();
+    }
+
+    public void update() {
+        notifyObservers();
+    }
+
+    public void removePopup(UUID popup) {
+        popupList.remove(popup);
     }
 
     public void removeStaff(UUID ID) {
-        staffList.get(ID).removeStaff();
         staffList.remove(ID);
     }
 

@@ -1,5 +1,7 @@
 package order;
 
+import client.SimUIController;
+import client.SimUIModel;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
@@ -13,6 +15,8 @@ import interfaces.Observer;
 
 import logs.CoffeeShopLogger;
 
+import static java.lang.Thread.sleep;
+
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
@@ -24,35 +28,33 @@ import logs.CoffeeShopLogger;
  * @author Fraser Holman
  */
 
-public class OrderList implements EntityList<Order, UUID>, Subject, Serializable {
-    /** A queue to hold existing Order objects */
-    //private Queue<Order> inCompleteOrders;
-
+public class OrderList extends Subject implements EntityList<Order, UUID>, Serializable, Runnable {
     /** A queue to hold completed Order objects
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
 
     private ArrayList<Queue<Order>> allOrders;
 
-    /** Private instance of OrderList */
-    private static OrderList instance = new OrderList();
+    private ArrayList<Order> simulationOrders;
 
-    /** Linked list to hold observer details */
-    private List<Observer> registeredObservers = new LinkedList<Observer>();
+    /** Private instance of OrderList */
+    private static OrderList instance;
 
     /** Integer to check max queue size */
     private int maxQueueSize = 50;
 
     /** Logger instance */
-    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+    private final CoffeeShopLogger logger;
 
     /**
      * Initialises the queue to contain all the orders
      */
     private OrderList() {
         allOrders = new ArrayList<>();
+        simulationOrders = new ArrayList<>();
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
+        logger = CoffeeShopLogger.getInstance();
         completeOrders = new ArrayList<>();
     }
 
@@ -82,9 +84,14 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
             return false;
         }
 
+        if (order == null) {
+            logger.logSevere("Invalid order: Order details cannot be null");
+            throw new InvalidOrderException("Order details cannot be null");
+        }
+
         if (order.getDetails().isEmpty()) {
-            logger.logSevere("Invalid order: Order details cannot be null or empty");
-            throw new InvalidOrderException("Order details cannot be null or empty");
+            logger.logSevere("Invalid order: Order details cannot be empty");
+            throw new InvalidOrderException("Order details cannot be empty");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
@@ -92,13 +99,49 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
             throw new DuplicateOrderException("Duplicate Order");
         }
 
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+
+        boolean success;
+
+        if (order.getOnlineStatus()) {
+            success = allOrders.getLast().offer(order);
+        }
+        else {
+            success = allOrders.getFirst().offer(order);
+        }
+
         notifyObservers();
 
-        logger.logInfo("Order added to queue: " + order.getOrderID());
-      
-        if (order.getOnlineStatus()) return allOrders.getLast().offer(order);
+        return success;
+    }
 
-        return allOrders.getFirst().offer(order);
+    /**
+     * Method to add orders from order.txt file into the simulation before being displayed
+     *
+     * @param order The order to be added
+     * @return True if successfully added, False if not
+     * @throws InvalidOrderException If order is missing details
+     * @throws DuplicateOrderException If order already exists
+     */
+    public boolean addSimulation(Order order) throws InvalidOrderException, DuplicateOrderException {
+        if (order == null) {
+            logger.logSevere("Invalid order: Order details cannot be null");
+            throw new InvalidOrderException("Order details cannot be null");
+        }
+
+        if (order.getDetails().isEmpty()) {
+            logger.logSevere("Invalid order: Order details cannot be empty");
+            throw new InvalidOrderException("Order details cannot be empty");
+        }
+
+        if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
+            throw new DuplicateOrderException("Duplicate Order");
+        }
+
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+
+        return simulationOrders.add(order);
     }
 
     /**
@@ -126,7 +169,12 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return Order object to be processed by staff
      */
     public synchronized Order remove() {
-        return allOrders.getFirst().poll();
+        Order o = allOrders.getFirst().poll();
+        if (o != null) {
+            notifyObservers();
+            notifyAll();
+        }
+        return o;
     }
 
     /**
@@ -137,12 +185,26 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return Order object to be processed by staff
      */
     public synchronized Order removeOnline() {
-        return allOrders.getLast().poll();
+        Order o = allOrders.getLast().poll();
+
+        if (o == null) {
+            return null;
+        }
+        
+        notifyObservers();
+        notifyAll();
+        
+        return o;
     }
 
-    public void completeOrder(Order order) {
+    /**
+     * Completes an order from the queue of orders and plays a sound
+     */
+    public synchronized void completeOrder(Order order) {
         completeOrders.add(order);
+        notifyObservers();
         logger.logInfo("Order completed: " + order.getOrderID());
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
     /**
@@ -160,7 +222,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @param online Checks whether the caller wants the size of the online or in person order queue
      * @return an integer representing the size of the queue
      */
-    public int getQueueSize(boolean online) {
+    public synchronized int getQueueSize(boolean online) {
         if (online) return allOrders.getLast().size();
 
         return allOrders.getFirst().size();
@@ -233,19 +295,23 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
     /**
      * Method used by the simulation GUI to get a summary of orders that need to be complete
      *
-     * @param online whether to return online or in person orders
+     * @param state whether to return online or in person orders or complete orders
      * @return a string array of orders to be displayed
      */
-    public String[] getOrdersForDisplay(boolean online) {
-        Queue<Order> c = allOrders.getFirst();
+    public String getOrdersForDisplay(int state) {
+        Collection<Order> c;
 
-        if (online) {
+        if (state == 0) {
+            c = allOrders.getFirst();
+        }
+        else if (state == 1) {
             c = allOrders.getLast();
         }
+        else {
+            c = completeOrders;
+        }
 
-        String[] orderString = new String[c.size()];
-
-        int count = 0;
+        StringBuilder orderString = new StringBuilder();
 
         for (Order o : c) {
             String s = String.format("%s,%s,%s",
@@ -254,12 +320,15 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
                     String.join(";", o.getDetails())
             );
 
-            orderString[count] = s;
-
-            count++;
+            orderString.append(s).append("\n");
         }
 
-        return orderString;
+        // Remove the last newline if needed
+        if (!c.isEmpty()) {
+            orderString.setLength(orderString.length() - 1);
+        }
+
+        return orderString.toString();
     }
 
     /**
@@ -330,6 +399,7 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
      * @return an instance of OrderList
      */
     public static OrderList getInstance() {
+        if (instance == null) instance = new OrderList();
         return instance;
     }
 
@@ -341,28 +411,26 @@ public class OrderList implements EntityList<Order, UUID>, Subject, Serializable
         instance = new OrderList();
     }
 
-    /**
-     * Method used to register observers
-     *
-     * @param obs The observer to be added to the list of observers
-     */
-    public void registerObserver(Observer obs) {
-        registeredObservers.add(obs);
-    }
+    @Override
+    public void run() {
+        while (!simulationOrders.isEmpty()) {
+            try {
+                if (!this.add(simulationOrders.removeFirst())) {
+                    synchronized (this) {
+                        wait();
+                    }
+                }
+            }
+            catch (InvalidOrderException | DuplicateOrderException | InterruptedException e) {
+                System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
+            }
 
-    /**
-     * Method used to remove observers
-     *
-     * @param obs The observer to be removed from the list of observers
-     */
-    public void removeObserver(Observer obs) {
-        registeredObservers.remove(obs);
-    }
-
-    /**
-     * Method used to notify observers
-     */
-    public void notifyObservers() {
-        for(Observer obs : registeredObservers) obs.update();
+            try {
+                Thread.sleep((int) ((10000.0 - ( SimUIModel.getSimSpeed() / 100.0 * 10000.0 ) + 100.0)/2.0));
+            }
+            catch (InterruptedException e) {
+                System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
+            }
+        }
     }
 }

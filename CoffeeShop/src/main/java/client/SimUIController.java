@@ -1,108 +1,138 @@
 package client;
 
-import exceptions.StaffNullOrderException;
+import exceptions.StaffNullNameException;
 import interfaces.Observer;
-import order.OrderList;
+import logs.CoffeeShopLogger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * The simulation UI controller
  * Uses action listener to watch for any button presses on the UI
+ * @author Caelan Mackenzie
  */
-public class SimUIController implements Observer {
+public class SimUIController {
 
     private SimUIModel simModel;
-    private SimulationUI simView;
+    private SimUIView simView;
+    private static SimUIController instance;
+    private CoffeeShopLogger coffeeShopLogger;
 
-    // The order list to display
-    // Contains both in person and online orders
-    private OrderList orders;
-
-    public SimUIController() {
+    public SimUIController(SimUIView simView, SimUIModel simModel) {
 
         System.out.println("SimUIController()");
         System.out.println("-----------------------------------");
-        simModel = new SimUIModel();
-        simModel.registerObserver(this);
-        simView = new SimulationUI(simModel);
+        this.simModel = simModel;
+        this.simView = simView;
+        coffeeShopLogger = CoffeeShopLogger.getInstance();
         simView.addSetListener(new SetListener());
-        orders = OrderList.getInstance();
-
+        simView.addSimSpeedChangeListener(e -> updateSimSpeed());
     }
 
     private void viewStaffDetails() {
-        StaffDetailsPopup staffDetailsPopup = new StaffDetailsPopup();
-        try {
-            staffDetailsPopup.setDetails(simModel.getStaffDetails(simView.getCurStaff()));
-        } catch (StaffNullOrderException e) {
-            staffDetailsPopup.exit();
-            simView.showPopup(e.getMessage());
-        } catch (NullPointerException e) {
-            staffDetailsPopup.exit();
-            simView.showPopup("No Staff Found");
-        }
-
-        simModel.notifyObservers();
+        SwingUtilities.invokeLater(() -> {
+            if (!simModel.checkPopup(simView.getCurStaff())) {
+                try {
+                    new StaffPopupController(simModel, simView.getCurStaff());
+                } catch (NullPointerException e) {
+                    simView.showPopup("No Staff Found");
+                }
+            }
+            else {
+                simView.showPopup("Popup Already Exists");
+            }
+        });
     }
 
+    /**
+     * Retrieve the current staff details from the View and get the Model to add them to the staffList
+     * Utilises a Swing Worker to ensure thread safety
+     */
     private void addStaff() {
-        try {
-            String name = simView.getStaffName();
-            simModel.addStaff(name, simView.getStaffRole(), Integer.parseInt(simView.getStaffExp()));
-            simView.clearCurStaff();
-            simModel.notifyObservers();
-            simView.showPopup("Added " + name + " to Staff List");
-        } catch (StaffNullOrderException e) {
-            simView.showPopup(e.getMessage());
-        }
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            String name;
+            @Override
+            protected Void doInBackground() {
+                try {
+                    name = simView.getStaffName();
+                    simModel.addStaff(name, simView.getStaffRole(), simView.getStaffExp());
+                    SwingUtilities.invokeLater(() -> simView.showPopup("Added " + name + " to Staff List"));
+                    simView.clearCurStaff();
+                } catch (StaffNullNameException e) {
+                    SwingUtilities.invokeLater(() -> simView.showPopup("Please insert a staff name"));
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                simModel.notifyObservers();
+            }
+        };
+        worker.execute();
     }
 
+    /**
+     * Retrieve the selected staff from the View and get the Model to remove it from the staffList
+     * Utilises a Swing Worker to ensure thread safety
+     */
     private void removeStaff() {
-        try {
-            simModel.removeStaff(simView.getCurStaff());
-            simModel.notifyObservers();
-            simView.showPopup("Removed Selected Staff");
-        } catch (NullPointerException e) {
-            simView.showPopup("No Staff to Remove");
-        }
+
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            String name;
+            @Override
+            protected Void doInBackground() {
+                try {
+                    name = simView.getStaffName();
+                    System.out.println(name);
+                    simModel.removeStaff(simView.getCurStaff());
+                    simView.showPopup("Removed " + name + " from Staff List");
+                } catch (NullPointerException e) {
+                    simView.showPopup("No Staff to Remove");
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                simModel.notifyObservers();
+            }
+        };
+        worker.execute();
     }
 
-    private void updateSimSpd() {
-        simModel.setSimSpd(simView.getSimSliderValue());
-        simModel.notifyObservers();
-        simView.showPopup("Updated Simulation Speed");
+
+    public void updateSimSpeed() {
+        SwingUtilities.invokeLater(() -> simModel.setSimSpeed(simView.getSimSliderValue()));
     }
 
-    private void updateOrders() {
-        // get the order list and send it to the view
-        ArrayList<String> list = simModel.getOrderList();
+    /** Send a message to the view to be sown as a popup */
+    public void message(String msg) {
+        simView.showPopup(msg);
     }
 
-    public void update() {
-        updateOrders();
-    }
-
+    /**
+     * The set listener to detect button presses on the UI
+     * Determines the button by using the defined button names
+     */
     public class SetListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton sourceBtn = (JButton)e.getSource();
+
+            JButton sourceBtn = (JButton) e.getSource();
+
             if (sourceBtn.getName().equals("RemoveStaffBtn")) {
                 removeStaff();
-            }
-
-            else if (sourceBtn.getName().equals("AddStaffBtn")) {
+            } else if (sourceBtn.getName().equals("AddStaffBtn")) {
                 addStaff();
-            }
-
-            else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
+            } else if (sourceBtn.getName().equals("ViewDetailsBtn")) {
                 viewStaffDetails();
             }
-
-            else if (sourceBtn.getName().equals("SimSpdBtn")) {
-                updateSimSpd();
+            else if (sourceBtn.getName().equals("PopOrderListBtn")) {
+                simModel.populateOrders();
+                sourceBtn.setEnabled(false);
             }
         }
     }
