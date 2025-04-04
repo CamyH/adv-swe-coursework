@@ -1,18 +1,13 @@
 package order;
 
-import interfaces.EntityList;
-import interfaces.Observer;
 import interfaces.Subject;
-import logs.CoffeeShopLogger;
 import workers.Waiter;
 
 import java.util.*;
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
- *
  * Class represents a list of food items to be processed
- *
  * Contains a queue of different item IDs and the waiter the item has come from
  *
  * @author Fraser Holman
@@ -20,13 +15,13 @@ import java.util.*;
 public class FoodList extends Subject {
     private static FoodList instance;
 
-    private Queue<Map.Entry<Waiter, FoodItem>> foodList;
+    private final Queue<Map.Entry<Waiter, FoodItem>> foodList;
 
     /**
      * Constructor to set up the food list class
      */
     private FoodList() {
-        foodList = new ArrayDeque<Map.Entry<Waiter, FoodItem>>();
+        foodList = new ArrayDeque<>();
     }
 
     /**

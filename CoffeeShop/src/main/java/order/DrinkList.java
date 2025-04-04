@@ -1,17 +1,13 @@
 package order;
 
-import interfaces.Observer;
 import interfaces.Subject;
-import item.Item;
 import workers.Waiter;
 
 import java.util.*;
 
 /**
  * Singleton class and uses Observer Design Pattern (this class is the subject)
- *
  * Class represents a list of drinks to be processed
- *
  * Contains a queue of different item IDs and the waiter the item has come from
  *
  * @author Fraser Holman
