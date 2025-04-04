@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Represents a message with a specific type and sender
  */
-public record Message(UUID messageID, UUID customerID, UUID orderID, MessageContent message, MessageType messageType) implements Serializable {
+public record Message(UUID messageID, UUID customerID, UUID orderID, String message, MessageType messageType) implements Serializable {
     /**
      * Constructor to generate a random messageId
      * @param customerId ID of the customer receiving the message
@@ -15,7 +15,7 @@ public record Message(UUID messageID, UUID customerID, UUID orderID, MessageCont
      * @param message the body of the message
      * @param messageType the message type
      */
-    public Message(UUID customerId, UUID orderID, MessageContent message, MessageType messageType) {
+    public Message(UUID customerId, UUID orderID, String message, MessageType messageType) {
         this(UUID.randomUUID(), customerId, orderID, message, messageType);
     }
     /**
@@ -39,6 +39,6 @@ public record Message(UUID messageID, UUID customerID, UUID orderID, MessageCont
      */
     @Override
     public String toString() {
-        return "Order: " + orderID + " " + message.fromMessageType(messageType);
+        return "Order: " + orderID + " " + message;
     }
 }
