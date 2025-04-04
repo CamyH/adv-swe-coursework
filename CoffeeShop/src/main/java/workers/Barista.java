@@ -82,6 +82,7 @@ public class Barista extends Staff<String> {
     @Override
     public synchronized boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue());
+        currentItem = null;
         return true;
     }
 
@@ -157,6 +158,7 @@ public class Barista extends Staff<String> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentItem == null) continue;
 
@@ -173,7 +175,9 @@ public class Barista extends Staff<String> {
             catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
+
             completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }

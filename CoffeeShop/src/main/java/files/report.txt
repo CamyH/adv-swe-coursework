@@ -1,56 +1,63 @@
 =======================
 Current Order Details
 -----------------------
-e345bd56-c9c3-4915-a4d4-e075defbd95f,1622c9d7-3f84-4463-b301-54cde560104a,2025-03-30T12:12:59.519545800,RL1,false
-48154ff2-73cd-47c9-8257-4d845068d47d,cc49352f-90df-4631-8a74-561b54bb7fe5,2025-03-30T11:33:15.928563300,HD4,false
+989da11b-3d0b-4b8d-884d-a7310edabc8d,623d77a3-f10b-48d6-be08-0ebe59e61b32,2025-03-26T11:01:42.507095200,RL1;HD4;SD7;PSY1,false
+eb3cdfa7-d799-49b7-a447-d5e2ba7a508a,ae99e5d2-f53d-4056-aa60-d2fdd1a27f26,2025-03-26T11:01:42.508093500,FD3;HD5;RL1;SD1,false
+f888c5f8-0e3d-42ef-83b9-20f19bb2f380,818e5eec-eb1b-46cf-b66f-fe1d1e4b243d,2025-03-23T15:55:12.183768100,SD1,false
+f77d7c49-741d-4e98-be1e-6c6fb5849d2e,f14dcd5e-08f7-458e-a5d7-02ff58c9616b,2025-03-23T16:00:42.928996800,RL2,false
+461748a1-dee8-45e2-ac79-f752ea4e8eb9,a10ff740-2b90-4d04-a2b4-da7c0f91109e,2025-03-26T11:01:42.475627200,RL2;SD4;PSY5,false
+a17a7307-2dda-4723-b071-5a6593059a47,9e5194bf-ec2b-494a-a12b-a2aee0e19330,2025-03-26T11:01:42.510616700,RL1;FD2;HD6;SD8;PSY4;SCK6,true
+f37a8af6-b0a2-46ea-9abe-97ccf4bb7993,ff59a19a-007d-464c-a162-700d46b89831,2025-03-23T15:54:50.649015200,RL1;RL2;RL2,true
+5d277964-16c1-45c0-9dfa-82a26ddd49e1,7e4ae04c-59ac-4a1b-a9ca-e97d3ff972a7,2025-03-26T11:01:42.509094,RL3;HD1;PSY2,true
+866e99b7-b8a2-470f-be8c-72872bc0221b,877ed379-567b-4c7a-b908-8d0bc96993fe,2025-03-26T11:01:42.509604400,FD5;RL1;SCK4;HD5;SCK7,true
 -----------------------
 Number of Items Ordered
 -----------------------
-RL1 = 1
-RL2 = 0
-RL3 = 0
+RL1 = 5
+RL2 = 4
+RL3 = 1
 RL4 = 0
 FD1 = 0
-FD2 = 0
-FD3 = 0
+FD2 = 1
+FD3 = 1
 FD4 = 0
-FD5 = 0
-HD1 = 0
+FD5 = 1
+HD1 = 1
 HD2 = 0
 HD3 = 0
 HD4 = 1
-HD5 = 0
-HD6 = 0
+HD5 = 2
+HD6 = 1
 HD7 = 0
-SD1 = 0
+SD1 = 2
 SD2 = 0
 SD3 = 0
-SD4 = 0
+SD4 = 1
 SD5 = 0
 SD6 = 0
-SD7 = 0
-SD8 = 0
+SD7 = 1
+SD8 = 1
 SD9 = 0
 SCK1 = 0
 SCK2 = 0
 SCK3 = 0
-SCK4 = 0
+SCK4 = 1
 SCK5 = 0
-SCK6 = 0
-SCK7 = 0
+SCK6 = 1
+SCK7 = 1
 SCK8 = 0
-PSY1 = 0
-PSY2 = 0
+PSY1 = 1
+PSY2 = 1
 PSY3 = 0
-PSY4 = 0
-PSY5 = 0
+PSY4 = 1
+PSY5 = 1
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £6.00
-Total Income (Including Discounts) : £6.00
-Total Orders : 2
-Average Spend Per Order (Excluding Discounts) : £3.00
-Average Spend Per Order (Including Discounts) : £3.00
+Total Income (Excluding Discounts) : £88.30
+Total Income (Including Discounts) : £71.73
+Total Orders : 9
+Average Spend Per Order (Excluding Discounts) : £9.81
+Average Spend Per Order (Including Discounts) : £7.97
 =======================
 
