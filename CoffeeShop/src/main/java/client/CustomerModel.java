@@ -14,6 +14,16 @@ public class CustomerModel {
     private final OrderList orderList;
     private final ItemList itemList;
 
+    private boolean isOnlineOrder = false;
+
+    public void setOnlineOrder(boolean isOnlineOrder) {
+        this.isOnlineOrder = isOnlineOrder;
+    }
+
+    public boolean isOnlineOrder() {
+        return isOnlineOrder;
+    }
+
     public CustomerModel() {
         orderList = OrderList.getInstance();
         itemList = ItemList.getInstance();

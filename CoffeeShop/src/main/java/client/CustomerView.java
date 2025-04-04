@@ -70,9 +70,6 @@ public class  CustomerView extends JFrame {
         discountedCostField.setText("£0.00");
         displayMenuField.append("Item ID, Name, Cost \n");
 
-
-
-
     }
 
 
@@ -115,6 +112,10 @@ public class  CustomerView extends JFrame {
 
     public JButton getCancelOrderButton() {
         return cancelOrderButton;
+    }
+
+    public JCheckBox getOnlineOrderCheckBox() {
+        return onlineOrderCheckBox;
     }
 
     public JButton getAddItemButton() {

@@ -32,6 +32,7 @@ public class CustomerController implements ActionListener {
         view.getRemoveLastItemButton().addActionListener(this);
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
+        view.getOnlineOrderCheckBox().addActionListener(this);
 
         // Initialize view with menu data
         view.displayMenu(model.getMenuDetails());
@@ -55,7 +56,10 @@ public class CustomerController implements ActionListener {
             handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
             handleExit();
+        }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
+            handleOnlineOrderToggle();
         }
+
     }
 
     /**
@@ -63,10 +67,15 @@ public class CustomerController implements ActionListener {
      */
     private void handleSubmitOrder() {
         try {
+            boolean isOnline = model.isOnlineOrder();
             boolean orderAdded = model.submitOrder();
+
             if (orderAdded) {
                 Demo.demoWriteOrders();  // Existing demo functionality
-                JOptionPane.showMessageDialog(view, "Order has been submitted");
+                String message = isOnline ?
+                        "Online order has been submitted for delivery" :
+                        "In-store order has been submitted";
+                JOptionPane.showMessageDialog(view, message);
                 updateView();
             } else {
                 JOptionPane.showMessageDialog(view,
@@ -82,6 +91,7 @@ public class CustomerController implements ActionListener {
      */
     private void handleCancelOrder() {
         model.cancelOrder();
+        view.getOnlineOrderCheckBox().setSelected(false);
         JOptionPane.showMessageDialog(view, "Order Cancelled");
         updateView();
     }
@@ -140,6 +150,21 @@ public class CustomerController implements ActionListener {
         Demo.demoCloseGUI();  // Existing demo functionality
         JOptionPane.showMessageDialog(view, "Good Bye!");
         view.closeGUI();
+    }
+
+    /**
+     * Handles online order checkbox toggle
+     */
+    private void handleOnlineOrderToggle() {
+        boolean isSelected = view.getOnlineOrderCheckBox().isSelected();
+        model.setOnlineOrder(isSelected);
+
+        // Update UI based on order type
+        if (isSelected) {
+            JOptionPane.showMessageDialog(view,
+                    "Online order selected. Delivery charges may apply.");
+        }
+        updateView(); // Refresh to show any price changes
     }
 
     /**
