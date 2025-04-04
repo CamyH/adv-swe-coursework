@@ -53,6 +53,8 @@ public class CustomerModel {
     }
 
     public boolean submitOrder() throws InvalidOrderException, DuplicateOrderException {
+        if (isOnlineOrder) currentOrder.setOnlineStatus();
+
         boolean added = orderList.add(currentOrder);
         if (added) {
             createNewOrder();
@@ -85,7 +87,6 @@ public class CustomerModel {
      *
      * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
      */
-
     public String getDailySpecialInfo() {
         Item dailySpecial = Discount.getDailySpecialItem();
         if (dailySpecial == null) {

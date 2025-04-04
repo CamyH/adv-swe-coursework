@@ -76,14 +76,13 @@ public class CustomerController implements ActionListener {
                 String message = isOnline ?
                         "Online order has been submitted for delivery" :
                         "In-store order has been submitted";
-                JOptionPane.showMessageDialog(view, message);
+                view.showPopup(message);
                 updateView();
             } else {
-                JOptionPane.showMessageDialog(view,
-                        "Order could not be placed - Please Try Again Later");
+                view.showPopup("Order could not be placed - Please Try Again Later");
             }
         } catch (InvalidOrderException | DuplicateOrderException e) {
-            JOptionPane.showMessageDialog(view, e.getMessage());
+            view.showPopup(e.getMessage());
         }
     }
 
@@ -93,7 +92,7 @@ public class CustomerController implements ActionListener {
     private void handleCancelOrder() {
         model.cancelOrder();
         view.getOnlineOrderCheckBox().setSelected(false);
-        JOptionPane.showMessageDialog(view, "Order Cancelled");
+        view.showPopup("Order Cancelled");
         updateView();
     }
 
@@ -105,35 +104,25 @@ public class CustomerController implements ActionListener {
 
         // Guard clause
         if (itemID.isEmpty()) {
+            view.showPopup("Please Input an Item ID");
             return;
         }
 
         try {
-            model.addItem(itemID);
-            view.getItemIDField().setText("");
-            updateView();
-        } catch (InvalidItemIDException ex) {
-            JOptionPane.showMessageDialog(view,
-                    itemID.toUpperCase() + " is not a valid item ID");
-        }
-        try {
             model.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
-            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+            view.showPopup(itemID.toUpperCase() + " is not a valid item ID");
         }
         view.getItemIDField().setText("");
         updateView();
     }
-
-
-
 
     /**
      * Handles removal of last item
      */
     private void handleRemoveLastItem() {
         if (!model.removeLastItem()) {
-            JOptionPane.showMessageDialog(view, "No Items in this Order");
+            view.showPopup("No Items in this Order");
         }
         updateView();
     }
@@ -148,8 +137,7 @@ public class CustomerController implements ActionListener {
                 view.getItemIDField().setText("");
                 updateView();
             } else {
-                JOptionPane.showMessageDialog(view,
-                        itemID.toUpperCase() + " is not in the current order");
+                view.showPopup(itemID.toUpperCase() + " is not in the current order");
             }
         }
     }
@@ -159,7 +147,7 @@ public class CustomerController implements ActionListener {
      */
     private void handleExit() {
         Demo.demoCloseGUI();  // Existing demo functionality
-        JOptionPane.showMessageDialog(view, "Good Bye!");
+        view.showPopup("Good Bye!");
         view.closeGUI();
     }
 
@@ -172,8 +160,7 @@ public class CustomerController implements ActionListener {
 
         // Update UI based on order type
         if (isSelected) {
-            JOptionPane.showMessageDialog(view,
-                    "Online order selected. Delivery charges may apply.");
+            view.showPopup("Online order selected. Delivery charges may apply.");
         }
         updateView(); // Refresh to show any price changes
     }

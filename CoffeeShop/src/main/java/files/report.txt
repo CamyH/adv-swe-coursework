@@ -50,4 +50,5 @@ Total Income (Including Discounts) : £0.00
 Total Orders : 0
 Average Spend Per Order (Excluding Discounts) : £0.00
 Average Spend Per Order (Including Discounts) : £0.00
+=======================
 
