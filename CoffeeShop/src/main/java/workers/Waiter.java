@@ -90,8 +90,6 @@ public class Waiter extends Staff<Order> {
             currentOrder = orderList.removeOnline();
         }
 
-//        orderList.notifyObservers();
-
         if (currentOrder == null) {
             try {
                 synchronized (this) {
@@ -152,8 +150,6 @@ public class Waiter extends Staff<Order> {
 
         logger.logInfo("Waiter " + getWorkerName() + " completed order: " + currentOrder.getOrderID());
         currentOrder = null;
-
-//        orderList.notifyObservers();
 
         thisOrder = new ArrayList<>();
         return true;

@@ -111,11 +111,18 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         }
 
         notifyObservers();
-        System.out.println("NOTIFYING OBSERVERS");
 
         return success;
     }
 
+    /**
+     * Method to add orders from order.txt file into the simulation before being displayed
+     *
+     * @param order The order to be added
+     * @return True if successfully added, False if not
+     * @throws InvalidOrderException If order is missing details
+     * @throws DuplicateOrderException If order already exists
+     */
     public boolean addSimulation(Order order) throws InvalidOrderException, DuplicateOrderException {
         if (order == null) {
             logger.logSevere("Invalid order: Order details cannot be null");
@@ -179,10 +186,14 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public synchronized Order removeOnline() {
         Order o = allOrders.getLast().poll();
-        if (o != null) {
-            notifyObservers();
-            notifyAll();
+
+        if (o == null) {
+            return null;
         }
+        
+        notifyObservers();
+        notifyAll();
+        
         return o;
     }
 
@@ -399,7 +410,6 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     @Override
     public void run() {
         while (!simulationOrders.isEmpty()) {
-            System.out.println("ADDING ORDERS");
             try {
                 if (!this.add(simulationOrders.removeFirst())) {
                     synchronized (this) {
