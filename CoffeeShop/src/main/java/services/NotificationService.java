@@ -2,15 +2,24 @@ package services;
 
 import interfaces.INotificationService;
 import interfaces.OrderObserver;
+import logs.CoffeeShopLogger;
 import message.MessageType;
 import server.ClientService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+/**
+ * Notification service for sending messages from the server to clients
+ * <p>
+ * Handles the registration of observers and the dispatching of order-related
+ * notifications to the correct client observer
+ * </p>
+ *
+ * @author Cameron Hunt
+ */
 public class NotificationService implements INotificationService {
-    private final List<ClientService> observers = new ArrayList<>();
+    private final List<OrderObserver> observers = Collections.synchronizedList(new ArrayList<>());
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     /**
      * Adds an observer to the list of observers.
@@ -18,7 +27,7 @@ public class NotificationService implements INotificationService {
      *
      * @param observer The observer to be added.
      */
-    public void addObserver(ClientService observer) {
+    public void addObserver(OrderObserver observer) {
         observers.add(observer);
     }
 
@@ -28,20 +37,34 @@ public class NotificationService implements INotificationService {
      *
      * @param observer The observer to be removed.
      */
-    public void removeObserver(ClientService observer) {
+    public void removeObserver(OrderObserver observer) {
         observers.remove(observer);
     }
 
     /**
-     * Notifies all registered observers about an order event.
+     * Notifies all registered observers about an order event
      *
      * @param orderID The unique identifier of the order.
      * @param type The type of message to be sent.
      */
-    private void notifyObservers(UUID orderID, MessageType type) {
-        for (OrderObserver observer : observers) {
-            observer.sendOrderNotification(orderID, type);
-        }
+    private void notifySpecificObserver(UUID orderID, OrderObserver observer, MessageType type) {
+        findObserver(observer)
+                .ifPresentOrElse(presentObserver ->
+                        presentObserver
+                        .sendOrderNotification(orderID, type), () ->
+                        logger.logWarning("No observer found for order " + orderID)
+                );
+    }
+
+    /**
+     * Searches for a specific observer in the list of registered observers
+     *
+     * @param observerToFind The observer to find
+     * @return A {@code Optional} containing the matching {@code OrderObserver}
+     * if found, or an empty {@code Optional} if no match is present
+     */
+    private Optional<OrderObserver> findObserver(OrderObserver observerToFind) {
+        return observers.stream().filter(observer -> observer.equals(observerToFind)).findFirst();
     }
 
     /**
@@ -50,8 +73,8 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order
      */
-    public void sendOrderProcessingNotification(UUID orderID) {
-        notifyObservers(orderID, MessageType.ORDER_RECEIVED);
+    public void sendOrderProcessingNotification(UUID orderID, ClientService clientService) {
+        notifySpecificObserver(orderID, clientService, MessageType.ORDER_RECEIVED);
     }
 
     /**
@@ -59,8 +82,8 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order.
      */
-    public void sendOrderCompleteNotification(UUID orderID) {
-        notifyObservers(orderID, MessageType.ORDER_COMPLETED);
+    public void sendOrderCompleteNotification(UUID orderID, ClientService clientService) {
+        notifySpecificObserver(orderID, clientService, MessageType.ORDER_COMPLETE);
     }
 
     /**
@@ -69,7 +92,7 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order.
      */
-    public void sendOrderErrorNotification(UUID orderID) {
-        notifyObservers(orderID, MessageType.ERROR);
+    public void sendOrderErrorNotification(UUID orderID, ClientService clientService) {
+        notifySpecificObserver(orderID, clientService, MessageType.ERROR);
     }
 }
