@@ -55,7 +55,7 @@ public class Order {
         this.timestamp = LocalDateTime.now(); // Set the current timestamp
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
-        this.onlineStatus = false;
+        this.onlineStatus = true;
 
         if (menu.getItemCount() == 0) {
             ItemList.resetInstance();
@@ -280,7 +280,7 @@ public class Order {
      * This implementation will probably be changed later but useful for me for initial testing
      */
     public void setOnlineStatus() {
-        onlineStatus = true;
+        this.onlineStatus = onlineStatus;
     }
 
     /**
