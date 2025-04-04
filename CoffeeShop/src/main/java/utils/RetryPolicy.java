@@ -1,6 +1,9 @@
 package utils;
 
 import interfaces.ThrowingRunnable;
+import logs.CoffeeShopLogger;
+
+import java.util.function.Consumer;
 
 /**
  * RetryPolicy provides a utility for executing tasks with retry logic.
@@ -13,6 +16,7 @@ import interfaces.ThrowingRunnable;
  * @author Cameron Hunt
  */
 public class RetryPolicy {
+    private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     /**
      * Constructor
      */
@@ -26,6 +30,38 @@ public class RetryPolicy {
      * @throws RuntimeException if retry fails
      */
     public static void retryOnFailure(ThrowingRunnable task, int maxRetries) {
+        retry(task, maxRetries, (e) -> {
+            // This tells the Consumer what to do if the rery
+            // logic fails, in this case we want to throw an exception
+            // below we want to log
+            throw new RuntimeException("Could not retry after " + maxRetries + " attempts failed", e);
+        });
+    }
+
+    /**
+     * Run a task with retry logic and log the failure instead of throwing
+     * @param task the task to run
+     * @param maxRetries max number of retries
+     */
+    public static void retryAndLog(ThrowingRunnable task, int maxRetries) {
+        retry(task, maxRetries, (e) ->
+                logger.logWarning("Could not retry after "
+                        + maxRetries
+                        + " attempts failed. Exceptoion: "
+                        + e.getClass() + " "
+                        + e.getCause() + " "
+                        + e.getMessage()));
+    }
+
+    /**
+     * Retry Loop
+     * Consumer<Throwable> here allows us to pass in a custom action
+     * to perform if the retry logic fails
+     * @param task the task to run
+     * @param maxRetries the max number of retries allowed
+     * @param onFailure the custom action to perform on failure
+     */
+    private static void retry(ThrowingRunnable task, int maxRetries, Consumer<Throwable> onFailure) {
         int attempts = 0;
         Exception exception = null;
         while (attempts < maxRetries) {
@@ -38,6 +74,6 @@ public class RetryPolicy {
             }
         }
 
-        throw new RuntimeException("Could not retry after " + maxRetries + " attempts failed", exception);
+        onFailure.accept(exception);
     }
 }
