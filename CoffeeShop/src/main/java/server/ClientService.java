@@ -11,6 +11,7 @@ import message.MessageContent;
 import message.MessageType;
 import order.Order;
 import order.OrderList;
+import utils.RetryPolicy;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -64,8 +65,10 @@ public class ClientService implements Runnable, OrderObserver {
                     receivedOrder.setClientService(this);
 
                     logger.logInfo("Order " + receivedOrder.getOrderID());
-                    // ToDO: Refactor to use conditional check in case order does not get added
-                    simUIModel.addOrder(receivedOrder);
+                    RetryPolicy.retryAndLog(() ->
+                        simUIModel.addOrder(receivedOrder),
+                            3
+                    );
                 } catch (EOFException e) {
                     logger.logInfo("Client disconnected: " + clientSocket.getInetAddress());
                     clientSocket.close();
