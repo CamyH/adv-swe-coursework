@@ -71,7 +71,7 @@ public class CustomerModel {
     }
 
     /**
-     * Display about daily special offer. 
+     * Display in Customer GUI about daily special offer. 
      *
      * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
      */
