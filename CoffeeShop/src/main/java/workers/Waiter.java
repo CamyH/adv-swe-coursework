@@ -13,6 +13,7 @@ import order.OrderList;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import logs.CoffeeShopLogger;
 
@@ -225,6 +226,20 @@ public class Waiter extends Staff<Order> {
         }
     }
 
+    public static void addBackAllCurrentOrders() {
+        ArrayList<Order> allOrders = new ArrayList<>();
+
+        for (Waiter waiter : waiterList) {
+            try {
+                if (waiter.getCurrentOrder() != null) {
+                    OrderList.getInstance().add(waiter.getCurrentOrder());
+                }
+            } catch (InvalidOrderException | DuplicateOrderException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
     /**
      * Method used by the Subject (OrderList) to tell the Staff member that an order has been added
      */
@@ -345,6 +360,7 @@ public class Waiter extends Staff<Order> {
             }
 
             getOrders();
+            staffList.notifyObservers();
 
             if (currentOrder == null) continue;
 
@@ -362,6 +378,7 @@ public class Waiter extends Staff<Order> {
 
             if (active) completeCurrentOrder();
             orderList.notifyObservers();
+            staffList.notifyObservers();
         }
     }
 }

@@ -81,6 +81,7 @@ public class Chef extends Staff<String> {
     @Override
     public boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue());
+        currentItem = null;
         return true;
     }
 
@@ -162,6 +163,7 @@ public class Chef extends Staff<String> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentItem == null) continue;
 
@@ -179,6 +181,7 @@ public class Chef extends Staff<String> {
                 System.out.println(e.getMessage());
             }
             completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }

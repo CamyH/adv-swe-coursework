@@ -3,31 +3,35 @@ package client;
 import exceptions.StaffNullNameException;
 import interfaces.Observer;
 import interfaces.Subject;
-import item.ItemList;
 import order.OrderList;
 import workers.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * The simulation UI Model
+ * @author Caelan Mackenzie
+ */
 public class SimUIModel extends Subject implements Observer {
 
-    private OrderList orderList;
-    private final ItemList menu;
+    // Declare the Model's data
+    private final OrderList orderList;
     private final ArrayList<String> roles;
     private final StaffList staffList;
+    private ArrayList<UUID> popupList;
+    private static int simSpeed;
 
-    private static SimUIModel instance;
-
-    private static Integer simSpeed = 50;
-
+    /** SimUIModel constructor method */
     public SimUIModel() {
-        this.menu = ItemList.getInstance();
+
+        // Get the singleton instances of staffList and orderList
         this.staffList = StaffList.getInstance();
         this.orderList = OrderList.getInstance();
 
-        orderList.registerObserver(this);
-
+        // initialise the data for the UI
+        simSpeed = 100;
+        popupList = new ArrayList<>();
         roles = new ArrayList<>();
 
         // Populate roles
@@ -58,23 +62,35 @@ public class SimUIModel extends Subject implements Observer {
         return staffList;
     }
 
-    /**
-     *
-     * @param ID The ID of the staff whose details we are collecting
-     * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
-     */
     public String getStaffDetails(UUID ID) {
-        return staffList.getStaff(ID).getCurrentOrderDetails();
+        synchronized (staffList) {
+            return staffList.getStaff(ID).getCurrentOrderDetails();
+        }
     }
 
 
     // Setter methods
 
     public void setSimSpeed(int speed) {
-        this.simSpeed = speed;
+        simSpeed = speed;
         StaffList.getInstance().setDefaultDelay(simSpeed);
+        notifyObservers();
     }
 
+    public void addPopup(UUID popup) {
+        popupList.add(popup);
+    }
+    public boolean checkPopup(UUID popup) {
+        return popupList.contains(popup);
+    }
+
+    /**
+     * Add a new staff to the staffList
+     * @param name staff name
+     * @param role staff role
+     * @param experience staff experience
+     * @throws StaffNullNameException thrown when the staff nae field is empty
+     */
     public void addStaff(String name, String role, int experience) throws StaffNullNameException {
         if (name.isEmpty()) {
             throw new StaffNullNameException("Staff name is empty");
@@ -92,6 +108,10 @@ public class SimUIModel extends Subject implements Observer {
 
     public void update() {
         notifyObservers();
+    }
+
+    public void removePopup(UUID popup) {
+        popupList.remove(popup);
     }
 
     public void removeStaff(UUID ID) {

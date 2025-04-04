@@ -1,7 +1,11 @@
 package workers;
 
 import interfaces.EntityList;
+import interfaces.Observer;
+import interfaces.Subject;
+import item.ItemList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -12,7 +16,7 @@ import java.util.UUID;
  *
  * @author Fraser Holman
  */
-public class StaffList implements EntityList<Staff, UUID> {
+public class StaffList extends Subject implements EntityList<Staff, UUID> {
     /** Hashmap of staff ID as the key, and Staff Object as the value */
     private HashMap<UUID, Staff> staffList;
 
