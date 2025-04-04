@@ -52,6 +52,7 @@ public class Demo {
     }
 
     public void showSimUI(INotificationService notificationService) {
+        loadMenuAndOrdersFromFile();
         simModel = new SimUIModel(notificationService);
         simView = new SimUIView(simModel);
         simController =  new SimUIController(simView, simModel);
@@ -66,20 +67,6 @@ public class Demo {
 
         Demo demo = new Demo();
 
-        itemReader = new ItemFileReader("menu.txt");
-        try {
-            itemReader.readFile();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        orderReader = new OrderFileReadWrite("orders.txt");
-        try {
-            orderReader.readFile();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
         demo.showSimUI(notificationService);
         demo.showConsole();
     }
@@ -90,7 +77,6 @@ public class Demo {
     static void demoCloseGUI() {
         System.out.println("Goodbye.");
         view.closeGUI();
-        simController.close();
         Waiter.addBackAllCurrentOrders();
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
@@ -130,11 +116,23 @@ public class Demo {
         }
     }
 
-    public void updateItemList(ItemList itemList) {
-        ItemList test = ItemList.getInstance();
-        System.out.println(test.getMenu());
-        for (Item item : itemList.getMenu().values()) {
-            test.add(item);
+    /**
+     * Loads menu items and customer orders from order and menu files
+     * <p>
+     * This method uses {@code ItemFileReader} to read the menu from {@code menu.txt}
+     * and {@code OrderFileReadWrite} to load existing orders from {@code orders.txt}
+     * </p>
+     *
+     * <p>
+     * Throws a {@code RuntimeException} if either file is not found
+     * </p>
+     */
+    private void loadMenuAndOrdersFromFile() {
+        itemReader = new ItemFileReader("menu.txt");
+        try {
+            itemReader.readFile();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
         System.out.println(test.getMenu());
