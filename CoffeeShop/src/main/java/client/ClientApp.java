@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class ClientApp {
     public static void main(String[] args) {
-        try (Socket clientSocket = new Socket("137.195.118.13", 9876)) {
+        try (Socket clientSocket = new Socket("localhost", 9876)) {
             System.out.println("Connected to server");
 
             Client client = new Client(clientSocket);
