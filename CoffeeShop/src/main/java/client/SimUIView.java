@@ -110,7 +110,12 @@ public class SimUIView extends JFrame implements Observer {
     }
 
     public int getStaffExp() {
-        return (Integer) StaffExpCombo.getSelectedItem();
+        try {
+            return (Integer) StaffExpCombo.getSelectedItem();
+        }
+        catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     /**
