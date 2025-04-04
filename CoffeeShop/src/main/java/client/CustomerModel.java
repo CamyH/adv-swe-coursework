@@ -4,9 +4,11 @@ import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.ItemList;
 import logs.CoffeeShopLogger;
+import message.Message;
 import order.Order;
 import order.OrderList;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -147,5 +149,13 @@ public class CustomerModel {
      */
     public Order getCurrentOrder() {
         return currentOrder;
+    }
+
+    /**
+     * Display the message to the user
+     * @param message the message to show
+     */
+    public void displayMessage(Message message) {
+        JOptionPane.showMessageDialog(null, message.toString());
     }
 }

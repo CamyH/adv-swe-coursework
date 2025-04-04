@@ -88,14 +88,6 @@ public class Client {
                .orElseThrow(() -> new IOException("Message received is NULL"));
     }
 
-    public synchronized void sendMessage(Message message) throws IOException {
-        if (message == null) throw new NullPointerException("Message cannot be null");
-
-        outputStream.writeObject(message);
-        outputStream.flush();
-        logger.logInfo("Message sent to the server: " + message);
-    }
-
     /**
      * Closes the client's I/O streams and attempts to close the socket
      * This method closes both the {@link ObjectOutputStream} and
@@ -149,7 +141,7 @@ public class Client {
 
                     if (object instanceof Message) {
                         Message message = receiveMessage(object);
-                        System.out.println(message.toString());
+                        customerModel.displayMessage(message);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
