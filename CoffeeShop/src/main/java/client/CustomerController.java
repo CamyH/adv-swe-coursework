@@ -35,6 +35,7 @@ public class CustomerController implements ActionListener {
 
         // Initialize view with menu data
         view.displayMenu(model.getMenuDetails());
+        view.displayDailySpecial(model.getDailySpecialInfo());
     }
 
     /**
