@@ -155,6 +155,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     public void completeOrder(Order order) {
         completeOrders.add(order);
         logger.logInfo("Order completed: " + order.getOrderID());
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
     /**
