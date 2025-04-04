@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
  * @author Caelan Mackenzie
  */
 public class Demo {
-
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static CustomerView view;
