@@ -52,7 +52,7 @@ public enum MessageContent {
      * @param type the {@link MessageType}
      * @return the {@link MessageContent} as a string
      */
-    public String fromMessageType(MessageType type) {
+    public static String fromMessageType(MessageType type) {
         return switch (type) {
             case ORDER_RECEIVED -> RECEIVED.toString();
             case PROCESSING_ORDER -> PROCESSING.toString();
