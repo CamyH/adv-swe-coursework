@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 /**
  * View Class (Refactored from GUI by Akash)
  * Represents the user interface for the Coffee Shop application.
+ *
  * @author Caelan Mackenzie
  */
 public class CustomerView extends JFrame {
