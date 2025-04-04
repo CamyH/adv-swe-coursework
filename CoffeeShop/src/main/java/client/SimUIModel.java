@@ -19,7 +19,7 @@ public class SimUIModel extends Subject implements Observer {
     private final OrderList orderList;
     private final ArrayList<String> roles;
     private final StaffList staffList;
-    private ArrayList<StaffPopupController> popupList;
+    private ArrayList<UUID> popupList;
     private static int simSpeed;
 
     /** SimUIModel constructor method */
@@ -73,8 +73,11 @@ public class SimUIModel extends Subject implements Observer {
         notifyObservers();
     }
 
-    public void addPopup(StaffPopupController popup) {
+    public void addPopup(UUID popup) {
         popupList.add(popup);
+    }
+    public boolean checkPopup(UUID popup) {
+        return popupList.contains(popup);
     }
 
     /**
@@ -98,7 +101,7 @@ public class SimUIModel extends Subject implements Observer {
         notifyObservers();
     }
 
-    public void removePopup(StaffPopupController popup) {
+    public void removePopup(UUID popup) {
         popupList.remove(popup);
     }
 

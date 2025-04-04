@@ -18,6 +18,7 @@ public class StaffPopupController implements Observer {
     private StaffPopupModel staffPopupModel;
     private StaffDetailsPopup staffPopup;
     private final SimUIModel simModel;
+    private final UUID staffID;
 
     public StaffPopupController(SimUIModel SM, UUID staffID) {
 
@@ -25,6 +26,7 @@ public class StaffPopupController implements Observer {
         staffPopupModel = new StaffPopupModel(simModel,staffID);
         staffPopupModel.registerObserver(this);
         staffPopup = new StaffDetailsPopup(staffPopupModel);
+        this.staffID = staffID;
 
         staffPopup.addSetListener(new SetListener());
         // Use WindowAdapter to override only windowClosing()
@@ -36,7 +38,7 @@ public class StaffPopupController implements Observer {
         });
 
         update();
-        simModel.addPopup(this);
+        simModel.addPopup(staffID);
     }
 
     public void update() {
@@ -55,7 +57,7 @@ public class StaffPopupController implements Observer {
 
     public void close() {
         staffPopupModel.removeThisObserver();
-        simModel.removePopup(this);
+        simModel.removePopup(staffID);
         staffPopup.close();
     }
 }
