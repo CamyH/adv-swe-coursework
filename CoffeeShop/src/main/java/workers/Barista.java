@@ -1,22 +1,22 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
-import interfaces.Observer;
+import interfaces.INotificationService;
 import item.ItemList;
 import logs.CoffeeShopLogger;
+import order.DrinkItem;
 import order.DrinkList;
+import order.Order;
+import order.OrderList;
+import server.ClientService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Class represents how a Barista functions in the Coffee Shop Simulation
- *
  * This class uses two design patterns:
  * 1. Factory Design Pattern (with Staff and StaffFactory)
  * 2. Observer Design Pattern (between this class and DrinkList)
- *
  * Tasks:
  * 1. Check for Item by checking for items in DrinkList
  * 2. Wait specified amount of time to complete Item
@@ -25,28 +25,34 @@ import java.util.Map;
  * @author Fraser Holman
  */
 public class Barista extends Staff<String> {
-    DrinkList drinkList;
+    private final INotificationService notificationService;
+    private final DrinkList drinkList;
 
-    ItemList itemList;
+    private final ItemList itemList;
 
-    StaffList staffList;
+    private final StaffList staffList;
 
-    Map.Entry<Waiter, String> currentItem;
+    private Map.Entry<Waiter, DrinkItem> currentItem;
 
-    /** Tells if the staff member is currently active (ie not fired) */
+    /**
+     * Tells if the staff member is currently active (ie not fired)
+     */
     private boolean active = true;
 
-    /** Logger instance */
-    private CoffeeShopLogger logger;
+    /**
+     * Logger instance
+     */
+    private final CoffeeShopLogger logger;
 
     /**
      * Constructor to set up barista
      *
-     * @param name Name of Barista
+     * @param name       Name of Barista
      * @param experience Experience level of barista
      */
-    public Barista(String name, int experience) {
+    public Barista(String name, int experience, INotificationService notificationService) {
         super(name, experience);
+        this.notificationService = notificationService;
         drinkList = DrinkList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();
@@ -57,7 +63,7 @@ public class Barista extends Staff<String> {
 
     /**
      * Method gets next drink in drink list
-     *
+     * <p>
      * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
@@ -67,8 +73,7 @@ public class Barista extends Staff<String> {
         if (currentItem == null) {
             try {
                 wait();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -81,7 +86,7 @@ public class Barista extends Staff<String> {
      */
     @Override
     public synchronized boolean completeCurrentOrder() {
-        currentItem.getKey().addItem(currentItem.getValue());
+        currentItem.getKey().addItem(currentItem.getValue().drinkItem());
         return true;
     }
 
@@ -92,12 +97,12 @@ public class Barista extends Staff<String> {
      */
     @Override
     public String getCurrentOrder() {
-        return currentItem.getValue();
+        return currentItem.getValue().drinkItem();
     }
 
     /**
      * This method will be used to display current order details on the GUI
-     *
+     * <p>
      * Will return a list of items in the order. This can be further customised depending on what we want to show
      *
      * @return ArrayList of Current Order Details
@@ -118,7 +123,7 @@ public class Barista extends Staff<String> {
         itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
 
         try {
-            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue())).append("\n");
+            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue().drinkItem())).append("\n");
         } catch (InvalidItemIDException e) { // this will never happen
             itemDetails.append("Item Description : ").append("ERROR LOADING ITEMS").append("\n");
             System.out.println(e.getMessage());
@@ -160,6 +165,11 @@ public class Barista extends Staff<String> {
 
             if (currentItem == null) continue;
 
+            ClientService clientService = currentItem.getValue().clientService();
+            for (Order item : OrderList.getInstance().getOrderList()) {
+                System.out.println("HEY " + item.getOrderID() + " " + item.getClientService());
+            }
+
             try {
                 sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
             } catch (InterruptedException e) {
@@ -167,13 +177,12 @@ public class Barista extends Staff<String> {
             }
 
             try {
-                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-            }
-            catch (InvalidItemIDException e) {
+                completeCurrentOrder();
+                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()) + currentItem.getValue().clientService());
+                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
+            } catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
-            completeCurrentOrder();
         }
     }
 }
