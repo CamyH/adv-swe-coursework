@@ -137,7 +137,7 @@ public class CustomerController implements ActionListener {
      * Handles application exit
      */
     private void handleExit() {
-        Demo.demoCloseGUI();  // Existing demo functionality
+        Demo.demoCloseGUI();
         JOptionPane.showMessageDialog(view, "Good Bye!");
         view.closeGUI();
     }
