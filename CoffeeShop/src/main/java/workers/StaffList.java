@@ -106,18 +106,4 @@ public class StaffList extends Subject implements EntityList<Staff, UUID> {
     public static void resetInstance() {
         instance = new StaffList();
     }
-
-    public void registerObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    public void removeObserver(Observer obs) {
-        observers.remove(obs);
-    }
-
-    public void notifyObservers() {
-        for (Observer obs : observers) {
-            obs.update();
-        }
-    }
 }

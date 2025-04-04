@@ -22,8 +22,6 @@ public class StaffPopupController implements Observer {
     public StaffPopupController(SimUIModel SM, UUID staffID) {
 
         this.simModel = SM;
-        System.out.println("SimUIController()");
-        System.out.println("-----------------------------------");
         staffPopupModel = new StaffPopupModel(simModel,staffID);
         staffPopupModel.registerObserver(this);
         staffPopup = new StaffDetailsPopup(staffPopupModel);
@@ -40,7 +38,6 @@ public class StaffPopupController implements Observer {
         update();
         simModel.addPopup(this);
     }
-
 
     public void update() {
         String updatedDetails = staffPopupModel.getDetails();

@@ -310,6 +310,7 @@ public class Waiter extends Staff<Order> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentOrder == null) continue;
 
@@ -325,6 +326,7 @@ public class Waiter extends Staff<Order> {
             logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
 
             completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }
