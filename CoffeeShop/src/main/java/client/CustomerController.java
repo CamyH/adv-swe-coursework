@@ -2,7 +2,6 @@ package client;
 
 import exceptions.InvalidItemIDException;
 import logs.CoffeeShopLogger;
-import order.Order;
 import utils.RetryPolicy;
 
 import javax.swing.*;
