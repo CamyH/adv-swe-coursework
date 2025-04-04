@@ -83,6 +83,10 @@ public class Demo {
         demo.showConsole();
     }
 
+    /**
+     * Randomly selects an item from the item list to be today's special offer.
+     * Sets the selected item in the Discount class with a random discount between 50-75 percentage.
+     */
     private static void setDailySpecial() {
         ItemList itemList = ItemList.getInstance();
         List<Item> items = new ArrayList<>(itemList.getMenu().values());
