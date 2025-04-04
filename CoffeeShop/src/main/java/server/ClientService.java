@@ -4,9 +4,13 @@ import client.Client;
 import client.SimUIModel;
 import exceptions.InvalidOrderException;
 import interfaces.OrderObserver;
+import item.ItemList;
 import logs.CoffeeShopLogger;
 import message.Message;
+import message.MessageContent;
+import message.MessageType;
 import order.Order;
+import order.OrderList;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -50,13 +54,17 @@ public class ClientService implements Runnable, OrderObserver {
     @Override
     public void run() {
         try {
+            sendItemListToClient();
             // Now wait for orders from the client
             while (true) {
                 try {
                     logger.logDebug("Idling...");
                     Order receivedOrder = (Order) inputStream.readObject();
 
+                    receivedOrder.setClientService(this);
+
                     logger.logInfo("Order " + receivedOrder.getOrderID());
+                    // ToDO: Refactor to use conditional check in case order does not get added
                     simUIModel.addOrder(receivedOrder);
                 } catch (EOFException e) {
                     logger.logInfo("Client disconnected: " + clientSocket.getInetAddress());
@@ -69,11 +77,11 @@ public class ClientService implements Runnable, OrderObserver {
                 }
             }
         } catch (Exception e) {
-            logger.logSevere("Error in server: " + e.getMessage());
+            logger.logSevere("Error in server: " + e.getCause() + e.getMessage());
         }
     }
 
-        /**
+    /**
      * Sends a {@link Message} object to the server.
      * The message is serialized and sent using {@link ObjectOutputStream}.
      *
@@ -83,6 +91,7 @@ public class ClientService implements Runnable, OrderObserver {
     public synchronized void sendMessage(Message message) throws IOException {
         if (message == null) throw new NullPointerException("Message cannot be null");
 
+        System.out.println("Sending processing message to " + clientSocket.getInetAddress());
         outputStream.writeObject(message);
         outputStream.flush();
     }
@@ -101,13 +110,24 @@ public class ClientService implements Runnable, OrderObserver {
     }
 
     /**
-     * Notifies the observer that an order has moved to the processing stage
+     * Notifies the observer of a change to their order
      *
-     * @param orderID the ID of the order that has been updated
+     * @param orderID the ID of the order that has been changed
      */
     @Override
-    public void sendOrderProcessingNotification(UUID orderID) {
-        
+    public void sendOrderNotification(UUID orderID, MessageType messageType) {
+        Message message = new Message(UUID.randomUUID(), orderID, MessageContent.fromMessageType(messageType), messageType);
+        try {
+            sendMessage(message);
+        } catch (IOException e) {
+            logger.logSevere("Could not send " + messageType + " notification: " + e.getCause() + e.getMessage());
+        }
+    }
+
+    private void sendOrderItemList(OrderList orderList, ItemList itemList) throws IOException {
+        outputStream.writeObject(itemList);
+        outputStream.writeObject(orderList);
+        outputStream.flush();
     }
 
     public void sendItemListToClient() {
@@ -119,5 +139,11 @@ public class ClientService implements Runnable, OrderObserver {
         }
     }
 
+    public void sendOrderListToClient() {
+        try {
+            outputStream.writeObject(simUIModel.getOrderList());  // Send order list to client
+        } catch (IOException e) {
+            System.err.println("Error sending order list to client: " + e.getMessage());
+        }
     }
 }
