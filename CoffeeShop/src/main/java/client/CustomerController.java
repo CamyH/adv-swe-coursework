@@ -3,9 +3,15 @@ package client;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.ItemList;
+import logs.CoffeeShopLogger;
+import order.Order;
+import order.OrderList;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Controller Class (Refactored for MVC)
@@ -13,17 +19,20 @@ import java.awt.event.ActionListener;
  * @author Caelan Mackenzie
  */
 public class CustomerController implements ActionListener {
-
     private final CustomerView view;
+    private Order currentOrder;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
+    private final Client client;
 
     /**
      * Initializes the Controller with View and Model
      * @param view The View component
      */
-    public CustomerController(CustomerView view) {
+    public CustomerController(CustomerView view, Client client, CustomerModel customerModel) {
         this.view = view;
-        this.model = new CustomerModel();
+        this.model = customerModel;
+        this.client = client;
 
         // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
@@ -44,7 +53,7 @@ public class CustomerController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == view.getSubmitOrderButton()) {
-            handleSubmitOrder();
+            submitOrder(model.getCurrentOrder());
         } else if (e.getSource() == view.getCancelOrderButton()) {
             handleCancelOrder();
         } else if (e.getSource() == view.getAddItemButton()) {
@@ -61,19 +70,20 @@ public class CustomerController implements ActionListener {
     /**
      * Handles order submission
      */
-    private void handleSubmitOrder() {
+    private void submitOrder(Order order) {
         try {
-            boolean orderAdded = model.submitOrder();
-            if (orderAdded) {
-                Demo.demoWriteOrders();  // Existing demo functionality
-                JOptionPane.showMessageDialog(view, "Order has been submitted");
-                updateView();
-            } else {
-                JOptionPane.showMessageDialog(view,
-                        "Order could not be placed - Please Try Again Later");
+            //Demo.demoWriteOrders();
+            System.out.println(order.getOrderID());
+            client.sendOrder(order);
+            JOptionPane.showMessageDialog(view, "Order has been submitted");
+        } catch (IOException e) {
+            // this disgusts me don't forget to refactor
+            logger.logWarning(e.getClass() + " Order was not sent, retrying " + e.getMessage());
+            try {
+                client.sendOrder(order);
+            } catch (IOException e1) {
+                logger.logSevere("Could not send order, retry failed" + e1.getMessage());
             }
-        } catch (InvalidOrderException | DuplicateOrderException e) {
-            JOptionPane.showMessageDialog(view, e.getMessage());
         }
     }
 
