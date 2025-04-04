@@ -7,24 +7,27 @@ import java.util.UUID;
 /**
  * Represents a message with a specific type and sender
  */
-public record Message(UUID messageId, UUID customerId, String message, MessageType messageType) implements Serializable {
+public record Message(UUID messageID, UUID customerID, UUID orderID, MessageContent message, MessageType messageType) implements Serializable {
     /**
      * Constructor to generate a random messageId
-     * @param customerId Id of the customer sending the message
-     * @param message the message body
+     * @param customerId ID of the customer receiving the message
+     * @param orderID the ID of the order
+     * @param message the body of the message
      * @param messageType the message type
      */
-    public Message(UUID customerId, String message, MessageType messageType) {
-        this(UUID.randomUUID(), customerId, message, messageType);
+    public Message(UUID customerId, UUID orderID, MessageContent message, MessageType messageType) {
+        this(UUID.randomUUID(), customerId, orderID, message, messageType);
     }
     /**
      * Constructor
-     * @param customerId the customerId cannot be null
+     * @param customerID the customerID cannot be null
+     * @param orderID the orderID cannot be null
      * @param message the message cannot be null
      * @param messageType the message cannot be null
      */
     public Message {
-        Objects.requireNonNull(customerId);
+        Objects.requireNonNull(customerID);
+        Objects.requireNonNull(orderID);
         Objects.requireNonNull(message);
         Objects.requireNonNull(messageType);
     }
@@ -36,10 +39,6 @@ public record Message(UUID messageId, UUID customerId, String message, MessageTy
      */
     @Override
     public String toString() {
-        return "{" +
-                "messageId=" + messageId +
-                ", message='" + message + '\'' +
-                ", customerId=" + customerId +
-                ", messageType=" + messageType + '}';
+        return "Order: " + orderID + " " + message.fromMessageType(messageType);
     }
 }
