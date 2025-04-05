@@ -84,9 +84,8 @@ public class Client {
      * The message is deserialized from the input stream and returned
      *
      * @throws IOException if an I/O error occurs while receiving the object
-     * @throws ClassNotFoundException if the class of the received object cannot be found
      */
-    public synchronized Message receiveMessage(Object inputStream) throws IOException, ClassNotFoundException {
+    public synchronized Message receiveMessage(Object inputStream) throws IOException {
         return Optional.ofNullable((Message) inputStream)
                .orElseThrow(() -> new IOException("Message received is NULL"));
     }
