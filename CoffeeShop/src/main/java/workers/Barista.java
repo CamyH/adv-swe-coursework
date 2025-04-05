@@ -14,9 +14,11 @@ import java.util.Map;
 
 /**
  * Class represents how a Barista functions in the Coffee Shop Simulation
+ *
  * This class uses two design patterns:
  * 1. Factory Design Pattern (with Staff and StaffFactory)
  * 2. Observer Design Pattern (between this class and DrinkList)
+ *
  * Tasks:
  * 1. Check for Item by checking for items in DrinkList
  * 2. Wait specified amount of time to complete Item
@@ -32,6 +34,7 @@ public class Barista extends Staff<String> {
 
     private final StaffList staffList;
 
+    /** Holds a single entry representing the current processed item and the corresponding waiter */
     private Map.Entry<Waiter, DrinkItem> currentItem;
 
     /**
@@ -67,12 +70,14 @@ public class Barista extends Staff<String> {
      * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
-    public synchronized void getOrders() {
+    public void getOrders() {
         currentItem = drinkList.remove();
 
         if (currentItem == null) {
             try {
-                wait();
+                synchronized (this) {
+                    wait();
+                }
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
@@ -87,6 +92,7 @@ public class Barista extends Staff<String> {
     @Override
     public synchronized boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue().drinkItem());
+        currentItem = null;
         return true;
     }
 
@@ -132,6 +138,11 @@ public class Barista extends Staff<String> {
         return itemDetails.toString();
     }
 
+    /**
+     * Method to return the role of the staff object in this case "barista"
+     *
+     * @return String representing this staff's role
+     */
     public String getRole() {
         return "Barista";
     }
@@ -151,8 +162,10 @@ public class Barista extends Staff<String> {
     /**
      * Method used by the Subject (DrinkList) to tell the Staff member that an order has been added
      */
-    public synchronized void update() {
-        notifyAll();
+    public void update() {
+        synchronized (this) {
+            notifyAll();
+        }
     }
 
     /**
@@ -162,13 +175,9 @@ public class Barista extends Staff<String> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentItem == null) continue;
-
-            ClientService clientService = currentItem.getValue().clientService();
-            for (Order item : OrderList.getInstance().getOrderList()) {
-                System.out.println("HEY " + item.getOrderID() + " " + item.getClientService());
-            }
 
             try {
                 sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
@@ -177,12 +186,15 @@ public class Barista extends Staff<String> {
             }
 
             try {
-                completeCurrentOrder();
-                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()) + currentItem.getValue().clientService());
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
-            } catch (InvalidItemIDException e) {
+                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+            }
+            catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
             }
+
+            completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }

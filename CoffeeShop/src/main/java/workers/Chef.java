@@ -58,12 +58,14 @@ public class Chef extends Staff<String> {
      * If there is no food left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
-    public synchronized void getOrders() {
+    public void getOrders() {
         currentItem = foodList.remove();
 
         if (currentItem == null) {
             try {
-                wait();
+                synchronized (this) {
+                    wait();
+                }
             }
             catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -79,11 +81,13 @@ public class Chef extends Staff<String> {
     @Override
     public synchronized boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue().foodItem());
+        currentItem = null;
         return true;
     }
 
     /**
      * This method will be used to display current order details on the GUI
+     *
      * Will return a list of items in the order. This can be further customised depending on what we want to show
      *
      * @return ArrayList of Current Order Details
@@ -113,6 +117,11 @@ public class Chef extends Staff<String> {
         return itemDetails.toString();
     }
 
+    /**
+     * Method to return the role of the staff object in this case "chef"
+     *
+     * @return String representing this staff's role
+     */
     public String getRole() {
         return "Chef";
     }
@@ -152,12 +161,9 @@ public class Chef extends Staff<String> {
     public void run() {
         while (active) {
             getOrders();
+            staffList.notifyObservers();
 
             if (currentItem == null) continue;
-
-            for (Order item : OrderList.getInstance().getOrderList()) {
-                System.out.println("HEY " + item.getOrderID() + " " + item.getClientService());
-            }
 
             try {
                 sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
@@ -173,6 +179,7 @@ public class Chef extends Staff<String> {
                 System.out.println(e.getMessage());
             }
             completeCurrentOrder();
+            staffList.notifyObservers();
         }
     }
 }

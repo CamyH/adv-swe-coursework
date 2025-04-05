@@ -81,7 +81,7 @@ public abstract class Staff<T> extends Thread implements Observer {
      * @param defaultDelay double representing the delay in completing orders
      */
     public void setDefaultDelay(double defaultDelay) {
-        this.defaultDelay = 10000 - ( defaultDelay / 100 * 10000 ) + 100;
+        this.defaultDelay = 10000.0 - ( defaultDelay / 100.0 * 10000.0 ) + 100.0;
     }
 
     /**

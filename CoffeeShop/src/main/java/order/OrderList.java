@@ -1,5 +1,7 @@
 package order;
 
+import client.SimUIController;
+import client.SimUIModel;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidOrderException;
 import interfaces.EntityList;
@@ -10,6 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import logs.CoffeeShopLogger;
+
+import static java.lang.Thread.sleep;
 
 
 /**
@@ -22,12 +26,14 @@ import logs.CoffeeShopLogger;
  * @author Fraser Holman
  */
 
-public class OrderList extends Subject implements EntityList<Order, UUID>, Serializable {
+public class OrderList extends Subject implements EntityList<Order, UUID>, Serializable, Runnable {
     /** A queue to hold completed Order objects
      * This will be implemented in Stage 2 */
     private ArrayList<Order> completeOrders;
 
     private ArrayList<Queue<Order>> allOrders;
+
+    private ArrayList<Order> simulationOrders;
 
     /** Private instance of OrderList */
     private static OrderList instance;
@@ -43,6 +49,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     private OrderList() {
         allOrders = new ArrayList<>();
+        simulationOrders = new ArrayList<>();
         allOrders.add(new ArrayDeque<Order>());
         allOrders.add(new ArrayDeque<Order>());
         logger = CoffeeShopLogger.getInstance();
@@ -100,7 +107,35 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         notifyObservers();
 
         return success;
+    }
 
+    /**
+     * Method to add orders from order.txt file into the simulation before being displayed
+     *
+     * @param order The order to be added
+     * @return True if successfully added, False if not
+     * @throws InvalidOrderException If order is missing details
+     * @throws DuplicateOrderException If order already exists
+     */
+    public boolean addSimulation(Order order) throws InvalidOrderException, DuplicateOrderException {
+        if (order == null) {
+            logger.logSevere("Invalid order: Order details cannot be null");
+            throw new InvalidOrderException("Order details cannot be null");
+        }
+
+        if (order.getDetails().isEmpty()) {
+            logger.logSevere("Invalid order: Order details cannot be empty");
+            throw new InvalidOrderException("Order details cannot be empty");
+        }
+
+        if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
+            logger.logWarning("Duplicate order detected: " + order.getOrderID());
+            throw new DuplicateOrderException("Duplicate Order");
+        }
+
+        logger.logInfo("Order added to queue: " + order.getOrderID());
+
+        return simulationOrders.add(order);
     }
 
     /**
@@ -129,7 +164,10 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public synchronized Order remove() {
         Order o = allOrders.getFirst().poll();
-        notifyObservers();
+        if (o != null) {
+            notifyObservers();
+            notifyAll();
+        }
         return o;
     }
 
@@ -142,13 +180,25 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public synchronized Order removeOnline() {
         Order o = allOrders.getLast().poll();
+
+        if (o == null) {
+            return null;
+        }
+
         notifyObservers();
+        notifyAll();
+
         return o;
     }
 
-    public void completeOrder(Order order) {
+    /**
+     * Completes an order from the queue of orders and plays a sound
+     */
+    public synchronized void completeOrder(Order order) {
         completeOrders.add(order);
+        notifyObservers();
         logger.logInfo("Order completed: " + order.getOrderID());
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
     /**
@@ -166,7 +216,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @param online Checks whether the caller wants the size of the online or in person order queue
      * @return an integer representing the size of the queue
      */
-    public int getQueueSize(boolean online) {
+    public synchronized int getQueueSize(boolean online) {
         if (online) return allOrders.getLast().size();
 
         return allOrders.getFirst().size();
@@ -239,14 +289,20 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     /**
      * Method used by the simulation GUI to get a summary of orders that need to be complete
      *
-     * @param online whether to return online or in person orders
+     * @param state whether to return online or in person orders or complete orders
      * @return a string array of orders to be displayed
      */
-    public String getOrdersForDisplay(boolean online) {
-        Queue<Order> c = allOrders.getFirst();
+    public String getOrdersForDisplay(int state) {
+        Collection<Order> c;
 
-        if (online) {
+        if (state == 0) {
+            c = allOrders.getFirst();
+        }
+        else if (state == 1) {
             c = allOrders.getLast();
+        }
+        else {
+            c = completeOrders;
         }
 
         StringBuilder orderString = new StringBuilder();
@@ -347,5 +403,28 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public static void resetInstance() {
         instance = new OrderList();
+    }
+
+    @Override
+    public void run() {
+        while (!simulationOrders.isEmpty()) {
+            try {
+                if (!this.add(simulationOrders.removeFirst())) {
+                    synchronized (this) {
+                        wait();
+                    }
+                }
+            }
+            catch (InvalidOrderException | DuplicateOrderException | InterruptedException e) {
+                System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
+            }
+
+            try {
+                Thread.sleep((int) ((10000.0 - ( SimUIModel.getSimSpeed() / 100.0 * 10000.0 ) + 100.0)/2.0));
+            }
+            catch (InterruptedException e) {
+                System.err.println("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
+            }
+        }
     }
 }

@@ -35,9 +35,11 @@ public class CustomerController implements ActionListener {
         view.getRemoveLastItemButton().addActionListener(this);
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
+        view.getOnlineOrderCheckBox().addActionListener(this);
 
         // Initialize view with menu data
         view.displayMenu(model.getMenuDetails());
+        view.displayDailySpecial(model.getDailySpecialInfo());
     }
 
     /**
@@ -58,6 +60,8 @@ public class CustomerController implements ActionListener {
             handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
             handleExit();
+        }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
+            handleOnlineOrderToggle();
         }
     }
 
@@ -70,11 +74,20 @@ public class CustomerController implements ActionListener {
                             client.sendOrder(model.getCurrentOrder()),
                     3);
             model.submitOrder();
+            boolean isOnline = model.isOnlineOrder();
+            String message = isOnline ?
+                        "Online order has been submitted for delivery" :
+                        "In-store order has been submitted";
+                view.showPopup(message);
+                updateView();
         } catch (Exception e) {
             logger.logSevere("Failed to submit order: "
                     + e.getClass() + " "
                     + e.getCause() + " "
                     + e.getMessage());
+            view.showPopup("Order could not be placed - Please Try Again Later");
+        } catch (DuplicateOrderException e) {
+            view.showPopup(e.getMessage());
         }
     }
 
@@ -83,7 +96,8 @@ public class CustomerController implements ActionListener {
      */
     private void handleCancelOrder() {
         model.cancelOrder();
-        JOptionPane.showMessageDialog(view, "Order Cancelled");
+        view.getOnlineOrderCheckBox().setSelected(false);
+        view.showPopup("Order Cancelled");
         updateView();
     }
 
@@ -93,26 +107,25 @@ public class CustomerController implements ActionListener {
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
         if (itemID.isEmpty()) {
+            view.showPopup("Please Input an Item ID");
             return;
         }
+
         try {
             model.addItem(itemID.toUpperCase());
         } catch (InvalidItemIDException e) {
-            JOptionPane.showMessageDialog(view, itemID.toUpperCase() + " is not a valid item ID");
+            view.showPopup(itemID.toUpperCase() + " is not a valid item ID");
         }
         view.getItemIDField().setText("");
         updateView();
     }
-
-
-
 
     /**
      * Handles removal of last item
      */
     private void handleRemoveLastItem() {
         if (!model.removeLastItem()) {
-            JOptionPane.showMessageDialog(view, "No Items in this Order");
+            view.showPopup("No Items in this Order");
         }
         updateView();
     }
@@ -127,8 +140,7 @@ public class CustomerController implements ActionListener {
                 view.getItemIDField().setText("");
                 updateView();
             } else {
-                JOptionPane.showMessageDialog(view,
-                        itemID.toUpperCase() + " is not in the current order");
+                view.showPopup(itemID.toUpperCase() + " is not in the current order");
             }
         }
     }
@@ -137,9 +149,22 @@ public class CustomerController implements ActionListener {
      * Handles application exit
      */
     private void handleExit() {
-        Demo.demoCloseGUI();
-        JOptionPane.showMessageDialog(view, "Good Bye!");
+        Demo.demoCloseGUI();  // Existing demo functionality
+        view.showPopup("Good Bye!");
         view.closeGUI();
+    }
+
+    /**
+     * Handles online order checkbox toggle
+     */
+    private void handleOnlineOrderToggle() {
+        boolean isSelected = view.getOnlineOrderCheckBox().isSelected();
+        model.setOnlineOrder(isSelected);
+
+        if (isSelected) {
+            view.showPopup("Online order selected. Delivery charges may apply.");
+        }
+        updateView(); // Refresh to show any price changes
     }
 
     /**

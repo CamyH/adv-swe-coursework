@@ -188,23 +188,27 @@ public class Order implements Serializable {
 
         DiscountDataStructure structure = new DiscountDataStructure();
 
-        // Nested for loop to compare each item to another to check for available discounts
-        int myOrderDetailsSize = myOrderDetails.size();
-
-        for (int i = 0; i < myOrderDetailsSize; i++) {
-            ItemCategory category1 = menu.getCategory(myOrderDetails.get(i));
-            for (int j = i + 1; j < myOrderDetailsSize; j++) {
-                ItemCategory category2 = menu.getCategory(myOrderDetails.get(j));
-
-                if (category1 == category2) {
-                    continue;
+        // First checking discounts for daily special items
+        Item dailySpecial = Discount.getDailySpecialItem();
+        if (dailySpecial != null) {
+            for (int i = 0; i < myOrderDetails.size(); i++) {
+                if (myOrderDetails.get(i).equals(dailySpecial.getItemID())) {
+                    structure.addEntry(Discount.DAILY_SPECIAL, i, i);
                 }
+            }
+        }
 
-                // If a discount is found this will then be added to the custom DiscountDataStructure
-                Discount discount = discountsMap.get(Set.of(category1, category2));
+        // After checking for Daily Specials, checking for other discounts
 
-                if (discount != null) {
-                    structure.addEntry(discount, i, j);
+        /** Nested for loop to compare each item to another to check for available discounts */
+        for (int i = 0; i < myOrderDetails.size(); i++) {
+            for (int j = i + 1; j < myOrderDetails.size(); j++) {
+                if (menu.getCategory(myOrderDetails.get(i)) != menu.getCategory(myOrderDetails.get(j))) {
+                    /** If a discount is found this will then be added to the custom DiscountDataStructure */
+                    Discount d = discountsMap.get(Set.of(menu.getCategory(myOrderDetails.get(i)), menu.getCategory(myOrderDetails.get(j))));
+                    if (d != null) {
+                        structure.addEntry(d, i, j);
+                    }
                 }
             }
         }
@@ -216,13 +220,39 @@ public class Order implements Serializable {
             // Applies the discount
             discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
             discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
+            Discount discount = (Discount) s.get(0);
+
             int index1 = (Integer) s.get(1);
             int index2 = (Integer) s.get(2);
             // Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again
             myOrderDetails.remove(index2);
             myOrderDetails.remove(index1);
 
+            if (discount == Discount.DAILY_SPECIAL) {
+                if (index1 < myOrderDetails.size()) {
+                    discountedCost -= (menu.getCost(myOrderDetails.get(index1)) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get(index1))));
+                    myOrderDetails.remove(index1);
+                }
+            }
+            else {
+                // Process the higher index first to avoid index shifting issues
+                int higherIndex = Math.max(index1, index2);
+                int lowerIndex = Math.min(index1, index2);
+
             // This is then repeated for anymore available discounts
+                if (higherIndex < myOrderDetails.size() && lowerIndex < myOrderDetails.size()) {
+                    // Apply discount to both items
+                    discountedCost -= (menu.getCost(myOrderDetails.get(higherIndex)) -
+                            discount.calculateDiscount(menu.getCost(myOrderDetails.get(higherIndex))));
+                    discountedCost -= (menu.getCost(myOrderDetails.get(lowerIndex)) -
+                            discount.calculateDiscount(menu.getCost(myOrderDetails.get(lowerIndex))));
+
+                    // Remove items starting from higher index first
+                    myOrderDetails.remove(higherIndex);
+                    myOrderDetails.remove(lowerIndex);
+                }
+            }
+            /** This is then repeated for anymore available discounts */
             s = structure.removeEntry();
         }
     }
@@ -287,7 +317,7 @@ public class Order implements Serializable {
      * This implementation will probably be changed later but useful for me for initial testing
      */
     public void setOnlineStatus() {
-        onlineStatus = true;
+        this.onlineStatus = true;
     }
 
     /**

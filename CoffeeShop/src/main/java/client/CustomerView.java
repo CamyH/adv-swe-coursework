@@ -1,7 +1,6 @@
 package client;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,6 +10,7 @@ import java.awt.event.WindowEvent;
  * Represents the user interface for the Coffee Shop application.
  *
  * @author Caelan Mackenzie
+ * @author Akash Poonia
  */
 public class CustomerView extends JFrame {
 
@@ -38,44 +38,68 @@ public class CustomerView extends JFrame {
     private JButton exitButton;
     private JButton removeLastItemButton;
     private JButton removeItemButton;
+    private JCheckBox onlineOrderCheckBox;
+    private JPanel dailySpecialPanel;
+    private JTextArea dailySpecialTextArea;
 
     /**s
      * Sets up the View (GUI)
      */
     public CustomerView() {
         // UI parameters
-        setContentPane(contentPanel);
-        setTitle("Coffee Shop App");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 300);
-        setLocationRelativeTo(null); // Center the window
-        setVisible(true);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                Demo.cleanUp();
-            }
+        SwingUtilities.invokeLater(() -> {
+            setContentPane(contentPanel);
+            setTitle("Coffee Shop App");
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(900, 400);
+            setLocationRelativeTo(null); // Center the window
+            setVisible(true);
+            initDailySpecialPanel();
+
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    Demo.cleanUp();
+                }
+            });
+
+            // Disable editing for certain fields
+            totalCostField.setEnabled(false);
+            totalCostField.setDisabledTextColor(Color.BLACK);
+            discountedCostField.setEnabled(false);
+            discountedCostField.setDisabledTextColor(Color.BLACK);
+            displayMenuField.setEnabled(false);
+            displayMenuField.setDisabledTextColor(Color.BLACK);
+            orderDetailsField.setEnabled(false);
+            orderDetailsField.setDisabledTextColor(Color.BLACK);
+
+            // Set scroll bars to always be visible
+            itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            // Initialize fields
+            totalCostField.setText("£0.00");
+            discountedCostField.setText("£0.00");
+            displayMenuField.append("Item ID, Name, Cost \n");
         });
 
-        // Disable editing for certain fields
-        totalCostField.setEnabled(false);
-        totalCostField.setDisabledTextColor(Color.BLACK);
-        discountedCostField.setEnabled(false);
-        discountedCostField.setDisabledTextColor(Color.BLACK);
-        displayMenuField.setEnabled(false);
-        displayMenuField.setDisabledTextColor(Color.BLACK);
-        orderDetailsField.setEnabled(false);
-        orderDetailsField.setDisabledTextColor(Color.BLACK);
+    }
 
-        // Set scroll bars to always be visible
-        itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    private void initDailySpecialPanel() {
 
-        // Initialize fields
-        totalCostField.setText("£0.00");
-        discountedCostField.setText("£0.00");
-        displayMenuField.append("Item ID, Name, Cost \n");
+        SwingUtilities.invokeLater(() -> {
+            dailySpecialTextArea.setEditable(false);
+            dailySpecialTextArea.setLineWrap(true);
+            dailySpecialTextArea.setWrapStyleWord(true);
+            dailySpecialTextArea.setMargin(new Insets(5, 5, 5, 5));
+
+            // Set scroll policy if scroll pane exists
+            if (dailySpecialTextArea.getParent() instanceof JScrollPane) {
+                ((JScrollPane) dailySpecialTextArea.getParent())
+                        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            }
+        });
     }
 
     /**
@@ -86,9 +110,11 @@ public class CustomerView extends JFrame {
      * @param discountedCost Discounted cost of the order
      */
     public void updateUI(String orderDetails, double totalCost, double discountedCost) {
-        orderDetailsField.setText("Current Order: \n" + orderDetails);
-        totalCostField.setText("£" + String.format("%.2f", totalCost));
-        discountedCostField.setText("£" + String.format("%.2f", discountedCost));
+        SwingUtilities.invokeLater(() -> {
+            orderDetailsField.setText("Current Order: \n" + orderDetails);
+            totalCostField.setText("£" + String.format("%.2f", totalCost));
+            discountedCostField.setText("£" + String.format("%.2f", discountedCost));
+        });
     }
 
     /**
@@ -97,9 +123,22 @@ public class CustomerView extends JFrame {
      * @param menuDetails Details of the menu items
      */
     public void displayMenu(String[] menuDetails) {
-        for (String entry : menuDetails) {
-            displayMenuField.append(entry + "\n");
-        }
+        SwingUtilities.invokeLater(() -> {
+            displayMenuField.setText("");
+            for (String entry : menuDetails) {
+                displayMenuField.append(entry + "\n");
+            }
+        });
+    }
+
+    public void displayDailySpecial(String specialText) {
+        SwingUtilities.invokeLater(() -> {
+            dailySpecialTextArea.setText(specialText);
+        });
+    }
+
+    public void showPopup(String message) {
+        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(CustomerView.this, message));
     }
 
     /**
@@ -116,6 +155,10 @@ public class CustomerView extends JFrame {
 
     public JButton getCancelOrderButton() {
         return cancelOrderButton;
+    }
+
+    public JCheckBox getOnlineOrderCheckBox() {
+        return onlineOrderCheckBox;
     }
 
     public JButton getAddItemButton() {

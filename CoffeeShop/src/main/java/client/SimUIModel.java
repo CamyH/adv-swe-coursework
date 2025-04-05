@@ -20,13 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * SimUIModel acts as the data model for the simulation user interface
- * Handles core logic related to staff management, order management, and server control
- * Implements the Observer pattern to react to order updates and notify observers
- * Dependencies include shared instances of OrderList, ItemList, and StaffList
- * Integrates with the server and staff via notification services and threading
+ * The simulation UI Model
  * NotificationService is injected using Dependency Injection
- *
  * @author Caelan Mackenzie
  */
 public class SimUIModel extends Subject implements Observer {
@@ -38,6 +33,8 @@ public class SimUIModel extends Subject implements Observer {
     private static Integer simSpeed = 50;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ArrayList<UUID> popupList;
+    private static int simSpeed;
 
     /**
      * Constructor for SimUIModel
@@ -48,6 +45,7 @@ public class SimUIModel extends Subject implements Observer {
     public SimUIModel(INotificationService notificationService) {
         this.notificationService = notificationService;
         this.menu = ItemList.getInstance();
+        // Get the singleton instances of staffList and orderList
         this.staffList = StaffList.getInstance();
         this.orderList = OrderList.getInstance();
 
@@ -55,6 +53,9 @@ public class SimUIModel extends Subject implements Observer {
 
         orderList.registerObserver(this);
 
+        // initialise the data for the UI
+        simSpeed = 50;
+        popupList = new ArrayList<>();
         roles = new ArrayList<>();
 
         // Populate roles
@@ -76,11 +77,15 @@ public class SimUIModel extends Subject implements Observer {
     /**
      * Returns a string representation of the current orders
      *
-     * @param online whether to display online orders only
+     * @param state whether to display online orders only
      * @return formatted string of current orders
      */
-    public String getOrderList(boolean online) {
-        return orderList.getOrdersForDisplay(online);
+    public String getOrderList(int state) {
+        return orderList.getOrdersForDisplay(state);
+    }
+
+    public String getCurrentOrders() {
+        return Waiter.getCurrentOrdersForDisplay();
     }
 
     /**
@@ -107,7 +112,9 @@ public class SimUIModel extends Subject implements Observer {
      * @return An array list of strings in the form (staff name,customer ID, item 1, ..., item n, order total cost, order discounted cost)
      */
     public String getStaffDetails(UUID ID) {
-        return staffList.getStaff(ID).getCurrentOrderDetails();
+        synchronized (staffList) {
+            return staffList.getStaff(ID).getCurrentOrderDetails();
+        }
     }
 
 
@@ -121,6 +128,7 @@ public class SimUIModel extends Subject implements Observer {
     public void setSimSpeed(int speed) {
         simSpeed = speed;
         StaffList.getInstance().setDefaultDelay(simSpeed);
+        notifyObservers();
     }
 
     /**
@@ -130,6 +138,20 @@ public class SimUIModel extends Subject implements Observer {
      * @param role role of the staff member
      * @param experience experience level
      * @throws StaffNullNameException if the name is empty
+     */
+    public void addPopup(UUID popup) {
+        popupList.add(popup);
+    }
+    public boolean checkPopup(UUID popup) {
+        return popupList.contains(popup);
+    }
+
+    /**
+     * Add a new staff to the staffList
+     * @param name staff name
+     * @param role staff role
+     * @param experience staff experience
+     * @throws StaffNullNameException thrown when the staff nae field is empty
      */
     public void addStaff(String name, String role, int experience) throws StaffNullNameException {
         if (name.isEmpty()) {
@@ -149,6 +171,11 @@ public class SimUIModel extends Subject implements Observer {
     /**
      * Updates all registered observers of this model
      */
+    public void populateOrders() {
+        Thread orders = new Thread(orderList);
+        orders.start();
+    }
+
     public void update() {
         notifyObservers();
     }
@@ -158,6 +185,10 @@ public class SimUIModel extends Subject implements Observer {
      *
      * @param ID UUID of the staff member
      */
+    public void removePopup(UUID popup) {
+        popupList.remove(popup);
+    }
+
     public void removeStaff(UUID ID) {
         staffList.remove(ID);
     }

@@ -2,14 +2,22 @@ package client;
 
 import interfaces.INotificationService;
 import item.Item;
+import item.Item;
 import item.ItemFileReader;
 import item.ItemList;
 import order.OrderFileReadWrite;
 import services.NotificationService;
+import order.OrderList;
+import utils.Discount;
 import utils.GenerateReportFileWriter;
+import workers.StaffList;
 import workers.Waiter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Refactored to support MVC by Akash
@@ -71,20 +79,30 @@ public class Demo {
     }
 
     /**
+     * Randomly selects an item from the item list to be today's special offer.
+     * Sets the selected item in the Discount class with a random discount between 50-75 percentage.
+     */
+    private static void setDailySpecial() {
+        ItemList itemList = ItemList.getInstance();
+        List<Item> items = new ArrayList<>(itemList.getMenu().values());
+
+        if (!items.isEmpty()) {
+            Random random = new Random();
+            Item dailySpecial = items.get(random.nextInt(items.size()));
+            Discount.setDailySpecialItem(dailySpecial);
+        }
+    }
+
+    /**
      * Closes the GUI
      */
     static void demoCloseGUI() {
         System.out.println("Goodbye.");
         view.closeGUI();
-        Waiter.addBackAllCurrentOrders();
+        simController.close();
+
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
-
-        try {
-            orderReader.writeToFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         System.exit(0);
     }
@@ -103,16 +121,8 @@ public class Demo {
     static void cleanUp() {
         System.out.println("Goodbye.");
 
-        Waiter.addBackAllCurrentOrders();
-
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
-
-        try {
-            orderReader.writeToFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

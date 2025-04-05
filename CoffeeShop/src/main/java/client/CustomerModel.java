@@ -2,11 +2,13 @@ package client;
 
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import item.Item;
 import item.ItemList;
 import logs.CoffeeShopLogger;
 import message.Message;
 import order.Order;
 import order.OrderList;
+import utils.Discount;
 
 import javax.swing.*;
 import java.util.List;
@@ -25,6 +27,8 @@ public class CustomerModel {
     private final OrderList orderList;
     private final ItemList itemList;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
+
+    private boolean isOnlineOrder = false;
 
     /**
      * Constructs a new CustomerModel, initializes the order list and item list,
@@ -79,12 +83,21 @@ public class CustomerModel {
         return currentOrder.removeItem(itemID.toUpperCase());
     }
 
+    public boolean submitOrder() throws InvalidOrderException, DuplicateOrderException {
+
+
+        boolean added = orderList.add(currentOrder);
+        if (added) {
+            createNewOrder();
+        }
+        return added;
     /**
      * Submits the current order to the order list.
      * If the order is successfully added, a new order is created.
      *
      */
     public void submitOrder() {
+        if (isOnlineOrder) currentOrder.setOnlineStatus();
         // If we get this far then the order has been sent so we
         // can clear the order on the customerGUI
         createNewOrder();
@@ -133,6 +146,14 @@ public class CustomerModel {
         return currentOrder.getDiscountedCost();
     }
 
+    public void setOnlineOrder(boolean isOnlineOrder) {
+        this.isOnlineOrder = isOnlineOrder;
+    }
+
+    public boolean isOnlineOrder() {
+        return isOnlineOrder;
+    }
+
     /**
      * Updates the item list with the given updated item list.
      *
@@ -157,5 +178,29 @@ public class CustomerModel {
      */
     public void displayMessage(Message message) {
         JOptionPane.showMessageDialog(null, message.toString());
+    }
+
+    /**
+     * Display in Customer GUI about daily special offer.
+     *
+     * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
+     */
+    public String getDailySpecialInfo() {
+        Item dailySpecial = Discount.getDailySpecialItem();
+        if (dailySpecial == null) {
+            return "No daily special today";
+        }
+
+        return String.format(" \uD83D\uDD25 Today's Special \uD83D\uDD25 \n\n" +
+                "Item: %s\n" +
+                "Original Price: £%.2f\n" +
+                "Special Price: £%.2f\n" +
+                "Discount: %d%% OFF\n\n" +
+                "Add this to your order:\n%s",
+        dailySpecial.getDescription(),
+        dailySpecial.getCost(),
+        Discount.DAILY_SPECIAL.calculateDiscount(dailySpecial.getCost()),
+        Discount.DAILY_SPECIAL.getValue(),
+        dailySpecial.getItemID());
     }
 }
