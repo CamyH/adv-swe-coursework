@@ -146,6 +146,7 @@ public class CustomerView extends JFrame {
      */
     public void closeGUI() {
         dispose();
+        System.exit(0);
     }
 
     // Getters for buttons (to be used by the Controller)
