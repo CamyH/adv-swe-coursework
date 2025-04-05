@@ -60,7 +60,15 @@ public class ClientService implements Runnable, OrderObserver {
             while (true) {
                 try {
                     logger.logDebug("Idling...");
-                    Order receivedOrder = (Order) inputStream.readObject();
+                    Object object = inputStream.readObject();
+
+                    // We only want to accept order objects
+                    // from the client for now
+                    if (!(object instanceof Order)) {
+                        continue;
+                    }
+
+                    Order receivedOrder = receiveOrder(object);
 
                     receivedOrder.setClientService(this);
 
@@ -79,7 +87,7 @@ public class ClientService implements Runnable, OrderObserver {
                     break;
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException | InvalidOrderException e) {
             logger.logSevere("Error in server: " + e.getCause() + e.getMessage());
         }
     }
@@ -94,7 +102,6 @@ public class ClientService implements Runnable, OrderObserver {
     public synchronized void sendMessage(Message message) throws IOException {
         if (message == null) throw new NullPointerException("Message cannot be null");
 
-        System.out.println("Sending processing message to " + clientSocket.getInetAddress());
         outputStream.writeObject(message);
         outputStream.flush();
     }
@@ -107,8 +114,8 @@ public class ClientService implements Runnable, OrderObserver {
      * @throws IOException if an I/O error occurs while receiving the object, aka if it is null
      * @throws ClassNotFoundException if the class of the received object cannot be found
      */
-    public synchronized Order receiveOrder() throws IOException, ClassNotFoundException, InvalidOrderException {
-        return Optional.ofNullable((Order) inputStream.readObject())
+    public synchronized Order receiveOrder(Object inputStream) throws IOException, ClassNotFoundException, InvalidOrderException {
+        return Optional.ofNullable((Order) inputStream)
                .orElseThrow(() -> new InvalidOrderException("Order received is NULL"));
     }
 
@@ -127,26 +134,31 @@ public class ClientService implements Runnable, OrderObserver {
         }
     }
 
+    /**
+     * Sends both the {@link OrderList} and {@link ItemList} to the client.
+     * This is typically used to initialise the client with both order and menu data.
+     *
+     * @param orderList the list of orders to send
+     * @param itemList the list of items (menu) to send
+     * @throws IOException if an I/O error occurs during transmission
+     */
     private void sendOrderItemList(OrderList orderList, ItemList itemList) throws IOException {
         outputStream.writeObject(itemList);
         outputStream.writeObject(orderList);
         outputStream.flush();
     }
 
+    /**
+     * Sends the current {@link ItemList} (menu) to the client.
+     * This method fetches the item list from the UI model and writes it to the output stream.
+     * If an error occurs during transmission, it logs the error message to standard error.
+     */
     public void sendItemListToClient() {
         try {
             System.out.println("sending ItemList to Client" + simUIModel.getMenu().getMenu());
             outputStream.writeObject(simUIModel.getMenu());  // Send item list to client
         } catch (IOException e) {
             System.err.println("Error sending item list to client: " + e.getMessage());
-        }
-    }
-
-    public void sendOrderListToClient() {
-        try {
-            outputStream.writeObject(simUIModel.getOrderList());  // Send order list to client
-        } catch (IOException e) {
-            System.err.println("Error sending order list to client: " + e.getMessage());
         }
     }
 }
