@@ -219,8 +219,14 @@ public class Order implements Serializable {
 
         while (s != null) {
             // Applies the discount
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(1))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
-            discountedCost = discountedCost - ((menu.getCost(myOrderDetails.get((Integer) s.get(2))) - ((Discount) s.get(0)).calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
+            discountedCost = discountedCost
+                    - ((menu.getCost(myOrderDetails.get((Integer) s.get(1)))
+                    - ((Discount) s.get(0))
+                    .calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
+            discountedCost = discountedCost
+                    - ((menu.getCost(myOrderDetails.get((Integer) s.get(2)))
+                    - ((Discount) s.get(0))
+                    .calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
             Discount discount = (Discount) s.get(0);
 
             int index1 = (Integer) s.get(1);
