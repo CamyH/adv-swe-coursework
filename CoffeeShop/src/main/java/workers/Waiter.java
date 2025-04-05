@@ -27,6 +27,7 @@ import logs.CoffeeShopLogger;
 public class Waiter extends Staff<Order> {
     private final INotificationService notificationService;
     private final OrderList orderList;
+    private StaffList staffList;
     private Order currentOrder;
     private boolean active = true;
 
@@ -51,7 +52,6 @@ public class Waiter extends Staff<Order> {
         this.notificationService = notificationService;
         orderList = OrderList.getInstance();
         orderList.registerObserver(this);
-        logger = CoffeeShopLogger.getInstance();
         waiterList.add(this);
         thisOrder = new ArrayList<>();
         StaffList staffList = StaffList.getInstance();

@@ -1,5 +1,6 @@
 package client;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import logs.CoffeeShopLogger;
 import utils.RetryPolicy;
@@ -86,8 +87,6 @@ public class CustomerController implements ActionListener {
                     + e.getCause() + " "
                     + e.getMessage());
             view.showPopup("Order could not be placed - Please Try Again Later");
-        } catch (DuplicateOrderException e) {
-            view.showPopup(e.getMessage());
         }
     }
 

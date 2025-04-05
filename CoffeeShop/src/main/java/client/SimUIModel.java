@@ -30,7 +30,6 @@ public class SimUIModel extends Subject implements Observer {
     private final ItemList menu;
     private final ArrayList<String> roles;
     private final StaffList staffList;
-    private static Integer simSpeed = 50;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ArrayList<UUID> popupList;
@@ -131,14 +130,6 @@ public class SimUIModel extends Subject implements Observer {
         notifyObservers();
     }
 
-    /**
-     * Attempts to add a staff member with the given details
-     *
-     * @param name name of the staff member
-     * @param role role of the staff member
-     * @param experience experience level
-     * @throws StaffNullNameException if the name is empty
-     */
     public void addPopup(UUID popup) {
         popupList.add(popup);
     }
@@ -176,8 +167,19 @@ public class SimUIModel extends Subject implements Observer {
         orders.start();
     }
 
+    /**
+     * Notify the observers
+     */
     public void update() {
         notifyObservers();
+    }
+
+    /**
+     * Remove the pop up from the list
+     * @param popup the pop up to remove
+     */
+    public void removePopup(UUID popup) {
+        popupList.remove(popup);
     }
 
     /**
@@ -185,10 +187,6 @@ public class SimUIModel extends Subject implements Observer {
      *
      * @param ID UUID of the staff member
      */
-    public void removePopup(UUID popup) {
-        popupList.remove(popup);
-    }
-
     public void removeStaff(UUID ID) {
         staffList.remove(ID);
     }

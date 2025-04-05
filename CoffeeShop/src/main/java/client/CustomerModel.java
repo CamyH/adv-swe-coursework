@@ -83,14 +83,6 @@ public class CustomerModel {
         return currentOrder.removeItem(itemID.toUpperCase());
     }
 
-    public boolean submitOrder() throws InvalidOrderException, DuplicateOrderException {
-
-
-        boolean added = orderList.add(currentOrder);
-        if (added) {
-            createNewOrder();
-        }
-        return added;
     /**
      * Submits the current order to the order list.
      * If the order is successfully added, a new order is created.
