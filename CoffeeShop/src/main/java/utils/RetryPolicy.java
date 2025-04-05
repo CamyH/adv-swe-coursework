@@ -6,12 +6,8 @@ import logs.CoffeeShopLogger;
 import java.util.function.Consumer;
 
 /**
- * RetryPolicy provides a utility for executing tasks with retry logic.
- * It attempts to run a given {@link Runnable} multiple times if it fails.
- * Example:
- * <pre>{@code
- *     RetryPolicy.retryOnFailure(() -> someMethodThatMightFail(), 3);
- * }</pre>
+ * RetryPolicy provides a utility for executing tasks with retry logic
+ * It attempts to run a given {@link ThrowingRunnable} multiple times if it fails
  *
  * @author Cameron Hunt
  */
