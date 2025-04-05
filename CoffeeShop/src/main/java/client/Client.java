@@ -97,9 +97,9 @@ public class Client {
      * <p><b>Note:</b> If multiple errors occur during cleanup, the
      * first encountered {@link IOException} is thrown</p>
      *
-     * @throws IOException if an I/O error occurs while closing the output or input stream
+     * @return  IOException if an I/O error occurs while closing the output or input stream
      */
-    public synchronized void close() throws IOException {
+    public synchronized IOException close() {
         // p.s I hate these multiple try catches
         // but since these can independently fail to
         // close it is needed in case one fails to close
@@ -127,10 +127,10 @@ public class Client {
             logger.logSevere("Failed to close socket: " + e.getMessage());
         }
 
-        if (exception != null) throw exception;
+        return exception;
     }
 
-    public void startListening(Demo demo) {
+    public void startListening() {
         Thread listenerThread = new Thread(() -> {
             try {
                 while (true) {
@@ -145,7 +145,11 @@ public class Client {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                // If we get an exception here, we should exit the program
+                logger.logSevere("Error in client, exiting....: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
+                Exception exception = close();
+                logger.logSevere("Error when exiting client: " + exception.getClass() + " " + exception.getCause() + " " + exception.getMessage());
+                System.exit(0);
             }
         });
         listenerThread.start();
