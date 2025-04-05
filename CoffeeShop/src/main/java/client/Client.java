@@ -133,19 +133,23 @@ public class Client {
         return exception;
     }
 
+    /**
+     * Main Listener for the client thread
+     * Used to read in the item list and messages
+     * sent from the server
+     */
     public void startListening() {
         Thread listenerThread = new Thread(() -> {
             try {
                 while (true) {
                     Object object = inputStream.readObject();
-                    if (object instanceof ItemList itemList) {
-                        customerModel.updateItemList(itemList);
+
+                    if (object == null) {
+                        logger.logWarning("Received object is null");
+                        continue;
                     }
 
-                    if (object instanceof Message) {
-                        Message message = receiveMessage(object);
-                        customerView.showPopup(message.toString());
-                    }
+                    process(object);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 // If we get an exception here, we should exit the program
@@ -156,5 +160,30 @@ public class Client {
             }
         });
         listenerThread.start();
+    }
+
+    /**
+     * Processes an object received from the server
+     * <p>
+     * This method supports the following types: {@link ItemList} and {@link Message}.
+     * </p>
+     *
+     * @param object the received object to process
+     * @throws IOException if an I/O error occurs while processing the object
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     */
+    private synchronized void process(Object object) throws IOException, ClassNotFoundException {
+        if (object instanceof ItemList itemList) {
+            customerModel.updateItemList(itemList);
+        }
+
+        if (object instanceof Message) {
+            Message message = receiveMessage(object);
+            customerView.showPopup(message.toString());
+        }
+
+        if (!(object instanceof Message || object instanceof ItemList)) {
+            logger.logWarning("Unknown object type: " + object.getClass().getName());
+        }
     }
 }
