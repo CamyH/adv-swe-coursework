@@ -214,26 +214,14 @@ public class Order implements Serializable {
             }
         }
 
-        // Removes and looks at the first entry in the discount data structure (ie the first discount to apply)
+        /** Removes and looks at the first entry in the discount data structure (ie the first discount to apply) */
         ArrayList<Object> s = structure.removeEntry();
 
         while (s != null) {
-            // Applies the discount
-            discountedCost = discountedCost
-                    - ((menu.getCost(myOrderDetails.get((Integer) s.get(1)))
-                    - ((Discount) s.get(0))
-                    .calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(1))))));
-            discountedCost = discountedCost
-                    - ((menu.getCost(myOrderDetails.get((Integer) s.get(2)))
-                    - ((Discount) s.get(0))
-                    .calculateDiscount(menu.getCost(myOrderDetails.get((Integer) s.get(2))))));
             Discount discount = (Discount) s.get(0);
 
             int index1 = (Integer) s.get(1);
             int index2 = (Integer) s.get(2);
-            // Removes the items from the copied array list of item IDs so that a discount cannot be applied to them again
-            myOrderDetails.remove(index2);
-            myOrderDetails.remove(index1);
 
             if (discount == Discount.DAILY_SPECIAL) {
                 if (index1 < myOrderDetails.size()) {
@@ -246,7 +234,6 @@ public class Order implements Serializable {
                 int higherIndex = Math.max(index1, index2);
                 int lowerIndex = Math.min(index1, index2);
 
-            // This is then repeated for anymore available discounts
                 if (higherIndex < myOrderDetails.size() && lowerIndex < myOrderDetails.size()) {
                     // Apply discount to both items
                     discountedCost -= (menu.getCost(myOrderDetails.get(higherIndex)) -
