@@ -58,6 +58,8 @@ public class StaffList extends Subject implements EntityList<Staff, UUID> {
 
         staff.removeStaff();
 
+        notifyObservers();
+
         return true;
     }
 

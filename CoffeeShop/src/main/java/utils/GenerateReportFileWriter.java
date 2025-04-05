@@ -54,7 +54,7 @@ public class GenerateReportFileWriter extends AbstractFileManager<Object, ArrayL
         OrderList orders = OrderList.getInstance();
 
         String[] IDs = items.getItemIDs();
-        String[] orderStrings = orders.getOrdersToString(false);
+        String[] orderStrings = orders.getOrdersToString(true);
         HashMap<String, Double> orderedItems = orders.completedOrderItemCount();
 
         reportDetails.add("=======================");

@@ -215,10 +215,12 @@ public class Waiter extends Staff<Order> {
      * Method to add order back to order list if waiter is removed during operation
      */
     public void addBackOrder() {
-        try {
-            OrderList.getInstance().add(getCurrentOrder());
-        } catch (InvalidOrderException | DuplicateOrderException e) {
-            System.out.println(e.getMessage());
+        if (getCurrentOrder() != null) {
+            try {
+                OrderList.getInstance().add(getCurrentOrder());
+            } catch (InvalidOrderException | DuplicateOrderException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

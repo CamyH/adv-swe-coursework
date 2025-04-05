@@ -31,6 +31,7 @@ public class StaffPopupModel extends Subject implements Observer {
 
     public void update() {
         details = simModel.getStaffDetails(staffID);
+
         notifyObservers();
     }
 

@@ -1,38 +1,43 @@
 =======================
 Current Order Details
 -----------------------
+d8086658-48ad-4ad5-8dc3-2f38a958ce32,2d5aade4-e2c7-4356-86fa-18470d9c9308,2025-04-04T23:13:45.514123200,FD3,true
+165259fc-7ba3-49fe-894c-d08cdcf0f42a,c21c177f-c4db-4dbc-8780-d51f4cc0fba8,2025-04-04T23:15:13.677847500,SCK3;RL4,false
+4bf4c6a0-155d-4995-b3d3-878530c34f54,c479af83-fde3-4bcf-8808-6b0423176728,2025-04-04T23:15:32.473513,FD5;SD7,false
+9f939e0c-742b-4978-9031-6ba6cb2db185,45c617d7-b3b9-414e-8a9b-62a57b8dd055,2025-04-04T23:15:43.468505700,FD3;SD2,false
+7978c727-4300-40fd-bb36-4a467735ebba,8b51e0aa-c369-408e-971e-c41fcebdae48,2025-04-04T23:23:01.843426100,HD3;HD2;HD1;SD3;FD4;FD5;RL2;SCK4,false
 -----------------------
 Number of Items Ordered
 -----------------------
 RL1 = 0
-RL2 = 0
+RL2 = 1
 RL3 = 0
-RL4 = 0
+RL4 = 1
 FD1 = 0
 FD2 = 0
-FD3 = 0
-FD4 = 0
-FD5 = 0
-HD1 = 0
-HD2 = 0
-HD3 = 0
+FD3 = 2
+FD4 = 1
+FD5 = 2
+HD1 = 1
+HD2 = 1
+HD3 = 1
 HD4 = 0
 HD5 = 0
 HD6 = 0
 HD7 = 0
 SD1 = 0
-SD2 = 0
-SD3 = 0
+SD2 = 1
+SD3 = 1
 SD4 = 0
 SD5 = 0
 SD6 = 0
-SD7 = 0
+SD7 = 1
 SD8 = 0
 SD9 = 0
 SCK1 = 0
 SCK2 = 0
-SCK3 = 0
-SCK4 = 0
+SCK3 = 1
+SCK4 = 1
 SCK5 = 0
 SCK6 = 0
 SCK7 = 0
@@ -45,10 +50,10 @@ PSY5 = 0
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £0.00
-Total Income (Including Discounts) : £0.00
-Total Orders : 0
-Average Spend Per Order (Excluding Discounts) : £0.00
-Average Spend Per Order (Including Discounts) : £0.00
+Total Income (Excluding Discounts) : £44.30
+Total Income (Including Discounts) : £36.98
+Total Orders : 5
+Average Spend Per Order (Excluding Discounts) : £8.86
+Average Spend Per Order (Including Discounts) : £7.40
 =======================
 

@@ -22,7 +22,9 @@ public class SimUIModel extends Subject implements Observer {
     private ArrayList<UUID> popupList;
     private static int simSpeed;
 
-    /** SimUIModel constructor method */
+    /**
+     * SimUIModel constructor method
+     */
     public SimUIModel() {
 
         // Get the singleton instances of staffList and orderList
@@ -42,46 +44,93 @@ public class SimUIModel extends Subject implements Observer {
         roles.add("Chef");
     }
 
-    // Getter methods
-
+    /**
+     * Getter method to return simulation speed of the program
+     *
+     * @return The simulation speed as an integer
+     */
     public static int getSimSpeed() {
         return simSpeed;
     }
 
+    /**
+     * Method that returns the order list to be displayed in each scroll pane
+     *
+     * @param state Which order list the simulation should return? Online, In person or Complete Orders
+     * @return a string to be displayed in each scroll pane representing each type of order list
+     */
     public String getOrderList(int state) {
         return orderList.getOrdersForDisplay(state);
     }
 
+    /**
+     * Method to return the currently processed orders to be displayed
+     *
+     * @return The current orders that are being processed to be displayed in the GUI
+     */
     public String getCurrentOrders() {
         return Waiter.getCurrentOrdersForDisplay();
     }
 
+    /**
+     * Method to return all the available staff roles to be displayed
+     *
+     * @return an Array List of all available staff roles
+     */
     public ArrayList<String> getRoles() {
         return roles;
     }
 
+    /**
+     * Method to return the list of staff members
+     *
+     * @return the StaffList object which holds information about each staff member
+     */
     public StaffList getStaffList() {
         return staffList;
     }
 
+    /**
+     * Method that returns the current order details that the staff member is currently processing
+     *
+     * @param ID The ID of the staff the data is received from
+     * @return String representing the current order details
+     */
     public String getStaffDetails(UUID ID) {
         synchronized (staffList) {
-            return staffList.getStaff(ID).getCurrentOrderDetails();
+            Staff s = staffList.getStaff(ID);
+
+            if (s == null) return null;
+
+            return s.getCurrentOrderDetails();
         }
     }
 
-
-    // Setter methods
-
+    /**
+     * Method to set the simulation speed
+     *
+     * @param speed The speed to be set for the simulation
+     */
     public void setSimSpeed(int speed) {
         simSpeed = speed;
         StaffList.getInstance().setDefaultDelay(simSpeed);
         notifyObservers();
     }
 
+    /**
+     * When a staff popup GUI is created this keep track of the currently opened popups
+     *
+     * @param popup The UUID of the staff member to be added to the popup list
+     */
     public void addPopup(UUID popup) {
         popupList.add(popup);
     }
+
+    /**
+     *
+     * @param popup
+     * @return
+     */
     public boolean checkPopup(UUID popup) {
         return popupList.contains(popup);
     }

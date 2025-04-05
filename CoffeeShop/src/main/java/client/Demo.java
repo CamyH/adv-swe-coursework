@@ -37,6 +37,7 @@ public class Demo {
      * Initialises and Empty ItemList and OrderList
      */
     public Demo() {}
+
     /**
      * Runs the Console Code
      */
@@ -53,6 +54,9 @@ public class Demo {
         customerController = new CustomerController(view);
     }
 
+    /**
+     * Starts the Simulation GUI
+     */
     public void showSimUI(){
         simModel = new SimUIModel();
         simView = new SimUIView(simModel);
@@ -118,15 +122,28 @@ public class Demo {
      * Writes to order txt file
      */
     static void demoWriteOrders() {
+        // is this a coursework requirement to write orders as they are added?
+        // think it will just be worth just writing to the file at the end with all the orders or adjust it to just append rather than overwrite
+//        try {
+//            orderReader.writeToFile();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+    }
+
+    /**
+     * Shuts down the system as necessary
+     */
+    static void cleanUp() {
+        System.out.println("Goodbye.");
+
+        Waiter.addBackAllCurrentOrders();
+
         try {
             orderReader.writeToFile();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    static void cleanUp() {
-        System.out.println("Goodbye.");
 
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();

@@ -77,6 +77,8 @@ public class CustomerView extends JFrame {
             itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+            orderDetailsField.setText("Current Order: \n");
+
             // Initialize fields
             totalCostField.setText("£0.00");
             discountedCostField.setText("£0.00");

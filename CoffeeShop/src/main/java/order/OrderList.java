@@ -10,6 +10,7 @@ import interfaces.Subject;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import interfaces.Observer;
 
@@ -265,11 +266,18 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * (Order ID,Customer ID,Timestamp,Order Details Array [Item ID],Total Cost,Discounted Cost) e.g.
      */
     public String[] getOrdersToString(boolean completed) {
-        Collection<Order> c = completeOrders;
+//        Collection<Order> c = completeOrders;
 
-        if (!completed) {
-            c = allOrders.stream().flatMap(Collection::stream).toList();
-        }
+        Collection<Order> c = Stream.of(
+                simulationOrders.stream(),
+                completeOrders.stream(),
+                allOrders.stream().flatMap(Collection::stream)
+        ).flatMap(s -> s)
+        .toList();
+
+//        if (!completed) {
+//            c = allOrders.stream().flatMap(Collection::stream).toList();
+//        }
 
         String[] orderString = new String[c.size()];
 
@@ -343,7 +351,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
+        for (Order o : completeOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();
