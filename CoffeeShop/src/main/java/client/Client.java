@@ -24,6 +24,7 @@ public class Client {
     private final ObjectOutputStream outputStream;
     private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel customerModel;
+    private final CustomerView customerView;
 
     /**
      * Constructor for initialising a client
@@ -32,9 +33,10 @@ public class Client {
      * @param socket the client's socket
      * @throws IOException if creation of a stream fails
      */
-    public Client(Socket socket, CustomerModel customerModel) throws IOException {
+    public Client(Socket socket, CustomerView view, CustomerModel customerModel) throws IOException {
         this.socket = socket;
         this.customerModel = customerModel;
+        this.customerView = view;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -48,12 +50,13 @@ public class Client {
      * @param port the custom port to use
      * @throws IOException if creation of a stream fails
      */
-    public Client(Socket socket, String host, int port, CustomerModel customerModel) throws IOException {
+    public Client(Socket socket, String host, int port, CustomerView view, CustomerModel customerModel) throws IOException {
         this.socket = socket;
         Client.host = host;
         Client.port = port;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.customerModel = customerModel;
+        this.customerView = view;
         outputStream.flush();
         this.inputStream = new ObjectInputStream(socket.getInputStream());
         Server.addClient(outputStream);
@@ -141,7 +144,7 @@ public class Client {
 
                     if (object instanceof Message) {
                         Message message = receiveMessage(object);
-                        customerModel.displayMessage(message);
+                        customerView.showPopup(message.toString());
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

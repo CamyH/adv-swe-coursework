@@ -15,7 +15,8 @@ public class ClientApp {
         try {
             Socket clientSocket = new Socket("localhost", 9876);
             CustomerModel customerModel = new CustomerModel();
-            Client client = new Client(clientSocket, customerModel);
+            CustomerView view = new CustomerView();
+            Client client = new Client(clientSocket, view, customerModel);
             logger.logInfo("Connected to server");
             Demo demo = new Demo();
             demo.showCustomerGUI(client);

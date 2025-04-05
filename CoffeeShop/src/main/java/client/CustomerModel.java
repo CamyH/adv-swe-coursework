@@ -165,14 +165,6 @@ public class CustomerModel {
     }
 
     /**
-     * Display the message to the user
-     * @param message the message to show
-     */
-    public void displayMessage(Message message) {
-        JOptionPane.showMessageDialog(null, message.toString());
-    }
-
-    /**
      * Display in Customer GUI about daily special offer.
      *
      * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
