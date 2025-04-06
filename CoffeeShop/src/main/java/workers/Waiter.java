@@ -336,6 +336,7 @@ public class Waiter extends Staff<Order> {
     @Override
     public void run() {
         while (active) {
+            delay(logger);
             getOrders();
             staffList.notifyObservers();
 
@@ -348,11 +349,7 @@ public class Waiter extends Staff<Order> {
             orderList.notifyObservers();
             processingOrder();
 
-            try {
-                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-            } catch (InterruptedException e) {
-                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
-            }
+            delay(logger);
 
             logger.logInfo(getWorkerName() + " completed order " + currentOrder.getOrderID());
 
