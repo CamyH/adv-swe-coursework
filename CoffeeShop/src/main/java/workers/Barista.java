@@ -64,7 +64,6 @@ public class Barista extends Staff<String> {
 
     /**
      * Method gets next drink in drink list
-     * <p>
      * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
