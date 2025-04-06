@@ -14,7 +14,7 @@ public class ClientApp {
     private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     public static void main(String[] args) {
         RetryPolicy.retryAndCustomLog(ClientApp::startClient,
-                3,
+                5,
                 "Server is not running, client is unable to connect"
         );
     }
