@@ -36,11 +36,7 @@ public class SimUIController {
         SwingUtilities.invokeLater(() -> {
             try {
                 if (!simModel.checkPopup(simView.getCurStaff())) {
-                    try {
-                        new StaffPopupController(simModel, simView.getCurStaff());
-                    } catch (NullPointerException e) {
-                        simView.showPopup("No Staff Found");
-                    }
+                    new StaffPopupController(simModel, simView.getCurStaff());
                 }
                 else {
                     simView.showPopup("Popup Already Exists");
