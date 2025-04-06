@@ -2,9 +2,11 @@ package workers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import interfaces.INotificationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Collection;
 
@@ -14,12 +16,13 @@ import java.util.Collection;
  * @author Fraser Holman
  */
 class StaffTest {
-
-    Staff staff;
+    private Staff staff;
+    @Mock
+    private INotificationService notificationService;
 
     @BeforeEach
     void setUp() {
-        staff = StaffFactory.getStaff("barista", "Bob", 1);
+        staff = StaffFactory.getStaff("barista", "Bob", 1, notificationService);
     }
 
     @AfterEach

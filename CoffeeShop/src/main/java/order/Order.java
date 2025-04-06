@@ -5,12 +5,11 @@ import item.Item;
 import item.ItemCategory;
 import item.ItemFileReader;
 import item.ItemList;
+import server.ClientService;
 import utils.Discount;
 import utils.DiscountDataStructure;
 
 import java.io.Serializable;
-
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -22,7 +21,7 @@ import java.util.*;
  * @author Mohd Faiz
  */
 
-public class Order {
+public class Order implements Serializable {
     /** Unique identifier for the order */
     private final UUID orderID;
 
@@ -45,6 +44,7 @@ public class Order {
     private double discountedCost;
 
     private boolean onlineStatus;
+    private ClientService clientService;
 
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
@@ -57,6 +57,7 @@ public class Order {
         this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
         this.menu = ItemList.getInstance();
         this.onlineStatus = false;
+        this.clientService = null;
 
         if (menu.getItemCount() == 0) {
             ItemList.resetInstance();
@@ -101,6 +102,7 @@ public class Order {
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.onlineStatus = onlineStatus;
+        this.clientService = null;
 
         if (menu == null) {
             throw new InvalidOrderException("Menu cannot be null.");
@@ -176,9 +178,6 @@ public class Order {
             totalCost += menu.getCost(itemID); // Can change this method according to need
         }
     }
-
-
-
 
     /**
      * Calculates the discounted cost
@@ -322,5 +321,34 @@ public class Order {
      */
     public boolean getOnlineStatus() {
         return onlineStatus;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    /**
+     * Checks if the given order is invalid
+     * An order is considered invalid if it is {@code null} or if its order ID is {@code null}
+     *
+     * @param order the order to check
+     * @return {@code true} if the order is null or has a null order ID, {@code false} otherwise
+     */
+    public static boolean isInvalidOrder(Order order) {
+        return order == null || order.getOrderID() == null;
+    }
+
+    /**
+     * Checks if the order details are null or empty
+     *
+     * @param order the order to check
+     * @return true if the order details are null or empty, false otherwise
+     */
+    public static boolean isOrderDetailsNullOrEmpty(Order order) {
+        return order.getDetails() == null || order.getDetails().isEmpty();
     }
 }

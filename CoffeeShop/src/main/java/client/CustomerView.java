@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 /**
  * View Class (Refactored from GUI by Akash)
  * Represents the user interface for the Coffee Shop application.
+ *
  * @author Caelan Mackenzie
  * @author Akash Poonia
  */
@@ -145,6 +146,7 @@ public class CustomerView extends JFrame {
      */
     public void closeGUI() {
         dispose();
+        System.exit(0);
     }
 
     // Getters for buttons (to be used by the Controller)
