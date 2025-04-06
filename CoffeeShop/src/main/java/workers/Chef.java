@@ -148,8 +148,10 @@ public class Chef extends Staff<String> {
     /**
      * Method used by the Subject (FoodList) to tell the Staff member that an order has been added
      */
-    public synchronized void update() {
-        notifyAll();
+    public void update() {
+        synchronized (this) {
+            notifyAll();
+        }
     }
 
     /**
