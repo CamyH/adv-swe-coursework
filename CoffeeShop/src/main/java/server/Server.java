@@ -28,7 +28,7 @@ public class Server {
      * The host used by the server
      * Dev: localhost
      */
-    private String host = "137.195.118.13";
+    private String host = "localhost";
     private int pool_size = 6;
     private SimUIModel simUIModel;
 
