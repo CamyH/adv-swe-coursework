@@ -38,7 +38,8 @@ public class StaffPopupController implements Observer {
         });
 
         update();
-        simModel.addPopup(staffID);
+        simModel.addPopup(this);
+        System.out.println(staffID);
     }
 
     public void update() {
@@ -55,9 +56,12 @@ public class StaffPopupController implements Observer {
         }
     }
 
+    public UUID getID() {
+        return staffID;
+    }
+
     public void close() {
         staffPopupModel.removeThisObserver();
-        simModel.removePopup(staffID);
         staffPopup.close();
     }
 }
