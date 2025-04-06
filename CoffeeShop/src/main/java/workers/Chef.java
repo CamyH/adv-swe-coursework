@@ -21,7 +21,6 @@ import java.util.Map;
  * @author Fraser Holman
  */
 public class Chef extends Staff<String> {
-    private final INotificationService notificationService;
     private final FoodList foodList;
 
     private final ItemList itemList;
@@ -42,9 +41,8 @@ public class Chef extends Staff<String> {
      * @param name Name of Chef
      * @param experience experience level of Chef
      */
-    public Chef(String name, int experience, INotificationService notificationService) {
+    public Chef(String name, int experience) {
         super(name, experience);
-        this.notificationService = notificationService;
         foodList = FoodList.getInstance();
         itemList = ItemList.getInstance();
         logger = CoffeeShopLogger.getInstance();

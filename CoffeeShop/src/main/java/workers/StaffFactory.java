@@ -20,8 +20,8 @@ public class StaffFactory {
     public static Staff<?> getStaff(String type, String name, int experience, INotificationService notificationService) {
         return switch (type.toLowerCase()) {
             case "waiter" -> new Waiter(name, experience, notificationService);
-            case "barista" -> new Barista(name, experience, notificationService);
-            case "chef" -> new Chef(name, experience, notificationService);
+            case "barista" -> new Barista(name, experience);
+            case "chef" -> new Chef(name, experience);
             default -> null;
         };
     }
