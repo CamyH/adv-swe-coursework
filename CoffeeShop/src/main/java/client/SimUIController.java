@@ -34,16 +34,20 @@ public class SimUIController {
 
     private void viewStaffDetails() {
         SwingUtilities.invokeLater(() -> {
-            if (!simModel.checkPopup(simView.getCurStaff())) {
-                try {
-                    new StaffPopupController(simModel, simView.getCurStaff());
-                } catch (NullPointerException e) {
-                    simView.showPopup("No Staff Found");
+            try {
+                if (!simModel.checkPopup(simView.getCurStaff())) {
+                    try {
+                        new StaffPopupController(simModel, simView.getCurStaff());
+                    } catch (NullPointerException e) {
+                        simView.showPopup("No Staff Found");
+                    }
                 }
-            }
-            else {
-                simView.showPopup("Popup Already Exists");
-            }
+                else {
+                    simView.showPopup("Popup Already Exists");
+                }
+            } catch (NullPointerException e) {
+                simView.showPopup("No staff selected");
+            };
         });
     }
 
