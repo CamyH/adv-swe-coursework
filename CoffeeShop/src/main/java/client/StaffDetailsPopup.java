@@ -38,9 +38,6 @@ public class StaffDetailsPopup extends JFrame  {
 
     public void setDetails(String details) {
         SwingUtilities.invokeLater(() -> {
-            if (details == null) {
-                close();
-            }
             detailsArea.setText("");
             detailsArea.append(details);
         });

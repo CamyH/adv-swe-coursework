@@ -240,15 +240,15 @@ public class SimUIView extends JFrame implements Observer {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                // Refresh sim speed related fields
-                setSimSpeed();
+            // Refresh sim speed related fields
+            setSimSpeed();
 
-                // Refresh the Staff list
-                setStaffList(simModel.getStaffList());
+            // Refresh the Staff list
+            setStaffList(simModel.getStaffList());
 
-                // Refresh the Order lists
-                setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
-                return null;
+            // Refresh the Order lists
+            setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
+            return null;
             }
         };
         worker.execute();
