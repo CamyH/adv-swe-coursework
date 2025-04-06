@@ -32,7 +32,7 @@ public class SimUIModel extends Subject implements Observer {
     private final StaffList staffList;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private ArrayList<UUID> popupList;
+    private ArrayList<StaffPopupController> popupList;
     private static int simSpeed;
 
     /**
@@ -130,11 +130,28 @@ public class SimUIModel extends Subject implements Observer {
         notifyObservers();
     }
 
-    public void addPopup(UUID popup) {
+    /**
+     * Adds the selected popup controller to the list of current staff details popups
+     * @param popup the Controller of the popup UI that is to be added
+     */
+    public void addPopup(StaffPopupController popup) {
         popupList.add(popup);
     }
-    public boolean checkPopup(UUID popup) {
-        return popupList.contains(popup);
+
+    /**
+     * Check to see id the given staff ID has a related staff details popup currently open
+     * @param ID the ID of the selected staff
+     * @return true if the staff has a related popup open, false if not
+     */
+    public boolean checkPopup(UUID ID) {
+        for (StaffPopupController p : popupList) {
+            if (p.getID().equals(ID)) {
+                System.out.println(true);
+                return true;
+            }
+        }
+        System.out.println(false);
+        return false;
     }
 
     /**
@@ -175,19 +192,21 @@ public class SimUIModel extends Subject implements Observer {
     }
 
     /**
-     * Remove the pop up from the list
-     * @param popup the pop up to remove
-     */
-    public void removePopup(UUID popup) {
-        popupList.remove(popup);
-    }
-
-    /**
-     * Removes a staff member by ID
      *
-     * @param ID UUID of the staff member
+     * Remove the selected staff from the staffList, closes their details popup if one exists and then gets rid of the staff object
+     *
+     * @param ID the ID of the staff to be removed
      */
     public void removeStaff(UUID ID) {
+
+        // If the staff has a details popup open, close the details popup
+        for (StaffPopupController p : popupList) {
+            if (p.getID().equals(ID)) {
+                popupList.remove(p);
+                staffList.remove(ID);
+                p.close();
+            }
+        }
         staffList.remove(ID);
     }
 
