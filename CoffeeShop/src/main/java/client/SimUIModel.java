@@ -154,7 +154,7 @@ public class SimUIModel extends Subject implements Observer {
         // member was created successfully
         // logs if a staff member cannot be added
         Optional.ofNullable(StaffFactory.getStaff(role, name, experience, notificationService))
-        .ifPresentOrElse(Staff::start, () -> logger.logSevere("Could not add staff member"));
+            .ifPresentOrElse(Staff::start, () -> logger.logSevere("Could not add staff member"));
 
         notifyObservers();
     }
