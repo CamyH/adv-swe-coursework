@@ -1,11 +1,9 @@
 package client;
 
-import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import logs.CoffeeShopLogger;
 import utils.RetryPolicy;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -50,7 +48,7 @@ public class CustomerController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == view.getSubmitOrderButton()) {
-            submitOrder();
+            handleSubmitOrder();
         } else if (e.getSource() == view.getCancelOrderButton()) {
             handleCancelOrder();
         } else if (e.getSource() == view.getAddItemButton()) {
@@ -69,7 +67,7 @@ public class CustomerController implements ActionListener {
     /**
      * Handles order submission
      */
-    private void submitOrder() {
+    private void handleSubmitOrder() {
         try {
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
