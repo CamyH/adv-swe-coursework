@@ -55,6 +55,7 @@ public class Demo {
     public void showCustomerGUI(Client client) {
         view = new CustomerView();
         customerModel = new CustomerModel();
+        setDailySpecial();
         customerController = new CustomerController(view, client, customerModel);
     }
 

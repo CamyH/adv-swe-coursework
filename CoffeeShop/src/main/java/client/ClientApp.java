@@ -19,8 +19,8 @@ public class ClientApp {
             Client client = new Client(clientSocket, view, customerModel);
             logger.logInfo("Connected to server");
             Demo demo = new Demo();
-            demo.showCustomerGUI(client);
             client.startListening();
+            demo.showCustomerGUI(client);
 
         } catch (IOException e) {
             logger.logSevere("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
