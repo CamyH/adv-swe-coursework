@@ -7,6 +7,7 @@ import order.OrderFileReadWrite;
 import order.OrderList;
 import utils.Discount;
 import utils.GenerateReportFileWriter;
+import utils.SoundPlayer;
 import workers.StaffList;
 import workers.Waiter;
 
@@ -63,6 +64,7 @@ public class Demo {
      * Starts the whole system
      */
     public static void main(String[] args) {
+        SoundPlayer.playSound(SoundPlayer.SoundType.STARTUP);
         Demo demo = new Demo();
 
         itemReader = new ItemFileReader("menu.txt");
@@ -104,6 +106,7 @@ public class Demo {
      * Closes the GUI
      */
     static void demoCloseGUI() {
+        SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
         System.out.println("Goodbye.");
         view.closeGUI();
         simController.close();

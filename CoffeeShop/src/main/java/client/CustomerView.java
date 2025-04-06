@@ -1,5 +1,7 @@
 package client;
 
+import utils.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -59,6 +61,7 @@ public class CustomerView extends JFrame {
             addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
+                    SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
                     Demo.cleanUp();
                 }
             });

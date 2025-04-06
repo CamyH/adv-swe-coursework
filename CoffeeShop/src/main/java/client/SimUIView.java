@@ -1,6 +1,7 @@
 package client;
 
 import interfaces.Observer;
+import utils.SoundPlayer;
 import workers.StaffList;
 
 import javax.swing.*;
@@ -97,6 +98,7 @@ public class SimUIView extends JFrame implements Observer {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
                 Demo.cleanUp();
             }
         });

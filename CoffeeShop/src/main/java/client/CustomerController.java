@@ -3,6 +3,8 @@ package client;
 import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
+import utils.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +74,7 @@ public class CustomerController implements ActionListener {
             boolean orderAdded = model.submitOrder();
 
             if (orderAdded) {
+                SoundPlayer.playSound(SoundPlayer.SoundType.SUBMIT_ORDER);
                 Demo.demoWriteOrders();  // Existing demo functionality
                 String message = isOnline ?
                         "Online order has been submitted for delivery" :

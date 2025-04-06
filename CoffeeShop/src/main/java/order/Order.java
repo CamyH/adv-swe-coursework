@@ -7,6 +7,7 @@ import item.ItemFileReader;
 import item.ItemList;
 import utils.Discount;
 import utils.DiscountDataStructure;
+import utils.SoundPlayer;
 
 import java.io.Serializable;
 
@@ -129,6 +130,7 @@ public class Order {
         }
 
         if (orderDetails.add(itemID)) {
+            SoundPlayer.playSound(SoundPlayer.SoundType.NEW_ITEM_ADD);
             calculateTotalCost();  // Recalculate the total cost after adding an item
             calculateDiscountedCost();
         }
