@@ -27,6 +27,7 @@ public class NotificationService implements INotificationService {
      *
      * @param observer The observer to be added.
      */
+    @Override
     public void addObserver(OrderObserver observer) {
         observers.add(observer);
     }
@@ -37,6 +38,7 @@ public class NotificationService implements INotificationService {
      *
      * @param observer The observer to be removed.
      */
+    @Override
     public void removeObserver(OrderObserver observer) {
         observers.remove(observer);
     }
@@ -73,6 +75,7 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order
      */
+    @Override
     public void sendOrderProcessingNotification(UUID orderID, ClientService clientService) {
         notifySpecificObserver(orderID, clientService, MessageType.ORDER_RECEIVED);
     }
@@ -82,6 +85,7 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order.
      */
+    @Override
     public void sendOrderCompleteNotification(UUID orderID, ClientService clientService) {
         notifySpecificObserver(orderID, clientService, MessageType.ORDER_COMPLETE);
     }
@@ -92,6 +96,7 @@ public class NotificationService implements INotificationService {
      *
      * @param orderID The unique identifier of the order.
      */
+    @Override
     public void sendOrderErrorNotification(UUID orderID, ClientService clientService) {
         notifySpecificObserver(orderID, clientService, MessageType.ERROR);
     }
