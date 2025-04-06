@@ -44,8 +44,8 @@ public class RetryPolicy {
                 logger.logWarning("Could not run after "
                         + maxRetries
                         + " failed attempts. Exception: "
-                        + e.getClass() + " "
-                        + e.getCause() + " "
+                        + e.getClass() + " \n"
+                        + e.getCause() + " \n"
                         + e.getMessage()));
     }
 
@@ -60,7 +60,7 @@ public class RetryPolicy {
                         + maxRetries
                         + " failed attempts. Exception: "
                         + e.getMessage()
-                        + " "
+                        + ". \n"
                         + exceptionMessage));
     }
 
