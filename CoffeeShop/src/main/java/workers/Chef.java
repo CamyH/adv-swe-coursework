@@ -165,11 +165,7 @@ public class Chef extends Staff<String> {
 
             if (currentItem == null) continue;
 
-            try {
-                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-            } catch (InterruptedException e) {
-                logger.logSevere("InterruptedException in Chef.run: " + e.getMessage());
-            }
+            delay(logger);
 
             try {
                 System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));

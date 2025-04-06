@@ -2,6 +2,7 @@ package workers;
 
 import client.SimUIModel;
 import interfaces.Observer;
+import logs.CoffeeShopLogger;
 import order.Order;
 import java.util.UUID;
 
@@ -120,5 +121,16 @@ public abstract class Staff<T> extends Thread implements Observer {
      */
     public static boolean hasClientService(Order order) {
         return order.getClientService() != null;
+    }
+
+    /**
+     * Helper Method to add a delay
+     */
+    public void delay(CoffeeShopLogger logger) {
+        try {
+                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
+            } catch (InterruptedException e) {
+                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
+            }
     }
 }

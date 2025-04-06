@@ -179,11 +179,7 @@ public class Barista extends Staff<String> {
 
             if (currentItem == null) continue;
 
-            try {
-                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-            } catch (InterruptedException e) {
-                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
-            }
+            delay(logger);
 
             try {
                 logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
