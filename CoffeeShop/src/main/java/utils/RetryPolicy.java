@@ -30,7 +30,7 @@ public class RetryPolicy {
             // This tells the Consumer what to do if the rery
             // logic fails, in this case we want to throw an exception
             // below we want to log
-            throw new RuntimeException("Could not retry after " + maxRetries + " attempts failed", e);
+            throw new RuntimeException("Could not retry after " + maxRetries + " failed attempts", e);
         });
     }
 
