@@ -141,6 +141,7 @@ public class SimUIView extends JFrame implements Observer {
         }
         String[] curStaffParts = selectedItem.split(", ", 3);
         return UUID.fromString(curStaffParts[2]);
+
     }
 
     public int getSimSliderValue() {

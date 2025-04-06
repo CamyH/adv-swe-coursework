@@ -19,7 +19,7 @@ public class SimUIModel extends Subject implements Observer {
     private final OrderList orderList;
     private final ArrayList<String> roles;
     private final StaffList staffList;
-    private ArrayList<UUID> popupList;
+    private ArrayList<StaffPopupController> popupList;
     private static int simSpeed;
 
     /**
@@ -98,11 +98,7 @@ public class SimUIModel extends Subject implements Observer {
      */
     public String getStaffDetails(UUID ID) {
         synchronized (staffList) {
-            Staff s = staffList.getStaff(ID);
-
-            if (s == null) return null;
-
-            return s.getCurrentOrderDetails();
+            return staffList.getStaff(ID).getCurrentOrderDetails();
         }
     }
 
@@ -118,21 +114,27 @@ public class SimUIModel extends Subject implements Observer {
     }
 
     /**
-     * When a staff popup GUI is created this keep track of the currently opened popups
-     *
-     * @param popup The UUID of the staff member to be added to the popup list
+     * Adds the selected popup controller to the list of current staff details popups
+     * @param popup the Controller of the popup UI that is to be added
      */
-    public void addPopup(UUID popup) {
+    public void addPopup(StaffPopupController popup) {
         popupList.add(popup);
     }
 
     /**
-     *
-     * @param popup
-     * @return
+     * Check to see id the given staff ID has a related staff details popup currently open
+     * @param ID the ID of the selected staff
+     * @return true if the staff has a related popup open, false if not
      */
-    public boolean checkPopup(UUID popup) {
-        return popupList.contains(popup);
+    public boolean checkPopup(UUID ID) {
+        for (StaffPopupController p : popupList) {
+            if (p.getID().equals(ID)) {
+                System.out.println(true);
+                return true;
+            }
+        }
+        System.out.println(false);
+        return false;
     }
 
     /**
@@ -161,11 +163,20 @@ public class SimUIModel extends Subject implements Observer {
         notifyObservers();
     }
 
-    public void removePopup(UUID popup) {
-        popupList.remove(popup);
-    }
-
+    /**
+     * Remove the selected staff from the staffList, closes their details popup if one exists and then gets rid of the staff object
+     * @param ID the ID of the staff to be removed
+     */
     public void removeStaff(UUID ID) {
+
+        // If the staff has a details popup open, close the details popup
+        for (StaffPopupController p : popupList) {
+            if (p.getID().equals(ID)) {
+                popupList.remove(p);
+                staffList.remove(ID);
+                p.close();
+            }
+        }
         staffList.remove(ID);
     }
 
