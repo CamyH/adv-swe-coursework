@@ -1,6 +1,7 @@
 package client;
 
 import logs.CoffeeShopLogger;
+import utils.RetryPolicy;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,18 +13,24 @@ import java.net.Socket;
 public class ClientApp {
     private static final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     public static void main(String[] args) {
-        try {
-            Socket clientSocket = new Socket("localhost", 9876);
-            CustomerModel customerModel = new CustomerModel();
-            CustomerView view = new CustomerView();
-            Client client = new Client(clientSocket, view, customerModel);
-            logger.logInfo("Connected to server");
-            Demo demo = new Demo();
-            client.startListening();
-            demo.showCustomerGUI(client);
+        RetryPolicy.retryAndCustomLog(ClientApp::startClient,
+                3,
+                "Server is not running, client is unable to connect"
+        );
+    }
 
-        } catch (IOException e) {
-            logger.logSevere("Error in client: " + e.getClass() + " " + e.getCause() + " " + e.getMessage());
-        }
+    /**
+     * Attempts to start the client
+     * and connect to the server
+     */
+    private static void startClient() throws IOException {
+        Socket clientSocket = new Socket("localhost", 9876);
+        CustomerModel customerModel = new CustomerModel();
+        CustomerView view = new CustomerView();
+        Client client = new Client(clientSocket, view, customerModel);
+        logger.logInfo("Connected to server");
+        Demo demo = new Demo();
+        client.startListening();
+        demo.showCustomerGUI(client);
     }
 }
