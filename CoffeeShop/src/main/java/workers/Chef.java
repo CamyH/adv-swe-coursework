@@ -77,7 +77,7 @@ public class Chef extends Staff<String> {
      * @return Boolean representing whether completion was a success
      */
     @Override
-    public synchronized boolean completeCurrentOrder() {
+    public boolean completeCurrentOrder() {
         currentItem.getKey().addItem(currentItem.getValue().foodItem());
         currentItem = null;
         return true;
