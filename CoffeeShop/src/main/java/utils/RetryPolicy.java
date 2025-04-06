@@ -30,7 +30,7 @@ public class RetryPolicy {
             // This tells the Consumer what to do if the rery
             // logic fails, in this case we want to throw an exception
             // below we want to log
-            throw new RuntimeException("Could not retry after " + maxRetries + " failed attempts", e);
+            throw new RuntimeException("Could not run after " + maxRetries + " failed attempts", e);
         });
     }
 
@@ -41,12 +41,27 @@ public class RetryPolicy {
      */
     public static void retryAndLog(ThrowingRunnable task, int maxRetries) {
         retry(task, maxRetries, (e) ->
-                logger.logWarning("Could not retry after "
+                logger.logWarning("Could not run after "
                         + maxRetries
-                        + " attempts failed. Exceptoion: "
+                        + " failed attempts. Exception: "
                         + e.getClass() + " "
                         + e.getCause() + " "
                         + e.getMessage()));
+    }
+
+    /**
+     * Run a task with retry logic and log the failure instead of throwing
+     * @param task the task to run
+     * @param maxRetries max number of retries
+     */
+    public static void retryAndCustomLog(ThrowingRunnable task, int maxRetries, String exceptionMessage) {
+        retry(task, maxRetries, (e) ->
+                logger.logSevere("Could not retry after "
+                        + maxRetries
+                        + " failed attempts. Exception: "
+                        + e.getMessage()
+                        + " "
+                        + exceptionMessage));
     }
 
     /**
