@@ -40,6 +40,7 @@ public class CustomerController implements ActionListener {
         view.getRemoveLastItemButton().addActionListener(this);
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
+        view.getEnterCustomerNameBtn().addActionListener(this);
         view.getOnlineOrderCheckBox().addActionListener(this);
 
         // Initialize view with menu data
@@ -77,7 +78,7 @@ public class CustomerController implements ActionListener {
      * Handles changing customer name
      */
     private void handleCustomerNameInput() {
-        String customerName = view.getEnterCustomerNameBtn().getText().trim();
+        String customerName = view.getCustomerNameField().getText().trim();
 
         if (customerName.isEmpty()) {
             view.showPopup("Customer Name is Empty");
