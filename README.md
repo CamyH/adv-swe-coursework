@@ -60,6 +60,28 @@ Once the project is built, you can run the main application:
 
 java -jar CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar
 
+<h2 align="center">How to Run the System?</h2>
+
+<h3>Single-Machine Setup (Testing/Local Use)</h2>
+
+#### Run the Server (Demo Class):
+ * Execute Demo.java first to start the server.
+
+#### Run the Client (ClientApp Class):
+ * Launch ClientApp.java to connect the client interface to the local server.
+
+<h3>Multi-Machine Setup (Live Environment)</h2>
+
+#### On the Server Machine:
+ * Run Demo.java—this will act as the central order-processing system.
+
+#### On Client Machines:
+ * Run ClientApp.java on each device; they will automatically detect and connect to the server over the network.
+
+<h3> Notes </h3>
+
+* Ensure all machines are on the same network for automatic server detection.
+* If connection issues arise, verify firewall settings and IP configurations.
 
 <h2 align="center">Repository Structure</h2>
 
