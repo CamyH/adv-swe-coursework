@@ -1,11 +1,9 @@
 package client;
 
-import exceptions.DuplicateOrderException;
+import customer.Customer;
 import exceptions.InvalidItemIDException;
-import exceptions.InvalidOrderException;
 import utils.SoundPlayer;
 
-import javax.swing.*;
 import logs.CoffeeShopLogger;
 import utils.RetryPolicy;
 
@@ -23,6 +21,7 @@ public class CustomerController implements ActionListener {
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
     private final Client client;
+    private final Customer customer;
 
     /**
      * Initializes the Controller with View and Model
@@ -32,6 +31,7 @@ public class CustomerController implements ActionListener {
         this.client = client;
         this.view = view;
         this.model = customerModel;
+        this.customer = new Customer();
 
         // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
