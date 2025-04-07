@@ -1,5 +1,7 @@
 package client;
 
+import utils.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -60,6 +62,7 @@ public class CustomerView extends JFrame {
             addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
+                    SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
                     Demo.cleanUp();
                 }
             });
@@ -77,6 +80,8 @@ public class CustomerView extends JFrame {
             // Set scroll bars to always be visible
             itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             orderDetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            orderDetailsField.setText("Current Order: \n");
 
             // Initialize fields
             totalCostField.setText("£0.00");

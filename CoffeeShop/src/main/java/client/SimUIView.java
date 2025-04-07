@@ -1,6 +1,7 @@
 package client;
 
 import interfaces.Observer;
+import utils.SoundPlayer;
 import workers.StaffList;
 
 import javax.swing.*;
@@ -97,6 +98,7 @@ public class SimUIView extends JFrame implements Observer {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
                 Demo.cleanUp();
             }
         });
@@ -241,15 +243,15 @@ public class SimUIView extends JFrame implements Observer {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                // Refresh sim speed related fields
-                setSimSpeed();
+            // Refresh sim speed related fields
+            setSimSpeed();
 
-                // Refresh the Staff list
-                setStaffList(simModel.getStaffList());
+            // Refresh the Staff list
+            setStaffList(simModel.getStaffList());
 
-                // Refresh the Order lists
-                setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
-                return null;
+            // Refresh the Order lists
+            setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
+            return null;
             }
         };
         worker.execute();

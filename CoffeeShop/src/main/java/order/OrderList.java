@@ -10,8 +10,10 @@ import interfaces.Subject;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import logs.CoffeeShopLogger;
+import utils.SoundPlayer;
 
 import static java.lang.Thread.sleep;
 
@@ -198,7 +200,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         completeOrders.add(order);
         notifyObservers();
         logger.logInfo("Order completed: " + order.getOrderID());
-        java.awt.Toolkit.getDefaultToolkit().beep();
+        SoundPlayer.playSound(SoundPlayer.SoundType.ORDER_COMPLETE);
     }
 
     /**
@@ -252,7 +254,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     }
 
     /**
-     * Method used to return details of uncompleted orders as a string array
+     * Method used to return details of either all or completed orders as a string array
      *
      * @param completed represents whether to return a string array of completed or incomplete orders
      * @return a String array with each entry formatted as below
@@ -262,7 +264,13 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         Collection<Order> c = completeOrders;
 
         if (!completed) {
-            c = allOrders.stream().flatMap(Collection::stream).toList();
+            c = Stream.of(
+                            simulationOrders.stream(),
+                            completeOrders.stream(),
+                            allOrders.stream().flatMap(Collection::stream)
+                    )
+                    .flatMap(s -> s)
+                    .toList();
         }
 
         String[] orderString = new String[c.size()];
@@ -337,7 +345,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         double discountCost = 0;
         double numOrders = 0;
 
-        for (Order o : allOrders.stream().flatMap(Collection::stream).toList()) {
+        for (Order o : completeOrders) {
             ArrayList<String> string = o.getDetails();
 
             totalCost += o.getTotalCost();

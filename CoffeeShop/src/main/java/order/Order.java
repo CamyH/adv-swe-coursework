@@ -8,6 +8,7 @@ import item.ItemList;
 import server.ClientService;
 import utils.Discount;
 import utils.DiscountDataStructure;
+import utils.SoundPlayer;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -131,6 +132,7 @@ public class Order implements Serializable {
         }
 
         if (orderDetails.add(itemID)) {
+            SoundPlayer.playSound(SoundPlayer.SoundType.NEW_ITEM_ADD);
             calculateTotalCost();  // Recalculate the total cost after adding an item
             calculateDiscountedCost();
         }

@@ -11,7 +11,7 @@ public class StaffPopupModel extends Subject implements Observer {
 
     private final ArrayList<Observer> observers = new ArrayList<Observer>();
 
-    UUID staffID;
+    private UUID staffID;
     private final SimUIModel simModel;
     private String details;
     private final StaffList staffList;
@@ -31,6 +31,7 @@ public class StaffPopupModel extends Subject implements Observer {
 
     public void update() {
         details = simModel.getStaffDetails(staffID);
+
         notifyObservers();
     }
 

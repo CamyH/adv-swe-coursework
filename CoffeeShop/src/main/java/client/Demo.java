@@ -5,11 +5,13 @@ import item.Item;
 import item.Item;
 import item.ItemFileReader;
 import item.ItemList;
+import logs.CoffeeShopLogger;
 import order.OrderFileReadWrite;
 import services.NotificationService;
 import order.OrderList;
 import utils.Discount;
 import utils.GenerateReportFileWriter;
+import utils.SoundPlayer;
 import workers.StaffList;
 import workers.Waiter;
 
@@ -35,11 +37,14 @@ public class Demo {
     private static Console console;
     private static SimUIController simController;
     private CustomerModel customerModel;
+    private static CoffeeShopLogger coffeeShopLogger;
 
     /**
      * Initialises and Empty ItemList and OrderList
      */
-    public Demo() {}
+    public Demo() {
+        coffeeShopLogger = CoffeeShopLogger.getInstance();
+    }
 
     /**
      * Runs the Console Code
@@ -59,6 +64,9 @@ public class Demo {
         customerController = new CustomerController(view, client, customerModel);
     }
 
+    /**
+     * Starts the Simulation GUI
+     */
     public void showSimUI(INotificationService notificationService) {
         loadMenuAndOrdersFromFile();
         simModel = new SimUIModel(notificationService);
@@ -70,8 +78,9 @@ public class Demo {
      * Starts the whole system
      */
     public static void main(String[] args) {
-        // Start Services Here
+        
         INotificationService notificationService = new NotificationService();
+        SoundPlayer.playSound(SoundPlayer.SoundType.STARTUP);
 
         Demo demo = new Demo();
 
@@ -98,6 +107,7 @@ public class Demo {
      * Closes the GUI
      */
     static void demoCloseGUI() {
+        SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
         System.out.println("Goodbye.");
         view.closeGUI();
         simController.close();
@@ -109,18 +119,18 @@ public class Demo {
     }
 
     /**
-     * Writes to order txt file
+     * Shuts down the system as necessary
      */
-    static void demoWriteOrders() {
+    static void cleanUp() {
+        System.out.println("Goodbye.");
+
+        Waiter.addBackAllCurrentOrders();
+
         try {
             orderReader.writeToFile();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            coffeeShopLogger.logSevere("Unable to Write to Orders.txt file");
         }
-    }
-
-    static void cleanUp() {
-        System.out.println("Goodbye.");
 
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();

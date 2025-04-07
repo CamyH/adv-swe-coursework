@@ -115,7 +115,7 @@ public class Barista extends Staff<String> {
         StringBuilder itemDetails = new StringBuilder();
 
         itemDetails.append("Staff Name : ").append(this.getWorkerName()).append("\n");
-        itemDetails.append("Staff Type : ").append("Chef").append("\n");
+        itemDetails.append("Staff Type : ").append("Barista").append("\n");
         itemDetails.append("Staff Experience Level : ").append(this.getExperience()).append("\n");
 
         if (currentItem == null) {

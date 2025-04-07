@@ -103,16 +103,16 @@ public class CustomerModel {
     }
 
     /**
-     * Retrieves the details of the menu items.
+     * Retrieves menu details as an array of strings.
      *
-     * @return an array of menu item details
+     * @return an array of strings containing menu item details
      */
     public String[] getMenuDetails() {
         return itemList.getMenuDetails();
     }
 
     /**
-     * Retrieves the details of the current order.
+     * Retrieves details of the current order as a list of strings.
      *
      * @return a list of order details (items, total cost, etc.)
      */

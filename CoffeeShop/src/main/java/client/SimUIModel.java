@@ -63,7 +63,6 @@ public class SimUIModel extends Subject implements Observer {
         roles.add("Chef");
     }
 
-    // Getter methods
     /**
      * Gets the current simulation speed in milliseconds
      *
@@ -74,23 +73,28 @@ public class SimUIModel extends Subject implements Observer {
     }
 
     /**
-     * Returns a string representation of the current orders
+     * Method that returns the order list to be displayed in each scroll pane
      *
-     * @param state whether to display online orders only
-     * @return formatted string of current orders
+     * @param state Which order list the simulation should return? Online, In person or Complete Orders
+     * @return a string to be displayed in each scroll pane representing each type of order list
      */
     public String getOrderList(int state) {
         return orderList.getOrdersForDisplay(state);
     }
 
+    /**
+     * Method to return the currently processed orders to be displayed
+     *
+     * @return The current orders that are being processed to be displayed in the GUI
+     */
     public String getCurrentOrders() {
         return Waiter.getCurrentOrdersForDisplay();
     }
 
     /**
-     * Gets the available staff roles in the simulation
+     * Method to return all the available staff roles to be displayed
      *
-     * @return list of role names
+     * @return an Array List of all available staff roles
      */
     public ArrayList<String> getRoles() {
         return roles;
@@ -115,9 +119,6 @@ public class SimUIModel extends Subject implements Observer {
             return staffList.getStaff(ID).getCurrentOrderDetails();
         }
     }
-
-
-    // Setter methods
 
     /**
      * Sets the simulation speed and applies it to all staff
@@ -203,8 +204,9 @@ public class SimUIModel extends Subject implements Observer {
         for (StaffPopupController p : popupList) {
             if (p.getID().equals(ID)) {
                 popupList.remove(p);
-                staffList.remove(ID);
                 p.close();
+                staffList.remove(ID);
+                return;
             }
         }
         staffList.remove(ID);

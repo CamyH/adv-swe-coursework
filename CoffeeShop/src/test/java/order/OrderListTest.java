@@ -281,8 +281,8 @@ public class OrderListTest {
             second.addItem("PSY1");
             newOrderList.add(second);
 
-//            newOrderList.remove(first.getOrderID());
-//            newOrderList.remove(second.getOrderID());
+            newOrderList.remove(first.getOrderID());
+            newOrderList.remove(second.getOrderID());
         }
         catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
