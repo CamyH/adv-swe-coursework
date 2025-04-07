@@ -67,6 +67,7 @@ public class SimUIController {
                     simModel.addStaff(name, simView.getStaffRole(), simView.getStaffExp());
                     SwingUtilities.invokeLater(() -> simView.showPopup("Added " + name + " to Staff List"));
                     simView.clearCurStaff();
+                    simView.setStaffList(simModel.getStaffList());
                 } catch (StaffNullNameException e) {
                     SwingUtilities.invokeLater(() -> simView.showPopup("Please insert a staff name"));
                 }
@@ -95,6 +96,7 @@ public class SimUIController {
                     name = simView.getStaffName();
                     simModel.removeStaff(simView.getCurStaff());
                     simView.showPopup("Removed " + name + " from Staff List");
+                    simView.setStaffList(simModel.getStaffList());
                 } catch (NullPointerException e) {
                     simView.showPopup("No Staff to Remove");
                 }

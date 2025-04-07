@@ -201,7 +201,7 @@ public class SimUIView extends JFrame implements Observer {
      * Write the staff list to the staff drop down menu, with each item in the form (name,role,ID)
      * @param staffList the list off current staff
      */
-    private void setStaffList(StaffList staffList) {
+    public void setStaffList(StaffList staffList) {
         SwingUtilities.invokeLater(() -> {
             SelectStaffCombo.removeAllItems();
 
@@ -246,8 +246,8 @@ public class SimUIView extends JFrame implements Observer {
             // Refresh sim speed related fields
             setSimSpeed();
 
-            // Refresh the Staff list
-            setStaffList(simModel.getStaffList());
+                // Refresh the Staff list
+//                setStaffList(simModel.getStaffList());
 
             // Refresh the Order lists
             setOrderLists(simModel.getOrderList(0), simModel.getOrderList(1), simModel.getOrderList(2), simModel.getCurrentOrders());
