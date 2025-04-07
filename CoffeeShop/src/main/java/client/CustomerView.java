@@ -43,6 +43,9 @@ public class CustomerView extends JFrame {
     private JCheckBox onlineOrderCheckBox;
     private JPanel dailySpecialPanel;
     private JTextArea dailySpecialTextArea;
+    private JLabel enterCustomerNameText;
+    private JTextField enterCustomerNameInput;
+    private JButton enterCustomerNameBtn;
 
     /**s
      * Sets up the View (GUI)
