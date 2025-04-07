@@ -84,7 +84,7 @@ public class CustomerController implements ActionListener {
             return;
         }
 
-//        customer.setName(customerName);
+        customer.setName(customerName);
     }
 
     /**
@@ -92,6 +92,11 @@ public class CustomerController implements ActionListener {
      */
     private void handleSubmitOrder() {
         try {
+            if (customer.getName() == null) {
+                view.showPopup("Please Enter Name");
+                return;
+            }
+
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);
