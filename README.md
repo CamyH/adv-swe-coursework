@@ -16,6 +16,12 @@ The Coffee Shop Simulation project is designed to simulate the opening, operatio
 * Discount Functionality: Apply discounts to orders.
 * Exception Handling: Custom exceptions to handle invalid orders, items, and operations.
 * Order List Management: Maintain a list of orders and manage them efficiently.
+* Real-time order processing
+* Networked multi-station support
+* Real-time Loggers to keep  track of whats happening.
+* Daily Specials Feature with its discount as top priority,
+* Auditory feedback system (custom sounds for actions)
+  
 
 <h2 align="center">Technologies Used</h2>
 
