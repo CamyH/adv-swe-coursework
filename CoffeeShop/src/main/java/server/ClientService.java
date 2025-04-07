@@ -70,6 +70,8 @@ public class ClientService implements Runnable, OrderObserver {
 
                     Order receivedOrder = receiveOrder(object);
 
+                    System.out.println(receivedOrder.getCustomerName());
+
                     receivedOrder.setClientService(this);
 
                     logger.logInfo("Order " + receivedOrder.getOrderID());

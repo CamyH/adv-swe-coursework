@@ -39,7 +39,6 @@ public class StaffPopupController implements Observer {
 
         update();
         simModel.addPopup(this);
-        System.out.println(staffID);
     }
 
     public void update() {

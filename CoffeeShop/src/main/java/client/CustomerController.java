@@ -100,6 +100,8 @@ public class CustomerController implements ActionListener {
                 return;
             }
 
+            model.getCurrentOrder().getCustomer().setName(customer.getName());
+
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);
