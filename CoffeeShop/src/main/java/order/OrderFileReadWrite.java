@@ -34,6 +34,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                 // Write the orders to the order file
                 for (String order : ordersToWrite) {
                     writer.write(order + ',');
+                    System.out.println(order);
                     writer.newLine();
                 }
 

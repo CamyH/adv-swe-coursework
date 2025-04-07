@@ -367,4 +367,13 @@ public class Order implements Serializable {
     public String getCustomerName() {
         return customer.getName();
     }
+
+    /**
+     * Method to return the Order's customer object
+     *
+     * @return Customer object
+     */
+    public Customer getCustomer() {
+        return customer;
+    }
 }

@@ -63,7 +63,8 @@ public class OrderFileReadWriteTest {
         // Arrange
         OrderFileReadWrite fileWriter = new OrderFileReadWrite(tempFile);
         OrderList orders = SetupOrderFile.generateOrderList();
-
+        for (int i = 0; i < orders.getQueueSize(false); i++) {
+        }
         // Act
         fileWriter.writeToFile();
         fileWriter.readFile();

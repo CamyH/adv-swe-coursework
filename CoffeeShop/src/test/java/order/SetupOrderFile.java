@@ -28,6 +28,7 @@ public class SetupOrderFile {
             first.addItem("RL2");
             first.addItem("SD4");
             first.addItem("PSY5");
+            first.getCustomer().setName("Fraser");
             orderList.add(first);
 
             Order o = new Order();
@@ -35,6 +36,7 @@ public class SetupOrderFile {
             o.addItem("HD4");
             o.addItem("SD7");
             o.addItem("PSY1");
+            o.getCustomer().setName("Fraser");
             orderList.add(o);
 
             o = new Order();
@@ -42,12 +44,14 @@ public class SetupOrderFile {
             o.addItem("HD5");
             o.addItem("RL1");
             o.addItem("SD1");
+            o.getCustomer().setName("Fraser");
             orderList.add(o);
 
             o = new Order();
             o.addItem("RL3");
             o.addItem("HD1");
             o.addItem("PSY2");
+            o.getCustomer().setName("Fraser");
             orderList.add(o);
 
             o = new Order();
@@ -56,6 +60,7 @@ public class SetupOrderFile {
             o.addItem("SCK4");
             o.addItem("HD5");
             o.addItem("SCK7");
+            o.getCustomer().setName("Fraser");
             orderList.add(o);
 
             o = new Order();
@@ -65,6 +70,7 @@ public class SetupOrderFile {
             o.addItem("SD8");
             o.addItem("PSY4");
             o.addItem("SCK6");
+            o.getCustomer().setName("Fraser");
             orderList.add(o);
         } catch (InvalidOrderException | InvalidItemIDException | DuplicateOrderException e) {
             System.out.println(e.getMessage());
