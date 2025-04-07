@@ -1,11 +1,13 @@
 package client;
 
-import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import utils.SoundPlayer;
 
 import javax.swing.*;
+import logs.CoffeeShopLogger;
+import utils.RetryPolicy;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,17 +17,19 @@ import java.awt.event.ActionListener;
  * @author Caelan Mackenzie
  */
 public class CustomerController implements ActionListener {
-
     private final CustomerView view;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
+    private final Client client;
 
     /**
      * Initializes the Controller with View and Model
      * @param view The View component
      */
-    public CustomerController(CustomerView view) {
+    public CustomerController(CustomerView view, Client client, CustomerModel customerModel) {
+        this.client = client;
         this.view = view;
-        this.model = new CustomerModel();
+        this.model = customerModel;
 
         // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
@@ -62,7 +66,6 @@ public class CustomerController implements ActionListener {
         }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
             handleOnlineOrderToggle();
         }
-
     }
 
     /**
@@ -70,6 +73,10 @@ public class CustomerController implements ActionListener {
      */
     private void handleSubmitOrder() {
         try {
+            RetryPolicy.retryOnFailure(() ->
+                            client.sendOrder(model.getCurrentOrder()),
+                    3);
+            model.submitOrder();
             boolean isOnline = model.isOnlineOrder();
             boolean orderAdded = model.submitOrder();
 
@@ -81,11 +88,12 @@ public class CustomerController implements ActionListener {
                         "In-store order has been submitted";
                 view.showPopup(message);
                 updateView();
-            } else {
-                view.showPopup("Order could not be placed - Please Try Again Later");
-            }
-        } catch (InvalidOrderException | DuplicateOrderException e) {
-            view.showPopup(e.getMessage());
+        } catch (Exception e) {
+            logger.logSevere("Failed to submit order: "
+                    + e.getClass() + " "
+                    + e.getCause() + " "
+                    + e.getMessage());
+            view.showPopup("Order could not be placed - Please Try Again Later");
         }
     }
 
@@ -104,8 +112,6 @@ public class CustomerController implements ActionListener {
      */
     private void handleAddItem() {
         String itemID = view.getItemIDField().getText().trim();
-
-        // Guard clause
         if (itemID.isEmpty()) {
             view.showPopup("Please Input an Item ID");
             return;
@@ -149,7 +155,6 @@ public class CustomerController implements ActionListener {
      * Handles application exit
      */
     private void handleExit() {
-        Demo.demoCloseGUI();  // Existing demo functionality
         view.showPopup("Good Bye!");
         view.closeGUI();
     }
@@ -161,7 +166,6 @@ public class CustomerController implements ActionListener {
         boolean isSelected = view.getOnlineOrderCheckBox().isSelected();
         model.setOnlineOrder(isSelected);
 
-        // Update UI based on order type
         if (isSelected) {
             view.showPopup("Online order selected. Delivery charges may apply.");
         }

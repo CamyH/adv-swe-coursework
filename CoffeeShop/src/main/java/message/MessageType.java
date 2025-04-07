@@ -18,7 +18,7 @@ public enum MessageType {
     /**
      * Indicates that the order has been completed.
      */
-    ORDER_COMPLETED("Order Complete"),
+    ORDER_COMPLETE("Order Complete"),
 
     /**
      * Indicates an error occurred with the order.

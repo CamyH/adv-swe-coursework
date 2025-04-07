@@ -1,9 +1,12 @@
 package client;
 
+import interfaces.INotificationService;
+import item.Item;
 import item.Item;
 import item.ItemFileReader;
 import item.ItemList;
 import order.OrderFileReadWrite;
+import services.NotificationService;
 import order.OrderList;
 import utils.Discount;
 import utils.GenerateReportFileWriter;
@@ -24,7 +27,6 @@ import java.util.Random;
  * @author Caelan Mackenzie
  */
 public class Demo {
-
     private static OrderFileReadWrite orderReader;
     private static ItemFileReader itemReader;
     private static CustomerView view;
@@ -33,11 +35,13 @@ public class Demo {
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
+    private CustomerModel customerModel;
 
     /**
      * Initialises and Empty ItemList and OrderList
      */
     public Demo() {}
+
     /**
      * Runs the Console Code
      */
@@ -49,13 +53,16 @@ public class Demo {
     /**
      * Starts the GUI
      */
-    public void showGUI() {
+    public void showCustomerGUI(Client client) {
         view = new CustomerView();
-        customerController = new CustomerController(view);
+        customerModel = new CustomerModel();
+        setDailySpecial();
+        customerController = new CustomerController(view, client, customerModel);
     }
 
-    public void showSimUI(){
-        simModel = new SimUIModel();
+    public void showSimUI(INotificationService notificationService) {
+        loadMenuAndOrdersFromFile();
+        simModel = new SimUIModel(notificationService);
         simView = new SimUIView(simModel);
         simController =  new SimUIController(simView, simModel);
     }
@@ -64,26 +71,13 @@ public class Demo {
      * Starts the whole system
      */
     public static void main(String[] args) {
+        
+        INotificationService notificationService = new NotificationService();
         SoundPlayer.playSound(SoundPlayer.SoundType.STARTUP);
+
         Demo demo = new Demo();
 
-        itemReader = new ItemFileReader("menu.txt");
-        try {
-            itemReader.readFile();
-            setDailySpecial();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        orderReader = new OrderFileReadWrite("orders.txt");
-        try {
-            orderReader.readFile();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        demo.showGUI();
-        demo.showSimUI();
+        demo.showSimUI(notificationService);
         demo.showConsole();
     }
 
@@ -133,5 +127,32 @@ public class Demo {
 
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");
         generateReportFileWriter.writeToFile();
+    }
+
+    /**
+     * Loads menu items and customer orders from order and menu files
+     * <p>
+     * This method uses {@code ItemFileReader} to read the menu from {@code menu.txt}
+     * and {@code OrderFileReadWrite} to load existing orders from {@code orders.txt}
+     * </p>
+     *
+     * <p>
+     * Throws a {@code RuntimeException} if either file is not found
+     * </p>
+     */
+    private void loadMenuAndOrdersFromFile() {
+        itemReader = new ItemFileReader("menu.txt");
+        try {
+            itemReader.readFile();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        orderReader = new OrderFileReadWrite("orders.txt");
+        try {
+            orderReader.readFile();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

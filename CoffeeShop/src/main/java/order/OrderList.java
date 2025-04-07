@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import interfaces.Observer;
-
 import logs.CoffeeShopLogger;
 import utils.SoundPlayer;
 
@@ -77,22 +75,25 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * Eg will be used when a new Order has been placed
      *
      * @param order The order to be added to the queue
+     * @return True if order successfully added, false otherwise
+     * @throws InvalidOrderException if the order is incorrect
+     * @throws DuplicateOrderException if the order already exists
      */
     @Override
-    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {            
+    public synchronized boolean add(Order order) throws InvalidOrderException, DuplicateOrderException {
         if (allOrders.getFirst().size() + allOrders.getLast().size() >= maxQueueSize) {
             logger.logWarning("Order queue is full. Cannot add new order.");
             return false;
         }
 
-        if (order == null) {
-            logger.logSevere("Invalid order: Order details cannot be null");
-            throw new InvalidOrderException("Order details cannot be null");
+        if (Order.isInvalidOrder(order)) {
+            logger.logSevere("Invalid order: Order or Order ID cannot be null");
+            throw new InvalidOrderException("Order or Order ID cannot be null");
         }
 
-        if (order.getDetails().isEmpty()) {
-            logger.logSevere("Invalid order: Order details cannot be empty");
-            throw new InvalidOrderException("Order details cannot be empty");
+        if (Order.isOrderDetailsNullOrEmpty(order)) {
+            logger.logSevere("Invalid order: Order must contain at least one item");
+            throw new InvalidOrderException("Order must contain at least one item");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
@@ -102,14 +103,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
 
         logger.logInfo("Order added to queue: " + order.getOrderID());
 
-        boolean success;
-
-        if (order.getOnlineStatus()) {
-            success = allOrders.getLast().offer(order);
-        }
-        else {
-            success = allOrders.getFirst().offer(order);
-        }
+        boolean success = order.getOnlineStatus() ? allOrders.getLast().offer(order) : allOrders.getFirst().offer(order);
 
         notifyObservers();
 
@@ -191,10 +185,10 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         if (o == null) {
             return null;
         }
-        
+
         notifyObservers();
         notifyAll();
-        
+
         return o;
     }
 
@@ -235,7 +229,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      * @param orderID The UUID of the order to be retrieved
      * @return An Order Object
      */
-    public Order getOrder(UUID orderID) throws InvalidOrderException {
+    public synchronized Order getOrder(UUID orderID) throws InvalidOrderException {
         /**
          * Combines the two queues from the array list into one stream
          * Saves having to use nested for loops
