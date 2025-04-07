@@ -2,9 +2,11 @@ package workers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import interfaces.INotificationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 /**
  * JUnit tests for Staff class and Staff Factory
@@ -13,11 +15,14 @@ import org.junit.jupiter.api.Test;
  */
 class WaiterTest {
 
-    Staff staff;
+    private Staff staff;
+
+    @Mock
+    private INotificationService notificationService;
 
     @BeforeEach
     void setUp() {
-        staff = StaffFactory.getStaff("waiter", "Bob", 1);
+        staff = StaffFactory.getStaff("waiter", "Bob", 1, notificationService);
     }
 
     @AfterEach
@@ -32,18 +37,18 @@ class WaiterTest {
     void testPriority() {
         assertEquals(0.8, ((Waiter) staff).getWaiterPriority());
 
-        Staff a = StaffFactory.getStaff("waiter", "Bob", 1);
+        Staff a = StaffFactory.getStaff("waiter", "Bob", 1, notificationService);
 
         assertEquals(Math.pow(0.8, 2), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 2) + ( ( 0.8 - Math.pow(0.8, 2) ) * 2 ) / ( 2 - 1 )), ((Waiter) a).getWaiterPriority());
 
-        Staff b = StaffFactory.getStaff("waiter", "Bill", 2);
+        Staff b = StaffFactory.getStaff("waiter", "Bill", 2, notificationService);
 
         assertEquals(Math.pow(0.8, 3), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 3) + ( ( 0.8 - Math.pow(0.8, 3) ) * 2 ) / ( 3 - 1 )), ((Waiter) a).getWaiterPriority());
         assertEquals((((Waiter) a).getWaiterPriority() + ( ( 0.8 - Math.pow(0.8, 3) ) * 2 ) / ( 3 - 1 )), ((Waiter) b).getWaiterPriority());
 
-        Staff c = StaffFactory.getStaff("waiter", "Fraser", 3);
+        Staff c = StaffFactory.getStaff("waiter", "Fraser", 3, notificationService);
 
         assertEquals(Math.pow(0.8, 4), ((Waiter) staff).getWaiterPriority());
         assertEquals((Math.pow(0.8, 4) + ( ( 0.8 - Math.pow(0.8, 4) ) * 2 ) / ( 4 - 1 )), ((Waiter) a).getWaiterPriority());
@@ -65,6 +70,6 @@ class WaiterTest {
      */
     @Test
     void testStaffFactory() {
-        assertInstanceOf(Waiter.class, StaffFactory.getStaff("waiter", "John", 2));
+        assertInstanceOf(Waiter.class, StaffFactory.getStaff("waiter", "John", 2, notificationService));
     }
 }

@@ -1,9 +1,15 @@
 package workers;
 
 import exceptions.InvalidItemIDException;
+import interfaces.INotificationService;
 import item.ItemList;
 import logs.CoffeeShopLogger;
+import order.DrinkItem;
 import order.DrinkList;
+import order.Order;
+import order.OrderList;
+import server.ClientService;
+
 import java.util.Map;
 
 /**
@@ -21,25 +27,29 @@ import java.util.Map;
  * @author Fraser Holman
  */
 public class Barista extends Staff<String> {
-    DrinkList drinkList;
+    private final DrinkList drinkList;
 
-    ItemList itemList;
+    private final ItemList itemList;
 
-    StaffList staffList;
+    private final StaffList staffList;
 
     /** Holds a single entry representing the current processed item and the corresponding waiter */
-    Map.Entry<Waiter, String> currentItem;
+    private Map.Entry<Waiter, DrinkItem> currentItem;
 
-    /** Tells if the staff member is currently active (ie not fired) */
+    /**
+     * Tells if the staff member is currently active (ie not fired)
+     */
     private boolean active = true;
 
-    /** Logger instance */
-    private CoffeeShopLogger logger;
+    /**
+     * Logger instance
+     */
+    private final CoffeeShopLogger logger;
 
     /**
      * Constructor to set up barista
      *
-     * @param name Name of Barista
+     * @param name       Name of Barista
      * @param experience Experience level of barista
      */
     public Barista(String name, int experience) {
@@ -54,7 +64,6 @@ public class Barista extends Staff<String> {
 
     /**
      * Method gets next drink in drink list
-     *
      * If there are no drinks left to process the Staff member thread will be left in the waiting state until notified
      */
     @Override
@@ -66,8 +75,7 @@ public class Barista extends Staff<String> {
                 synchronized (this) {
                     wait();
                 }
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -80,7 +88,7 @@ public class Barista extends Staff<String> {
      */
     @Override
     public boolean completeCurrentOrder() {
-        currentItem.getKey().addItem(currentItem.getValue());
+        currentItem.getKey().addItem(currentItem.getValue().drinkItem());
         currentItem = null;
         return true;
     }
@@ -92,12 +100,12 @@ public class Barista extends Staff<String> {
      */
     @Override
     public String getCurrentOrder() {
-        return currentItem.getValue();
+        return currentItem.getValue().drinkItem();
     }
 
     /**
      * This method will be used to display current order details on the GUI
-     *
+     * <p>
      * Will return a list of items in the order. This can be further customised depending on what we want to show
      *
      * @return ArrayList of Current Order Details
@@ -118,7 +126,7 @@ public class Barista extends Staff<String> {
         itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
 
         try {
-            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue())).append("\n");
+            itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue().drinkItem())).append("\n");
         } catch (InvalidItemIDException e) { // this will never happen
             itemDetails.append("Item Description : ").append("ERROR LOADING ITEMS").append("\n");
             System.out.println(e.getMessage());
@@ -168,15 +176,10 @@ public class Barista extends Staff<String> {
 
             if (currentItem == null) continue;
 
-            try {
-                sleep((int) (defaultDelay * ((6.0 - getExperience()) / 5.0)));
-            } catch (InterruptedException e) {
-                logger.logSevere("InterruptedException in Waiter.run: " + e.getMessage());
-            }
+            delay(logger);
 
             try {
-                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue()));
+                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
             }
             catch (InvalidItemIDException e) {
                 System.out.println(e.getMessage());
