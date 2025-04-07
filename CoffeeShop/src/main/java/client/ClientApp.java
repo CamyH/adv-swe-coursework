@@ -31,6 +31,6 @@ public class ClientApp {
         logger.logInfo("Connected to server");
         Demo demo = new Demo();
         client.startListening();
-        demo.showCustomerGUI(client);
+        demo.showCustomerGUI(client, view);
     }
 }
