@@ -1,5 +1,6 @@
 package client;
 
+import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import utils.SoundPlayer;
@@ -17,6 +18,7 @@ import java.awt.event.ActionListener;
  * @author Caelan Mackenzie
  */
 public class CustomerController implements ActionListener {
+
     private final CustomerView view;
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
@@ -66,6 +68,7 @@ public class CustomerController implements ActionListener {
         }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
             handleOnlineOrderToggle();
         }
+
     }
 
     /**
