@@ -85,6 +85,8 @@ public class CustomerController implements ActionListener {
         }
 
         customer.setName(customerName);
+
+        view.showPopup("Customer Name Inputted");
     }
 
     /**
