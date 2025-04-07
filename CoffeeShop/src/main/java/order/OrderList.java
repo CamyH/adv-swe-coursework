@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import logs.CoffeeShopLogger;
+import utils.SoundPlayer;
 
 import static java.lang.Thread.sleep;
 
@@ -199,7 +200,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
         completeOrders.add(order);
         notifyObservers();
         logger.logInfo("Order completed: " + order.getOrderID());
-        java.awt.Toolkit.getDefaultToolkit().beep();
+        SoundPlayer.playSound(SoundPlayer.SoundType.ORDER_COMPLETE);
     }
 
     /**
