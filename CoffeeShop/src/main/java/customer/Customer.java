@@ -12,11 +12,9 @@ public class Customer {
 
     /**
      * Constructs a new Customer with a generated UUID
-     * @param name Customer's name
      */
-    public Customer(String name) {
+    public Customer() {
         this.customerId = UUID.randomUUID();
-        this.name = name;
     }
 
     /**
