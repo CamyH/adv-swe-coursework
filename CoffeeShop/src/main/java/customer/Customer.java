@@ -1,12 +1,13 @@
 package customer;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Customer class
  * Stores details about a customer
  */
-public class Customer {
+public class Customer implements Serializable {
     private final UUID customerId;
     private String name;
 
