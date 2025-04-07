@@ -74,19 +74,19 @@ java -jar CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar
 
 <h3>Single-Machine Setup (Testing/Local Use)</h2>
 
-1. #### Run the Server (Demo Class):
-    Execute Demo.java first to start the server.
+1. #### Run the Server:
+    Launch CoffeeShop.jar first to start the server.
 
-2. #### Run the Client (ClientApp Class):
-    Launch ClientApp.java to connect the client interface to the local server.
+2. #### Run the Client:
+    Launch ClientApp.jar to connect the client interface to the local server.
 
 <h3>Multi-Machine Setup (Live Environment)</h2>
 
 1. #### On the Server Machine:
-    Run Demo.java—this will act as the central order-processing system.
+    Launch CoffeeShop.jar - this will act as the central order-processing system.
 
 2. #### On Client Machines:
-     Run ClientApp.java on each device; they will automatically detect and connect to the server over the network.
+     Launch ClientApp.jar on each device; they will automatically detect and connect to the server over the network.
 
 <h3> Notes </h3>
 
@@ -99,9 +99,8 @@ The repository is split mainly into coursework and src files. The src files cont
 
 * [Coursework](https://github.com/CamyH/adv-swe-coursework)
   * [CoffeeShop/](CoffeeShop)  # Codebase
-    * [out/artifacts/CoffeeShop_jar/](CoffeeShop/out/artifacts/CoffeeShop_jar)   # jar file to run the application
+    * [out/artifacts/CoffeeShop_jar/](CoffeeShop/out/artifacts/CoffeeShop_jar)   # jar file to run the server
       * [files/](CoffeeShop/out/artifacts/CoffeeShop_jar/files)  # txt files
-      * [CoffeeShop.jar](CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar)   # App to run
      * [src/](CoffeeShop/src)    # source files
        * [main/](CoffeeShop/src/main)
          * [java/](CoffeeShop/src/main/java)
