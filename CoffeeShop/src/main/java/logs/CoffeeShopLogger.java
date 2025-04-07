@@ -3,6 +3,7 @@ package logs;
 import item.ItemList;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -17,21 +18,17 @@ public class CoffeeShopLogger {
     private static CoffeeShopLogger instance;
 
     private CoffeeShopLogger() {
-        try {
-            // Create and configure the FileHandler
-            createFileHandler();
+        // Create and configure the FileHandler
+        createFileHandler();
 
-            // Set the log level
-            logger.setLevel(Level.ALL); // Log all levels (INFO, WARNING, SEVERE, etc.)
-        } catch (IOException e) {
-            System.err.println(e + e.getMessage());
-        }
+        // Set the log level
+        logger.setLevel(Level.ALL); // Log all levels (INFO, WARNING, SEVERE, etc.)
     }
 
 /**
      * Creates and configures the FileHandler for logging to a file.
      */
-    private void createFileHandler() throws IOException {
+    private void createFileHandler() {
         // Check if the FileHandler is already added
         for (Handler handler : logger.getHandlers()) {
             if (handler instanceof FileHandler) {
@@ -41,11 +38,27 @@ public class CoffeeShopLogger {
 
         // Create the FileHandler if not added already
         ConsoleHandler consoleHandler = new ConsoleHandler();
-        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true);
-        fileHandler.setLevel(Level.ALL);
-        fileHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(fileHandler);
-        //logger.addHandler(consoleHandler);
+
+        FileHandler fileHandler;
+
+        try {
+            fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true);
+            fileHandler.setLevel(Level.ALL);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            //logger.addHandler(consoleHandler);
+        }
+        catch (IOException e) {
+            try {
+                fileHandler = new FileHandler("files/coffee_shop.log", true);
+                fileHandler.setLevel(Level.ALL);
+                fileHandler.setFormatter(new SimpleFormatter());
+                logger.addHandler(fileHandler);
+            }
+            catch (IOException e1) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     public static CoffeeShopLogger getInstance() {
