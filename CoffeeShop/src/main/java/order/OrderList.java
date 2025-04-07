@@ -317,7 +317,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
 
         for (Order o : c) {
             String s = String.format("%s,%s,%s",
-                    o.getOrderID().toString(),
+                    o.getCustomerName(),
                     o.getTimestamp().toString(),
                     String.join(";", o.getDetails())
             );
