@@ -64,19 +64,19 @@ java -jar CoffeeShop/out/artifacts/CoffeeShop_jar/CoffeeShop.jar
 
 <h3>Single-Machine Setup (Testing/Local Use)</h2>
 
-#### Run the Server (Demo Class):
- * Execute Demo.java first to start the server.
+1. #### Run the Server (Demo Class):
+    Execute Demo.java first to start the server.
 
-#### Run the Client (ClientApp Class):
- * Launch ClientApp.java to connect the client interface to the local server.
+2. #### Run the Client (ClientApp Class):
+    Launch ClientApp.java to connect the client interface to the local server.
 
 <h3>Multi-Machine Setup (Live Environment)</h2>
 
-#### On the Server Machine:
- * Run Demo.java—this will act as the central order-processing system.
+1. #### On the Server Machine:
+    Run Demo.java—this will act as the central order-processing system.
 
-#### On Client Machines:
- * Run ClientApp.java on each device; they will automatically detect and connect to the server over the network.
+2. #### On Client Machines:
+     Run ClientApp.java on each device; they will automatically detect and connect to the server over the network.
 
 <h3> Notes </h3>
 
@@ -136,13 +136,27 @@ This project includes junit tests for all the classes to ensure that the core fu
 
 _To run the tests, use Maven or Gradle commands listed above._
 
+<h2 align="center">Design Patterns Used</h2>
+
+1. Singleton
+2. Dependency Injection
+3. Retry Pattern
+4. Factory
+5. Model-View-Controller (MVC)
+6. Observer
+7. Producer/Consumer
+8. Client/Server
+9. Object Pool
+
+
+
 <h2 align="center">Contributors</h2>
 
-*	__Akash Poonia:__ Responsible for developing the Item class and handling its associated exceptions.
-*	__Mohd Faiz:__ Oversees the creation of the Order class and its exception handling.
-*	__Fraser Holman:__ Develops the ItemList and OrderList classes, including their associated interfaces.
-*	__Cameron Hunt:__ Manages the FileManager component and implements discount logic.
-*	__Caelan Mackenzie:__ Leads the development of the demo, console interface, and initial UI design.
+*	__Akash Poonia__ 
+*	__Mohd Faiz__ 
+*	__Fraser Holman__ 
+*	__Cameron Hunt__ 
+*	__Caelan Mackenzie__ 
 
 
 
