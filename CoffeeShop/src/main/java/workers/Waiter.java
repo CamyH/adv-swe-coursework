@@ -205,26 +205,15 @@ public class Waiter extends Staff<Order> {
      * Method to add order back to order list if waiter is removed during operation
      */
     public void addBackOrder() {
-        if (getCurrentOrder() != null) {
-            try {
-                OrderList.getInstance().add(getCurrentOrder());
-            } catch (InvalidOrderException | DuplicateOrderException e) {
-                logger.logSevere(e.getCause() + " " + e.getMessage());
-            }
-        }
+        addBackOrder(this);
     }
 
+    /**
+     * Method to add all the current orders back to the Order List
+     */
     public static void addBackAllCurrentOrders() {
-        ArrayList<Order> allOrders = new ArrayList<>();
-
         for (Waiter waiter : waiterList) {
-            try {
-                if (waiter.getCurrentOrder() != null) {
-                    OrderList.getInstance().add(waiter.getCurrentOrder());
-                }
-            } catch (InvalidOrderException | DuplicateOrderException e) {
-                logger.logSevere(e.getCause() + " " + e.getMessage());
-            }
+            addBackOrder(waiter);
         }
     }
 
@@ -332,6 +321,21 @@ public class Waiter extends Staff<Order> {
         }
 
         return orderString.toString();
+    }
+
+    /**
+     * Method to return the current order back to the order list
+     *
+     * @param waiter The waiter to have the order added back to the Order List
+     */
+    private static void addBackOrder(Waiter waiter) {
+        if (waiter.getCurrentOrder() == null) return;
+
+        try {
+            OrderList.getInstance().add(waiter.getCurrentOrder());
+        } catch (InvalidOrderException | DuplicateOrderException e) {
+            logger.logSevere(e.getCause() + " " + e.getMessage());
+        }
     }
 
     /**
