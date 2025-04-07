@@ -87,6 +87,7 @@ public class CustomerController implements ActionListener {
                         "In-store order has been submitted";
                 view.showPopup(message);
                 updateView();
+            }
         } catch (Exception e) {
             logger.logSevere("Failed to submit order: "
                     + e.getClass() + " "
