@@ -76,7 +76,6 @@ public class CustomerController implements ActionListener {
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);
-            model.submitOrder();
             boolean isOnline = model.isOnlineOrder();
             boolean orderAdded = model.submitOrder();
 
