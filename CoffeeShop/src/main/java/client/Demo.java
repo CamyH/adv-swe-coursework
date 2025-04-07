@@ -57,8 +57,7 @@ public class Demo {
     /**
      * Starts the GUI
      */
-    public void showCustomerGUI(Client client) {
-        view = new CustomerView();
+    public void showCustomerGUI(Client client, CustomerView view) {
         customerModel = new CustomerModel();
         setDailySpecial();
         customerController = new CustomerController(view, client, customerModel);
@@ -78,7 +77,6 @@ public class Demo {
      * Starts the whole system
      */
     public static void main(String[] args) {
-        
         INotificationService notificationService = new NotificationService();
         SoundPlayer.playSound(SoundPlayer.SoundType.STARTUP);
 

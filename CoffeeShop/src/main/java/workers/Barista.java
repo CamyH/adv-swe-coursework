@@ -88,6 +88,13 @@ public class Barista extends Staff<String> {
      */
     @Override
     public boolean completeCurrentOrder() {
+        try {
+            logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
+        }
+        catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
+        }
+
         currentItem.getKey().addItem(currentItem.getValue().drinkItem());
         currentItem = null;
         return true;
@@ -123,7 +130,7 @@ public class Barista extends Staff<String> {
             return itemDetails.toString();
         }
 
-        itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
+        itemDetails.append("Item ID : ").append(currentItem.getValue().drinkItem()).append("\n");
 
         try {
             itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue().drinkItem())).append("\n");
@@ -149,6 +156,7 @@ public class Barista extends Staff<String> {
      */
     @Override
     public synchronized void removeStaff() {
+        if (currentItem != null) drinkList.add(currentItem);
         drinkList.removeObserver(this);
         active = false;
         staffList.remove(this.getID());
@@ -178,14 +186,8 @@ public class Barista extends Staff<String> {
 
             delay(logger);
 
-            try {
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().drinkItem()));
-            }
-            catch (InvalidItemIDException e) {
-                System.out.println(e.getMessage());
-            }
+            if (active) completeCurrentOrder();
 
-            completeCurrentOrder();
             staffList.notifyObservers();
         }
     }

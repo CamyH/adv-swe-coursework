@@ -1,11 +1,9 @@
 package client;
 
-import exceptions.DuplicateOrderException;
+import customer.Customer;
 import exceptions.InvalidItemIDException;
-import exceptions.InvalidOrderException;
 import utils.SoundPlayer;
 
-import javax.swing.*;
 import logs.CoffeeShopLogger;
 import utils.RetryPolicy;
 
@@ -23,6 +21,7 @@ public class CustomerController implements ActionListener {
     private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
     private final CustomerModel model;
     private final Client client;
+    private final Customer customer;
 
     /**
      * Initializes the Controller with View and Model
@@ -32,6 +31,7 @@ public class CustomerController implements ActionListener {
         this.client = client;
         this.view = view;
         this.model = customerModel;
+        this.customer = new Customer();
 
         // Set up action listeners
         view.getSubmitOrderButton().addActionListener(this);
@@ -40,6 +40,7 @@ public class CustomerController implements ActionListener {
         view.getRemoveLastItemButton().addActionListener(this);
         view.getRemoveItemButton().addActionListener(this);
         view.getExitButton().addActionListener(this);
+        view.getEnterCustomerNameBtn().addActionListener(this);
         view.getOnlineOrderCheckBox().addActionListener(this);
 
         // Initialize view with menu data
@@ -65,10 +66,28 @@ public class CustomerController implements ActionListener {
             handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
             handleExit();
-        }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
+        } else if (e.getSource() == view.getOnlineOrderCheckBox()) {
             handleOnlineOrderToggle();
+        } else if (e.getSource() == view.getEnterCustomerNameBtn()) {
+            handleCustomerNameInput();
         }
 
+    }
+
+    /**
+     * Handles changing customer name
+     */
+    private void handleCustomerNameInput() {
+        String customerName = view.getCustomerNameField().getText().trim();
+
+        if (customerName.isEmpty()) {
+            view.showPopup("Customer Name is Empty");
+            return;
+        }
+
+        customer.setName(customerName);
+
+        view.showPopup("Customer Name Inputted");
     }
 
     /**
@@ -76,6 +95,11 @@ public class CustomerController implements ActionListener {
      */
     private void handleSubmitOrder() {
         try {
+            if (customer.getName() == null) {
+                view.showPopup("Please Enter Name");
+                return;
+            }
+
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);

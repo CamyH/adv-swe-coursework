@@ -1,4 +1,5 @@
 package order;
+import customer.Customer;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
@@ -46,16 +47,18 @@ public class Order implements Serializable {
 
     private boolean onlineStatus;
     private ClientService clientService;
+    private final Customer customer;
 
     private Map<Set<ItemCategory>, Discount> discountsMap = new HashMap<>();
 
     /** Constructor for creating an Order with only the menu */
     public Order() throws InvalidOrderException {
         // Initialize fields
-        this.customerID = UUID.randomUUID(); // Generate a random UUID for customer ID
-        this.orderID = UUID.randomUUID();  // Generate a unique orderID
-        this.timestamp = LocalDateTime.now(); // Set the current timestamp
-        this.orderDetails = new ArrayList<>(); // Initialize order details as an empty list
+        this.customerID = UUID.randomUUID();
+        this.orderID = UUID.randomUUID();
+        this.customer = new Customer();
+        this.timestamp = LocalDateTime.now();
+        this.orderDetails = new ArrayList<>();
         this.menu = ItemList.getInstance();
         this.onlineStatus = false;
         this.clientService = null;
@@ -92,6 +95,7 @@ public class Order implements Serializable {
      */
     public Order(String orderID,
                  String customerID,
+                 String customerName,
                  LocalDateTime timestamp,
                  ArrayList<String> orderDetails,
                  ItemList menu,
@@ -99,7 +103,7 @@ public class Order implements Serializable {
 
         this.orderID = UUID.fromString(orderID);
         this.customerID = UUID.fromString(customerID);
-
+        this.customer = new Customer();
         this.timestamp = timestamp;
         this.orderDetails = orderDetails;
         this.onlineStatus = onlineStatus;
@@ -112,6 +116,8 @@ public class Order implements Serializable {
             throw new InvalidOrderException("Menu cannot be null.");
         }
         this.menu = menu;
+
+        this.customer.setName(customerName);
 
         discountsMap = Discount.createDiscounts();
 
@@ -352,5 +358,22 @@ public class Order implements Serializable {
      */
     public static boolean isOrderDetailsNullOrEmpty(Order order) {
         return order.getDetails() == null || order.getDetails().isEmpty();
+    }
+
+    /**
+     * Get the customer's name
+     * @return the name of the customer as a string
+     */
+    public String getCustomerName() {
+        return customer.getName();
+    }
+
+    /**
+     * Method to return the Order's customer object
+     *
+     * @return Customer object
+     */
+    public Customer getCustomer() {
+        return customer;
     }
 }

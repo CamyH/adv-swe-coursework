@@ -78,6 +78,13 @@ public class Chef extends Staff<String> {
      */
     @Override
     public boolean completeCurrentOrder() {
+        try {
+            System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
+            logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
+        } catch (InvalidItemIDException e) {
+            System.out.println(e.getMessage());
+        }
+
         currentItem.getKey().addItem(currentItem.getValue().foodItem());
         currentItem = null;
         return true;
@@ -103,7 +110,7 @@ public class Chef extends Staff<String> {
             return itemDetails.toString();
         }
 
-        itemDetails.append("Item ID : ").append(currentItem.getValue()).append("\n");
+        itemDetails.append("Item ID : ").append(currentItem.getValue().foodItem()).append("\n");
 
         try {
             itemDetails.append("Item Description : ").append(itemList.getDescription(currentItem.getValue().foodItem())).append("\n");
@@ -138,6 +145,7 @@ public class Chef extends Staff<String> {
      */
     @Override
     public synchronized void removeStaff() {
+        if (currentItem != null) foodList.add(currentItem);
         foodList.removeObserver(this);
         active = false;
         staffList.remove(this.getID());
@@ -167,14 +175,8 @@ public class Chef extends Staff<String> {
 
             delay(logger);
 
-            try {
-                System.out.println(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
-                logger.logInfo(getWorkerName() + " completed item " + itemList.getDescription(currentItem.getValue().foodItem()));
-            }
-            catch (InvalidItemIDException e) {
-                System.out.println(e.getMessage());
-            }
-            completeCurrentOrder();
+            if (active) completeCurrentOrder();
+
             staffList.notifyObservers();
         }
     }

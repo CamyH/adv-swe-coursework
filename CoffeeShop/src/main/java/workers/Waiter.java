@@ -54,7 +54,7 @@ public class Waiter extends Staff<Order> {
         orderList.registerObserver(this);
         waiterList.add(this);
         thisOrder = new ArrayList<>();
-        StaffList staffList = StaffList.getInstance();
+        staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
     }
@@ -166,6 +166,7 @@ public class Waiter extends Staff<Order> {
         }
 
         orderDetails.append("Order ID : ").append(currentOrder.getOrderID()).append("\n");
+        orderDetails.append("Customer Name : ").append(currentOrder.getCustomerName()).append("\n");
         orderDetails.append("Customer ID : ").append(currentOrder.getCustomerID()).append("\n");
 
         for (String itemID : currentOrder.getDetails()) {
@@ -247,8 +248,8 @@ public class Waiter extends Staff<Order> {
         while (thisOrder.size() != currentOrder.getDetails().size()) {
             try {
                 synchronized (this) {
-                    wait();
                     notificationService.sendOrderProcessingNotification(currentOrder.getOrderID(), currentOrder.getClientService());
+                    wait();
                 }
             } catch (InterruptedException e) {
                 logger.logSevere(e.getCause() + " " + e.getMessage());
@@ -261,9 +262,11 @@ public class Waiter extends Staff<Order> {
      *
      * @param item ItemID of completed item
      */
-    public synchronized void addItem(String item) {
-        thisOrder.add(item);
-        notifyAll();
+    public void addItem(String item) {
+        synchronized (this) {
+            thisOrder.add(item);
+            notifyAll();
+        }
     }
 
     /**
@@ -311,7 +314,7 @@ public class Waiter extends Staff<Order> {
 
             if (o != null) {
                 String s = String.format("%s,%s,%s",
-                        o.getOrderID().toString(),
+                        o.getCustomerName(),
                         o.getTimestamp().toString(),
                         String.join(";", o.getDetails())
                 );
