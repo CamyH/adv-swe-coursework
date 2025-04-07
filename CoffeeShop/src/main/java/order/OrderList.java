@@ -41,7 +41,7 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
     private static OrderList instance;
 
     /** Integer to check max queue size */
-    private int maxQueueSize = 50;
+    private int maxQueueSize = 15;
 
     /** Logger instance */
     private final CoffeeShopLogger logger;
