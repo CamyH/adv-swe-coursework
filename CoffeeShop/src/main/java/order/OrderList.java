@@ -121,21 +121,16 @@ public class OrderList extends Subject implements EntityList<Order, UUID>, Seria
      */
     public boolean addSimulation(Order order) throws InvalidOrderException, DuplicateOrderException {
         if (order == null) {
-            logger.logSevere("Invalid order: Order details cannot be null");
             throw new InvalidOrderException("Order details cannot be null");
         }
 
         if (order.getDetails().isEmpty()) {
-            logger.logSevere("Invalid order: Order details cannot be empty");
             throw new InvalidOrderException("Order details cannot be empty");
         }
 
         if (allOrders.stream().anyMatch(queue -> queue.contains(order)) || completeOrders.contains(order)) {
-            logger.logWarning("Duplicate order detected: " + order.getOrderID());
             throw new DuplicateOrderException("Duplicate Order");
         }
-
-        logger.logInfo("Order added to queue: " + order.getOrderID());
 
         return simulationOrders.add(order);
     }

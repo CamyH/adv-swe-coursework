@@ -57,6 +57,7 @@ public class Waiter extends Staff<Order> {
         staffList = StaffList.getInstance();
         staffList.add(this);
         updatePriority();
+        logger.logInfo("Waiter " + getWorkerName() + " added to the simulation.");
     }
 
     /**

@@ -60,6 +60,7 @@ public class Barista extends Staff<String> {
         drinkList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
+        logger.logInfo("Barista " + getWorkerName() + " added to the simulation.");
     }
 
     /**

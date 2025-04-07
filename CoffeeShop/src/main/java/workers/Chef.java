@@ -49,6 +49,7 @@ public class Chef extends Staff<String> {
         foodList.registerObserver(this);
         staffList = StaffList.getInstance();
         staffList.add(this);
+        logger.logInfo("Chef " + getWorkerName() + " added to the simulation.");
     }
 
     /**

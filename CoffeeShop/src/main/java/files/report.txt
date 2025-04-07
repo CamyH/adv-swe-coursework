@@ -19,7 +19,6 @@ b45c948f-57db-4d72-86d9-3976b7034af0,a992f0a9-ef72-44fa-bfb5-9775c9077255,Alexan
 38ad4707-32f9-4b35-b4ed-54f9bb174b0b,bd39bce3-3a41-489b-b4d6-87397622bb5b,Noah,2025-04-02T07:20:58.432093,SD4;SD2;RL1,false
 d8b6506b-eefb-47b7-b060-5def8b7bddd2,cf22425d-11d2-439f-802a-74e9cf5565db,Amelia,2025-03-30T18:25:22.141976,HD3;FD3;SD4;SD1;RL4;SD2;SD9;PSY1,true
 962567d5-1fc9-430e-ae22-9af96a9d6603,ce0af802-054a-4267-a62b-c009f63bd5a4,Noah,2025-03-30T06:15:22.142533,PSY1;SD9;SCK8;SD6,false
-8db3eac8-bdb6-4ed1-b62a-025fd3a13571,574cbc69-e70b-4fe1-b3f4-e4a82ba0cc06,BilllyBob,2025-04-07T14:38:45.903250800,SD4,true
 -----------------------
 Number of Items Ordered
 -----------------------
@@ -42,7 +41,7 @@ HD7 = 1
 SD1 = 1
 SD2 = 3
 SD3 = 5
-SD4 = 4
+SD4 = 3
 SD5 = 2
 SD6 = 2
 SD7 = 2
@@ -64,10 +63,10 @@ PSY5 = 1
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £239.40
-Total Income (Including Discounts) : £196.45
-Total Orders : 19
-Average Spend Per Order (Excluding Discounts) : £12.60
-Average Spend Per Order (Including Discounts) : £10.34
+Total Income (Excluding Discounts) : £236.90
+Total Income (Including Discounts) : £193.95
+Total Orders : 18
+Average Spend Per Order (Excluding Discounts) : £13.16
+Average Spend Per Order (Including Discounts) : £10.78
 =======================
 
