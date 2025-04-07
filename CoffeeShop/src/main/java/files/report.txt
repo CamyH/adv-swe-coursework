@@ -1,73 +1,54 @@
 =======================
 Current Order Details
 -----------------------
-b60015d1-7385-4c94-9033-54ab958ca816,7915b635-7c56-48ee-b312-58b9c71b51c6,Charles,2025-04-07T00:31:24.026119100,RL2,true
-d8086658-48ad-4ad5-8dc3-2f38a958ce32,2d5aade4-e2c7-4356-86fa-18470d9c9308,Lewis,2025-04-04T23:13:45.514123200,FD3,true
-4bf4c6a0-155d-4995-b3d3-878530c34f54,c479af83-fde3-4bcf-8808-6b0423176728,Liam,2025-04-04T23:15:32.473513,FD5;SD7,true
-30e6db05-59f2-481b-9a78-af4abdc8bdec,7562dcc9-20e5-4511-ac1e-a53c7c288be7,Fraser,2025-04-07T00:31:09.332452200,RL1,false
-165259fc-7ba3-49fe-894c-d08cdcf0f42a,c21c177f-c4db-4dbc-8780-d51f4cc0fba8,Lando,2025-04-04T23:15:13.677847500,SCK3;RL4,false
-9f939e0c-742b-4978-9031-6ba6cb2db185,45c617d7-b3b9-414e-8a9b-62a57b8dd055,Carlos,2025-04-04T23:15:43.468505700,FD3;SD2,true
-7978c727-4300-40fd-bb36-4a467735ebba,8b51e0aa-c369-408e-971e-c41fcebdae48,Alexander,2025-04-04T23:23:01.843426100,HD3;HD2;HD1;SD3;FD4;FD5;RL2;SCK4,false
-57be7e90-ee8b-47f3-a20a-696b150a3016,e4e0f901-9e19-47d9-ad05-6eba542c4d3f,Noah,2025-04-06T13:47:24.800276,SD8;SD3;SCK3;HD7;HD2;HD3;SD4;SCK6;PSY3,true
-9f1ff139-77b0-4274-bc55-bbe4dd2e9d87,b8d0dace-c41f-47c5-a11c-3432ff356ee4,Sophia,2025-04-03T20:46:24.800561,PSY4;HD5;PSY5,false
-27474c65-0696-4b75-b63b-d8923460b8f5,1eff2a90-0e74-48db-9296-cb9e37884b39,Mia,2025-03-28T22:02:24.800635,SCK8;SCK5;SCK1;PSY1;SCK3;FD4;SD3;SD7,true
-08ada520-2f4b-438e-9e18-dcb195017022,52b600a7-81cf-4c1b-a1b2-c5ee9eaa6b9e,Olivia,2025-04-06T17:02:24.800717,SD9;HD6;SD5;PSY1,false
-7c9841c4-4656-46e0-850d-a8abee882eeb,08e4bbb2-2c88-4fca-8087-717a4ca46a50,Ethan,2025-04-05T14:16:24.800774,SD3;HD4;HD3,false
-b45c948f-57db-4d72-86d9-3976b7034af0,a992f0a9-ef72-44fa-bfb5-9775c9077255,Alexander,2025-04-01T23:36:58.432852,HD4;FD1;PSY1;SD6;SD3;SCK1;FD4;HD1,true
-66df972f-ac24-44b9-94db-ddd476f55185,c1bc55dc-3108-4058-bb9a-0dff4d524aa2,Ethan,2025-03-30T05:36:58.431782,FD2;FD4;SCK4;SCK5;SCK3;FD5;RL3;HD6,false
-36e933d3-af1c-4100-ac0d-8e21de97f620,3d73fa81-438a-4d8c-9931-5a5a72036d30,Alexander,2025-03-30T00:22:58.433969,RL1;PSY3;PSY4;SCK2;FD2;HD3;SCK4;SCK8;SD8;SD5,true
-38ad4707-32f9-4b35-b4ed-54f9bb174b0b,bd39bce3-3a41-489b-b4d6-87397622bb5b,Noah,2025-04-02T07:20:58.432093,SD4;SD2;RL1,false
-d8b6506b-eefb-47b7-b060-5def8b7bddd2,cf22425d-11d2-439f-802a-74e9cf5565db,Amelia,2025-03-30T18:25:22.141976,HD3;FD3;SD4;SD1;RL4;SD2;SD9;PSY1,true
-962567d5-1fc9-430e-ae22-9af96a9d6603,ce0af802-054a-4267-a62b-c009f63bd5a4,Noah,2025-03-30T06:15:22.142533,PSY1;SD9;SCK8;SD6,false
-8db3eac8-bdb6-4ed1-b62a-025fd3a13571,574cbc69-e70b-4fe1-b3f4-e4a82ba0cc06,BilllyBob,2025-04-07T14:38:45.903250800,SD4,true
 -----------------------
 Number of Items Ordered
 -----------------------
-RL1 = 3
-RL2 = 2
-RL3 = 1
-RL4 = 2
-FD1 = 1
-FD2 = 2
-FD3 = 3
-FD4 = 4
-FD5 = 3
-HD1 = 2
-HD2 = 2
-HD3 = 5
-HD4 = 2
-HD5 = 1
-HD6 = 2
-HD7 = 1
-SD1 = 1
-SD2 = 3
-SD3 = 5
-SD4 = 4
-SD5 = 2
-SD6 = 2
-SD7 = 2
-SD8 = 2
-SD9 = 3
-SCK1 = 2
-SCK2 = 1
-SCK3 = 4
-SCK4 = 3
-SCK5 = 2
-SCK6 = 1
+RL1 = 0
+RL2 = 0
+RL3 = 0
+RL4 = 0
+FD1 = 0
+FD2 = 0
+FD3 = 0
+FD4 = 0
+FD5 = 0
+HD1 = 0
+HD2 = 0
+HD3 = 0
+HD4 = 0
+HD5 = 0
+HD6 = 0
+HD7 = 0
+SD1 = 0
+SD2 = 0
+SD3 = 0
+SD4 = 0
+SD5 = 0
+SD6 = 0
+SD7 = 0
+SD8 = 0
+SD9 = 0
+SCK1 = 0
+SCK2 = 0
+SCK3 = 0
+SCK4 = 0
+SCK5 = 0
+SCK6 = 0
 SCK7 = 0
-SCK8 = 3
-PSY1 = 5
+SCK8 = 0
+PSY1 = 0
 PSY2 = 0
-PSY3 = 2
-PSY4 = 2
-PSY5 = 1
+PSY3 = 0
+PSY4 = 0
+PSY5 = 0
 -----------------------
 Total Cost Breakdown
 -----------------------
-Total Income (Excluding Discounts) : £239.40
-Total Income (Including Discounts) : £196.45
-Total Orders : 19
-Average Spend Per Order (Excluding Discounts) : £12.60
-Average Spend Per Order (Including Discounts) : £10.34
+Total Income (Excluding Discounts) : £0.00
+Total Income (Including Discounts) : £0.00
+Total Orders : 0
+Average Spend Per Order (Excluding Discounts) : £0.00
+Average Spend Per Order (Including Discounts) : £0.00
 =======================
 
