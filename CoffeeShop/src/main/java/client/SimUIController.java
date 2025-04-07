@@ -21,10 +21,13 @@ public class SimUIController {
     private static SimUIController instance;
     private CoffeeShopLogger coffeeShopLogger;
 
+    /**
+     * Constructor to set up the Simulation UI Controller class
+     *
+     * @param simView The view related to the controller
+     * @param simModel The model related to the controller
+     */
     public SimUIController(SimUIView simView, SimUIModel simModel) {
-
-        System.out.println("SimUIController()");
-        System.out.println("-----------------------------------");
         this.simModel = simModel;
         this.simView = simView;
         coffeeShopLogger = CoffeeShopLogger.getInstance();
@@ -32,6 +35,9 @@ public class SimUIController {
         simView.addSimSpeedChangeListener(e -> updateSimSpeed());
     }
 
+    /**
+     * Method opens up new pop up gui window showing staff details
+     */
     private void viewStaffDetails() {
         SwingUtilities.invokeLater(() -> {
             try {
@@ -87,7 +93,6 @@ public class SimUIController {
             protected Void doInBackground() {
                 try {
                     name = simView.getStaffName();
-                    System.out.println(name);
                     simModel.removeStaff(simView.getCurStaff());
                     simView.showPopup("Removed " + name + " from Staff List");
                 } catch (NullPointerException e) {
@@ -104,12 +109,18 @@ public class SimUIController {
         worker.execute();
     }
 
-
+    /**
+     * Method to update the sim speed from the value shown on the view
+     */
     public void updateSimSpeed() {
         SwingUtilities.invokeLater(() -> simModel.setSimSpeed(simView.getSimSliderValue()));
     }
 
-    /** Send a message to the view to be sown as a popup */
+    /**
+     * Method to show a pop up message from the Controller Class
+     *
+     * @param msg Message to be shown on popup window
+     */
     public void message(String msg) {
         simView.showPopup(msg);
     }
@@ -137,6 +148,9 @@ public class SimUIController {
         }
     }
 
+    /**
+     * Method to close the gui
+     */
     public void close() {
         simView.close();
     }
