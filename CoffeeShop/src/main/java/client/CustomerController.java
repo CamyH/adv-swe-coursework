@@ -102,10 +102,14 @@ public class CustomerController implements ActionListener {
 
             model.getCurrentOrder().getCustomer().setName(customer.getName());
 
+            model.setOnlineStatus();
+
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);
-            model.submitOrder();
+
+            model.clearOrder();
+
             boolean isOnline = model.isOnlineOrder();
             SoundPlayer.playSound(SoundPlayer.SoundType.SUBMIT_ORDER);
             String message = isOnline ?

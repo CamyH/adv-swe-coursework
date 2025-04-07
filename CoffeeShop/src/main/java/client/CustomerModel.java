@@ -87,10 +87,14 @@ public class CustomerModel {
      * If the order is successfully added, a new order is created.
      *
      */
-    public void submitOrder() {
+    public void setOnlineStatus() {
         if (isOnlineOrder) currentOrder.setOnlineStatus();
-        // If we get this far then the order has been sent so we
-        // can clear the order on the customerGUI
+    }
+
+    /**
+     * Method to create a new empty order
+     */
+    public void clearOrder() {
         createNewOrder();
     }
 
