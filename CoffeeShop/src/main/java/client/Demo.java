@@ -135,13 +135,6 @@ public class Demo {
     }
 
     /**
-     * Shuts down the customer (client) system as necessary
-     */
-    public static void customerCleanUp() {
-        Waiter.addBackAllCurrentOrders();
-    }
-
-    /**
      * Loads menu items and customer orders from order and menu files
      * <p>
      * This method uses {@code ItemFileReader} to read the menu from {@code menu.txt}

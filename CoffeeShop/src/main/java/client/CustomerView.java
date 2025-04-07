@@ -66,7 +66,6 @@ public class CustomerView extends JFrame {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     SoundPlayer.playSound(SoundPlayer.SoundType.EXIT);
-                    Demo.customerCleanUp();
                 }
             });
 
