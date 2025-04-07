@@ -76,18 +76,14 @@ public class CustomerController implements ActionListener {
             RetryPolicy.retryOnFailure(() ->
                             client.sendOrder(model.getCurrentOrder()),
                     3);
+            model.submitOrder();
             boolean isOnline = model.isOnlineOrder();
-            boolean orderAdded = model.submitOrder();
-
-            if (orderAdded) {
-                SoundPlayer.playSound(SoundPlayer.SoundType.SUBMIT_ORDER);
-                Demo.demoWriteOrders();  // Existing demo functionality
-                String message = isOnline ?
+            SoundPlayer.playSound(SoundPlayer.SoundType.SUBMIT_ORDER);
+            String message = isOnline ?
                         "Online order has been submitted for delivery" :
                         "In-store order has been submitted";
                 view.showPopup(message);
                 updateView();
-            }
         } catch (Exception e) {
             logger.logSevere("Failed to submit order: "
                     + e.getClass() + " "
