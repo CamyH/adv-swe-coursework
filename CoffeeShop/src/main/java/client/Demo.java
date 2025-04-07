@@ -3,6 +3,7 @@ package client;
 import item.Item;
 import item.ItemFileReader;
 import item.ItemList;
+import logs.CoffeeShopLogger;
 import order.OrderFileReadWrite;
 import order.OrderList;
 import utils.Discount;
@@ -32,11 +33,14 @@ public class Demo {
     private static CustomerController customerController;
     private static Console console;
     private static SimUIController simController;
+    private static CoffeeShopLogger coffeeShopLogger;
 
     /**
      * Initialises and Empty ItemList and OrderList
      */
-    public Demo() {}
+    public Demo() {
+        coffeeShopLogger = CoffeeShopLogger.getInstance();
+    }
 
     /**
      * Runs the Console Code
@@ -119,19 +123,6 @@ public class Demo {
     }
 
     /**
-     * Writes to order txt file
-     */
-    static void demoWriteOrders() {
-        // is this a coursework requirement to write orders as they are added?
-        // think it will just be worth just writing to the file at the end with all the orders or adjust it to just append rather than overwrite
-//        try {
-//            orderReader.writeToFile();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-    }
-
-    /**
      * Shuts down the system as necessary
      */
     static void cleanUp() {
@@ -142,7 +133,7 @@ public class Demo {
         try {
             orderReader.writeToFile();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            coffeeShopLogger.logSevere("Unable to Write to Orders.txt file");
         }
 
         GenerateReportFileWriter generateReportFileWriter = new GenerateReportFileWriter("report.txt");

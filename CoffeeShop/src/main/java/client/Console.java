@@ -255,7 +255,6 @@ public class Console {
         try {
             if (orders.add(curOrder)) {
                 checkIfOnline(curOrder);
-                Demo.demoWriteOrders();
                 System.out.println("Order placed successfully");
             }
             else {

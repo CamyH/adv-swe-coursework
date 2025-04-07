@@ -72,7 +72,6 @@ public class CustomerController implements ActionListener {
             boolean orderAdded = model.submitOrder();
 
             if (orderAdded) {
-                Demo.demoWriteOrders();  // Existing demo functionality
                 String message = isOnline ?
                         "Online order has been submitted for delivery" :
                         "In-store order has been submitted";
