@@ -28,14 +28,15 @@ public class SoundPlayer {
                 String soundFile = getSoundFile(type);
                 InputStream audioSrc = SoundPlayer.class.getResourceAsStream("/files/" + soundFile);
 
-                if (audioSrc != null) {
-                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioSrc);
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(audioIn);
-                    clip.start();
-                } else {
+                if (audioSrc == null) {
                     java.awt.Toolkit.getDefaultToolkit().beep();
+                    return;
                 }
+
+                AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioSrc);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioIn);
+                clip.start();
             } catch (Exception e) {
                 System.err.println("Error playing sound: " + e.getMessage());
             }
