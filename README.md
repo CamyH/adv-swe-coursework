@@ -96,18 +96,25 @@ The repository is split mainly into coursework and src files. The src files cont
        * [main/](CoffeeShop/src/main)
          * [java/](CoffeeShop/src/main/java)
            * [client/](CoffeeShop/src/main/java/client) # GUI files
+           * [customer/](CoffeeShop/src/main/java/customer)
            * [exceptions/](CoffeeShop/src/main/java/exceptions)
            * [files/](CoffeeShop/src/main/java/files)  # txt files
            * [interfaces/](CoffeeShop/src/main/java/interfaces) 
-           * [item/](CoffeeShop/src/main/java/item) 
+           * [item/](CoffeeShop/src/main/java/item)
+           * [logs/](CoffeeShop/src/main/java/logs)
+           * [message/](CoffeeShop/src/main/java/message)
            * [order/](CoffeeShop/src/main/java/order)
+           * [server/](CoffeeShop/src/main/java/server)
+           * [services/](CoffeeShop/src/main/java/services)
            * [utils/](CoffeeShop/src/main/java/utils)
+           * [workers/](CoffeeShop/src/main/java/workers)
          * [resources/files/](CoffeeShop/src/main/resources/files)
        * [test/java/](CoffeeShop/src/test/java)   # All test classes
          * [client/](CoffeeShop/src/test/java/client)  # GUI and Console Test classes
          * [item](CoffeeShop/src/test/java/item)  # Item test classes
          * [order](CoffeeShop/src/test/java/order)  # Order test classes
          * [utils](CoffeeShop/src/test/java/utils)
+         * [workers/](CoffeeShop/src/test/java/workers)
   * [README.md](README.md)
   * [menu.txt](menu.txt)
 
