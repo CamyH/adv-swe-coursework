@@ -1,25 +1,21 @@
 package customer;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Customer class
  * Stores details about a customer
  */
-public class Customer {
+public class Customer implements Serializable {
     private final UUID customerId;
-    private final String firstName;
-    private final String lastName;
+    private String name;
 
     /**
      * Constructs a new Customer with a generated UUID
-     * @param firstName the customer's first name
-     * @param lastName the customer's last name
      */
-    public Customer(String firstName, String lastName) {
+    public Customer() {
         this.customerId = UUID.randomUUID();
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     /**
@@ -31,26 +27,19 @@ public class Customer {
     }
 
     /**
-     * Gets the customer's first name.
-     * @return the customer's first name {@link String}
+     * Gets the customer's name.
+     * @return the customer's name {@link String}
      */
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Gets the customer's last name.
-     * @return the customer's last name {@link String}
+     * Method to set a name for the customer
+     *
+     * @param name The customer's name
      */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Gets the full name of the customer, combining the first and last name.
-     * @return the customer's full name as a {@link String}
-     */
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

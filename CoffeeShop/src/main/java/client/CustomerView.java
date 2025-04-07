@@ -43,6 +43,9 @@ public class CustomerView extends JFrame {
     private JCheckBox onlineOrderCheckBox;
     private JPanel dailySpecialPanel;
     private JTextArea dailySpecialTextArea;
+    private JLabel enterCustomerNameText;
+    private JTextField enterCustomerNameInput;
+    private JButton enterCustomerNameBtn;
 
     /**s
      * Sets up the View (GUI)
@@ -76,6 +79,8 @@ public class CustomerView extends JFrame {
             displayMenuField.setDisabledTextColor(Color.BLACK);
             orderDetailsField.setEnabled(false);
             orderDetailsField.setDisabledTextColor(Color.BLACK);
+//            enterCustomerNameInput.setEnabled(true);
+//            enterCustomerNameInput.setDisabledTextColor(Color.BLACK);
 
             // Set scroll bars to always be visible
             itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -92,7 +97,6 @@ public class CustomerView extends JFrame {
     }
 
     private void initDailySpecialPanel() {
-
         SwingUtilities.invokeLater(() -> {
             dailySpecialTextArea.setEditable(false);
             dailySpecialTextArea.setLineWrap(true);
@@ -185,5 +189,13 @@ public class CustomerView extends JFrame {
 
     public JTextField getItemIDField() {
         return itemIDField;
+    }
+
+    public JTextField getCustomerNameField() {
+        return enterCustomerNameInput;
+    }
+
+    public JButton getEnterCustomerNameBtn() {
+        return enterCustomerNameBtn;
     }
 }

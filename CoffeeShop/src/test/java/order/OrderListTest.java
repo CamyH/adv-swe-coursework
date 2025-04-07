@@ -154,6 +154,7 @@ public class OrderListTest {
             first.addItem("RL2");
             first.addItem("SD4");
             first.addItem("PSY5");
+            first.getCustomer().setName("Fraser");
             newOrderList.add(first);
 
             second = new Order();
@@ -161,22 +162,25 @@ public class OrderListTest {
             second.addItem("HD4");
             second.addItem("SD7");
             second.addItem("PSY1");
+            second.getCustomer().setName("Fraser");
             newOrderList.add(second);
 
             newOrderList.remove(first.getOrderID());
             newOrderList.remove(second.getOrderID());
 
-            String s1 = String.format("%s,%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
+                    first.getCustomerName(),
                     first.getTimestamp().toString(),
                     "RL2;SD4;PSY5",
                     "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
+                    second.getCustomerName(),
                     second.getTimestamp().toString(),
                     "RL1;HD4;SD7;PSY1",
                     "false"
@@ -214,6 +218,7 @@ public class OrderListTest {
             first.addItem("RL2");
             first.addItem("SD4");
             first.addItem("PSY5");
+            first.getCustomer().setName("Fraser");
             orderList.add(first);
 
             second = new Order();
@@ -221,19 +226,22 @@ public class OrderListTest {
             second.addItem("HD4");
             second.addItem("SD7");
             second.addItem("PSY1");
+            second.getCustomer().setName("Fraser");
             orderList.add(second);
 
-            String s1 = String.format("%s,%s,%s,%s,%s",
+            String s1 = String.format("%s,%s,%s,%s,%s,%s",
                     first.getOrderID().toString(),
                     first.getCustomerID(),
+                    first.getCustomerName(),
                     first.getTimestamp().toString(),
                     "RL2;SD4;PSY5",
                     "false"
             );
 
-            String s2 = String.format("%s,%s,%s,%s,%s",
+            String s2 = String.format("%s,%s,%s,%s,%s,%s",
                     second.getOrderID().toString(),
                     second.getCustomerID(),
+                    second.getCustomerName(),
                     second.getTimestamp().toString(),
                     "RL1;HD4;SD7;PSY1",
                     "false"

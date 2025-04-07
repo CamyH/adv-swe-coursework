@@ -34,6 +34,7 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                 // Write the orders to the order file
                 for (String order : ordersToWrite) {
                     writer.write(order + ',');
+                    System.out.println(order);
                     writer.newLine();
                 }
 
@@ -62,17 +63,20 @@ public class OrderFileReadWrite extends AbstractFileManager<OrderList, OrderList
                 if (line.trim().isEmpty()) continue;
 
                 String[] lineData = line.split(",");
-                String[] itemIds = lineData[3].split(";");
+                String[] itemIds = lineData[4].split(";");
 
                 UUID.fromString(lineData[0]);
                 UUID.fromString(lineData[1]);
 
-                orderList.addSimulation(new Order(lineData[0],
+                Order order = new Order(lineData[0],
                         lineData[1],
-                        LocalDateTime.parse(lineData[2]),
+                        lineData[2],
+                        LocalDateTime.parse(lineData[3]),
                         new ArrayList<>(List.of(itemIds)),
                         menu,
-                        Boolean.parseBoolean(lineData[4])));
+                        Boolean.parseBoolean(lineData[5]));
+
+                orderList.addSimulation(order);
             }
         } catch (InvalidOrderException | IllegalArgumentException | DuplicateOrderException e) {
             System.err.println("Skipping : " + e.getMessage());

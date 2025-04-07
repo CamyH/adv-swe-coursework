@@ -48,7 +48,6 @@ public class CustomerModel {
     private void createNewOrder() {
         try {
             currentOrder = new Order();
-            currentOrder.setOnlineStatus();
         } catch (InvalidOrderException e) {
             throw new RuntimeException("Failed to create a new order", e);
         }
