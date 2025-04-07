@@ -128,13 +128,15 @@ The repository is split mainly into coursework and src files. The src files cont
 
 **HashMap:** HashMap is used to store key-value pairs. It is based on hashing and provides constant-time performance (O(1)) for basic operations like put(), get(), and remove(), assuming a good hash function. This is implemented within the ItemList class to establish a connection between the ItemID and the corresponding item. This ensures that when an ItemID is referenced, the associated item object is also retrieved. Therefore, incorporating this structure within the item list facilitates efficient data management and retrieval. 
 
-**Enum:** Enums were chosen for storing the fixed discounts and item categories. Enums are most suitable for these attributes as they only need to be set once at compile time and will never need to be changed.
+**Enum:** Enums were chosen for storing the fixed discounts and item categories. Enums are most suitable for these attributes as they only need to be set once at compile time and will never need to be changed. Enums were also chosen to store the different sound effects and play those at different part of the application to improve user experience and give appropriate feedback.
 
 <h2 align="center">Exception Handling</h2>
 
 This project defines custom exceptions to handle various error cases: <br/>
-**InvalidItemIDException:** Thrown when an invalid item ID is used. <br/>
-**InvalidOrderException:** Thrown when an order is invalid.
+1. **DuplicateOrderException:** Thrown when a duplicate Order is added to the OrderList.
+2. **InvalidItemIDException:** Thrown when an invalid item ID is used.
+3. **InvalidOrderException:** Thrown when an order is invalid.
+4. **StaffNullNameException:** Thrown when a Staff is created with no name.
 </p>
 
 <h2 align="center">Tests</h2>
