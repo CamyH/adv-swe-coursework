@@ -65,10 +65,26 @@ public class CustomerController implements ActionListener {
             handleRemoveItem();
         } else if (e.getSource() == view.getExitButton()) {
             handleExit();
-        }else if (e.getSource() == view.getOnlineOrderCheckBox()) {
+        } else if (e.getSource() == view.getOnlineOrderCheckBox()) {
             handleOnlineOrderToggle();
+        } else if (e.getSource() == view.getEnterCustomerNameBtn()) {
+            handleCustomerNameInput();
         }
 
+    }
+
+    /**
+     * Handles changing customer name
+     */
+    private void handleCustomerNameInput() {
+        String customerName = view.getEnterCustomerNameBtn().getText().trim();
+
+        if (customerName.isEmpty()) {
+            view.showPopup("Customer Name is Empty");
+            return;
+        }
+
+//        customer.setName(customerName);
     }
 
     /**

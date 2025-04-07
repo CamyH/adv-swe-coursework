@@ -8,18 +8,15 @@ import java.util.UUID;
  */
 public class Customer {
     private final UUID customerId;
-    private final String firstName;
-    private final String lastName;
+    private String name;
 
     /**
      * Constructs a new Customer with a generated UUID
-     * @param firstName the customer's first name
-     * @param lastName the customer's last name
+     * @param name Customer's name
      */
-    public Customer(String firstName, String lastName) {
+    public Customer(String name) {
         this.customerId = UUID.randomUUID();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
     }
 
     /**
@@ -31,26 +28,19 @@ public class Customer {
     }
 
     /**
-     * Gets the customer's first name.
-     * @return the customer's first name {@link String}
+     * Gets the customer's name.
+     * @return the customer's name {@link String}
      */
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Gets the customer's last name.
-     * @return the customer's last name {@link String}
+     * Method to set a name for the customer
+     *
+     * @param name The customer's name
      */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Gets the full name of the customer, combining the first and last name.
-     * @return the customer's full name as a {@link String}
-     */
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

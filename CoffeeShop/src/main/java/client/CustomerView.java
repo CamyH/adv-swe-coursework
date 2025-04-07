@@ -79,6 +79,8 @@ public class CustomerView extends JFrame {
             displayMenuField.setDisabledTextColor(Color.BLACK);
             orderDetailsField.setEnabled(false);
             orderDetailsField.setDisabledTextColor(Color.BLACK);
+            enterCustomerNameInput.setEnabled(true);
+            enterCustomerNameInput.setDisabledTextColor(Color.BLACK);
 
             // Set scroll bars to always be visible
             itemListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -188,5 +190,13 @@ public class CustomerView extends JFrame {
 
     public JTextField getItemIDField() {
         return itemIDField;
+    }
+
+    public JTextField customerNameField() {
+        return enterCustomerNameInput;
+    }
+
+    public JButton getEnterCustomerNameBtn() {
+        return enterCustomerNameBtn;
     }
 }
