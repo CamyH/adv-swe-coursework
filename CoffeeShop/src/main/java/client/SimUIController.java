@@ -93,7 +93,6 @@ public class SimUIController {
             protected Void doInBackground() {
                 try {
                     name = simView.getStaffName();
-                    System.out.println(name);
                     simModel.removeStaff(simView.getCurStaff());
                     simView.showPopup("Removed " + name + " from Staff List");
                 } catch (NullPointerException e) {

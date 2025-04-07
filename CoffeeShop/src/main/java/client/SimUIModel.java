@@ -173,8 +173,9 @@ public class SimUIModel extends Subject implements Observer {
         for (StaffPopupController p : popupList) {
             if (p.getID().equals(ID)) {
                 popupList.remove(p);
-                staffList.remove(ID);
                 p.close();
+                staffList.remove(ID);
+                return;
             }
         }
         staffList.remove(ID);
