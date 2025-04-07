@@ -18,33 +18,34 @@ public class CoffeeShopLogger {
 
     private CoffeeShopLogger() {
         try {
-            // Remove the default ConsoleHandler to prevent logs from being printed to the console
-            Logger rootLogger = Logger.getLogger("");
-            Handler[] handlers = rootLogger.getHandlers();
-            for (Handler handler : handlers) {
-                if (handler instanceof ConsoleHandler) {
-                    rootLogger.removeHandler(handler); // Remove the ConsoleHandler
-                }
-            }
-
             // Create and configure the FileHandler
             createFileHandler();
 
             // Set the log level
             logger.setLevel(Level.ALL); // Log all levels (INFO, WARNING, SEVERE, etc.)
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e + e.getMessage());
         }
     }
 
-    /**
+/**
      * Creates and configures the FileHandler for logging to a file.
      */
     private void createFileHandler() throws IOException {
-        // Create the FileHandler
-        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true); // Append mode
-        fileHandler.setFormatter(new SimpleFormatter()); // Use a simple text format for logs
-        logger.addHandler(fileHandler); // Add the FileHandler to the logger
+        // Check if the FileHandler is already added
+        for (Handler handler : logger.getHandlers()) {
+            if (handler instanceof FileHandler) {
+                return;
+            }
+        }
+
+        // Create the FileHandler if not added already
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        FileHandler fileHandler = new FileHandler("src/main/java/files/coffee_shop.log", true);
+        fileHandler.setLevel(Level.ALL);
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+        //logger.addHandler(consoleHandler);
     }
 
     public static CoffeeShopLogger getInstance() {
@@ -52,18 +53,55 @@ public class CoffeeShopLogger {
         return instance;
     }
 
-    // Info level logging
+    /**
+     * Logs a message at the INFO level
+     * Used for general messages
+     *
+     * @param message the message to log
+     */
     public void logInfo(String message) {
         logger.info(message);
     }
 
-    // Warning level logging
+    /**
+     * Logs a message at the WARNING level
+     * Use for potential problems
+     *
+     * @param message the message to log
+     */
     public void logWarning(String message) {
         logger.warning(message);
     }
 
-    // Severe level logging
+    /**
+     * Logs a message at the SEVERE level
+     * Used for critical errors
+     *
+     * @param message the message to log
+     */
     public void logSevere(String message) {
         logger.severe(message);
+    }
+
+    /**
+     * Logs a message at the SEVERE level
+     * Used for critical errors
+     * Allows for passing in the exception itself
+     *
+     * @param message the message to log
+     * @param exceptionDetails the extra exception details
+     */
+    public void logSevere(String message, Exception exceptionDetails) {
+        logger.severe(message + exceptionDetails);
+    }
+
+    /**
+     * Logs a message at the FINE level
+     * Used for debugging
+     *
+     * @param message the message to log
+     */
+    public void logDebug(String message) {
+        logger.fine(message);
     }
 }

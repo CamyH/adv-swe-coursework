@@ -1,18 +1,24 @@
 package client;
 
-import exceptions.DuplicateOrderException;
 import exceptions.InvalidItemIDException;
 import exceptions.InvalidOrderException;
 import item.Item;
 import item.ItemList;
+import logs.CoffeeShopLogger;
+import message.Message;
 import order.Order;
 import order.OrderList;
 import utils.Discount;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
- * Class represents the Model for the customer GUI MVC
+ * CustomerModel represents the model layer for managing customer orders
+ * and interacting with the item menu. It allows adding/removing items from orders,
+ * submitting orders, and canceling orders.
+ * The model ensures that the order is correctly managed and interacts with the
+ * shared order list and item list.
  *
  * @author Akash Poonia
  */
@@ -20,11 +26,13 @@ public class CustomerModel {
     private Order currentOrder;
     private final OrderList orderList;
     private final ItemList itemList;
+    private final CoffeeShopLogger logger = CoffeeShopLogger.getInstance();
 
     private boolean isOnlineOrder = false;
 
     /**
-     * Constructs a new CustomerModel instance, initializing order and item lists.
+     * Constructs a new CustomerModel, initializes the order list and item list,
+     * and creates a new order for the customer.
      */
     public CustomerModel() {
         orderList = OrderList.getInstance();
@@ -33,39 +41,23 @@ public class CustomerModel {
     }
 
     /**
-     * Sets whether the order is an online order.
+     * Creates a new order and sets it as an online order.
      *
-     * @param isOnlineOrder true if the order is online, false otherwise
-     */
-    public void setOnlineOrder(boolean isOnlineOrder) {
-        this.isOnlineOrder = isOnlineOrder;
-    }
-
-    /**
-     * Checks if the current order is an online order.
-     *
-     * @return true if the order is online, false otherwise
-     */
-    public boolean isOnlineOrder() {
-        return isOnlineOrder;
-    }
-
-    /**
-     * Creates a new order for the customer.
-     * If the order creation fails, a runtime exception is thrown.
+     * @throws RuntimeException if there is an error creating the order
      */
     private void createNewOrder() {
         try {
             currentOrder = new Order();
+            currentOrder.setOnlineStatus();
         } catch (InvalidOrderException e) {
             throw new RuntimeException("Failed to create a new order", e);
         }
     }
 
     /**
-     * Adds an item to the current order.
+     * Adds an item to the current order using the provided item ID.
      *
-     * @param itemID the ID of the item to be added
+     * @param itemID the ID of the item to add
      * @throws InvalidItemIDException if the item ID is invalid
      */
     public void addItem(String itemID) throws InvalidItemIDException {
@@ -75,17 +67,17 @@ public class CustomerModel {
     /**
      * Removes the last item added to the current order.
      *
-     * @return true if an item was removed, false if the order was empty
+     * @return true if the item was removed successfully, false otherwise
      */
     public boolean removeLastItem() {
         return currentOrder.removeLastItem();
     }
 
     /**
-     * Removes a specific item from the order.
+     * Removes a specific item from the current order using the provided item ID.
      *
-     * @param itemID the ID of the item to be removed
-     * @return true if the item was removed, false if it was not found
+     * @param itemID the ID of the item to remove
+     * @return true if the item was removed successfully, false otherwise
      */
     public boolean removeItem(String itemID) {
         return currentOrder.removeItem(itemID.toUpperCase());
@@ -93,24 +85,18 @@ public class CustomerModel {
 
     /**
      * Submits the current order to the order list.
-     * If the order is an online order, it sets its online status.
+     * If the order is successfully added, a new order is created.
      *
-     * @return true if the order was successfully submitted, false otherwise
-     * @throws InvalidOrderException if the order is invalid
-     * @throws DuplicateOrderException if the order already exists in the list
      */
-    public boolean submitOrder() throws InvalidOrderException, DuplicateOrderException {
+    public void submitOrder() {
         if (isOnlineOrder) currentOrder.setOnlineStatus();
-
-        boolean added = orderList.add(currentOrder);
-        if (added) {
-            createNewOrder();
-        }
-        return added;
+        // If we get this far then the order has been sent so we
+        // can clear the order on the customerGUI
+        createNewOrder();
     }
 
     /**
-     * Cancels the current order and starts a new one.
+     * Cancels the current order by creating a new one.
      */
     public void cancelOrder() {
         createNewOrder();
@@ -119,7 +105,7 @@ public class CustomerModel {
     /**
      * Retrieves menu details as an array of strings.
      *
-     * @return an array of strings containing menu details
+     * @return an array of strings containing menu item details
      */
     public String[] getMenuDetails() {
         return itemList.getMenuDetails();
@@ -128,32 +114,58 @@ public class CustomerModel {
     /**
      * Retrieves details of the current order as a list of strings.
      *
-     * @return a list containing order details
+     * @return a list of order details (items, total cost, etc.)
      */
     public List<String> getOrderDetails() {
         return currentOrder.getDetails();
     }
 
     /**
-     * Gets the total cost of the current order.
+     * Retrieves the total cost of the current order.
      *
-     * @return the total cost as a double
+     * @return the total cost of the order
      */
     public double getTotalCost() {
         return currentOrder.getTotalCost();
     }
 
     /**
-     * Gets the discounted total cost of the order.
+     * Retrieves the discounted cost of the current order.
      *
-     * @return the discounted total cost as a double
+     * @return the discounted cost of the order
      */
     public double getDiscountedCost() {
         return currentOrder.getDiscountedCost();
     }
 
+    public void setOnlineOrder(boolean isOnlineOrder) {
+        this.isOnlineOrder = isOnlineOrder;
+    }
+
+    public boolean isOnlineOrder() {
+        return isOnlineOrder;
+    }
+
     /**
-     * Display in Customer GUI about daily special offer. 
+     * Updates the item list with the given updated item list.
+     *
+     * @param updatedItemList the new item list to update
+     */
+    public void updateItemList(ItemList updatedItemList) {
+        itemList.updateItems(updatedItemList.getMenu());
+    }
+
+    /**
+     * Retrieves the current order.
+     *
+     * @return the current order object
+     */
+    public Order getCurrentOrder() {
+        return currentOrder;
+    }
+
+    /**
+     * Display in Customer GUI about daily special offer.
      *
      * @return formatted daily special item details and discount percentage, or "No daily special today" if none exists
      */
@@ -162,7 +174,7 @@ public class CustomerModel {
         if (dailySpecial == null) {
             return "No daily special today";
         }
-        
+
         return String.format(" \uD83D\uDD25 Today's Special \uD83D\uDD25 \n\n" +
                 "Item: %s\n" +
                 "Original Price: £%.2f\n" +

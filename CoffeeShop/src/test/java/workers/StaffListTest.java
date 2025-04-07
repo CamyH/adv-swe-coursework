@@ -1,8 +1,10 @@
 package workers;
 
+import interfaces.INotificationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -15,16 +17,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Fraser Holman
  */
 public class StaffListTest {
-    StaffList staffList;
+    private StaffList staffList;
+
+    @Mock
+    private INotificationService notificationService;
 
     @BeforeEach
     public void setUp() {
         StaffList.resetInstance();
         staffList = StaffList.getInstance();
 
-        StaffFactory.getStaff("barista", "Bob", 1);
-        StaffFactory.getStaff("barista", "Bill", 2);
-        StaffFactory.getStaff("barista", "Fraser", 3);
+        StaffFactory.getStaff("barista", "Bob", 1, notificationService);
+        StaffFactory.getStaff("barista", "Bill", 2, notificationService);
+        StaffFactory.getStaff("barista", "Fraser", 3, notificationService);
     }
 
     @AfterEach
